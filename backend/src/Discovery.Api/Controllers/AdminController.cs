@@ -332,13 +332,14 @@ public sealed class AdminImportsController(ImportService imports, AdminService a
 [Route("api/v1/admin/content")]
 [Produces("application/json")]
 [Authorize(Policy = Policies.Editorial)]
-public sealed class AdminContentController(
-    ContentService content,
-    Discovery.Infrastructure.Content.ContentGenerator generator,
-    HttpCurrentUser current) : ControllerBase
+public sealed class AdminContentController(ContentService content, HttpCurrentUser current) : ControllerBase
 {
     [HttpGet("status")]
-    public object Status() => new { configured = generator.IsConfigured, model = generator.Model };
+    public async Task<object> Status([FromServices] Discovery.Infrastructure.Content.AiSettings settings, CancellationToken ct)
+    {
+        var view = await settings.ViewAsync(ct);
+        return new { configured = view.Configured, model = view.Model };
+    }
 
     [HttpGet]
     public Task<ContentOverview> List([FromQuery] string? status, [FromQuery] string? q, [FromQuery] int? page, CancellationToken ct) =>
@@ -373,4 +374,34 @@ public sealed class AdminContentController(
 
     [HttpPost("cancel-queued")]
     public async Task<object> CancelQueued(CancellationToken ct) => new { count = await content.CancelQueuedAsync(ct) };
+}
+
+public sealed record SaveAiSettingsRequest(string? ApiKey, string? Model);
+
+/// <summary>Site settings. The OpenAI key is write-only: responses carry only whether it is set and its last 4 characters.</summary>
+[ApiController]
+[Route("api/v1/admin/settings")]
+[Produces("application/json")]
+[Authorize(Policy = Policies.Administration)]
+public sealed class AdminSettingsController(
+    Discovery.Infrastructure.Content.AiSettings settings,
+    Discovery.Infrastructure.Content.ContentGenerator generator,
+    HttpCurrentUser current) : ControllerBase
+{
+    [HttpGet("ai")]
+    public Task<Discovery.Infrastructure.Content.AiSettingsView> Get(CancellationToken ct) => settings.ViewAsync(ct);
+
+    [HttpPut("ai")]
+    public async Task<Discovery.Infrastructure.Content.AiSettingsView> Save(SaveAiSettingsRequest request, CancellationToken ct)
+    {
+        await settings.SaveAsync(current.RequireUserId(), request.ApiKey, request.Model, ct);
+        return await settings.ViewAsync(ct);
+    }
+
+    [HttpPost("ai/test")]
+    public async Task<object> Test(CancellationToken ct)
+    {
+        var (ok, message) = await generator.TestAsync(ct);
+        return new { ok, message };
+    }
 }

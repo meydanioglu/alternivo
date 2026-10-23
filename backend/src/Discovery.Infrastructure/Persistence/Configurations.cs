@@ -366,6 +366,17 @@ internal sealed class ContentDraftConfiguration : IEntityTypeConfiguration<Conte
     }
 }
 
+internal sealed class AppSettingConfiguration : IEntityTypeConfiguration<AppSetting>
+{
+    public void Configure(EntityTypeBuilder<AppSetting> b)
+    {
+        b.ToTable("AppSettings");
+        b.HasKey(x => x.Key);
+        b.Property(x => x.Key).HasMaxLength(100);
+        b.Property(x => x.Value).HasMaxLength(4000).IsRequired();
+    }
+}
+
 internal sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 {
     public void Configure(EntityTypeBuilder<AppUser> b)

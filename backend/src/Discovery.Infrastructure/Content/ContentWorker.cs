@@ -53,7 +53,7 @@ public sealed class ContentWorker(IServiceScopeFactory scopes, ILogger<ContentWo
     private async Task<List<Guid>> ClaimAsync(CancellationToken ct)
     {
         using var scope = scopes.CreateScope();
-        if (!scope.ServiceProvider.GetRequiredService<ContentGenerator>().IsConfigured) return [];
+        if (!await scope.ServiceProvider.GetRequiredService<ContentGenerator>().IsConfiguredAsync(ct)) return [];
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var drafts = await db.ContentDrafts.Where(d => d.Status == ContentDraftStatus.Queued)
             .OrderBy(d => d.CreatedAt).Take(Parallelism).ToListAsync(ct);

@@ -10,7 +10,6 @@ using Discovery.Domain.Operations;
 using Discovery.Infrastructure.Importing;
 using Discovery.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace Discovery.Infrastructure.Content;
 
@@ -19,14 +18,34 @@ namespace Discovery.Infrastructure.Content;
 /// website (fetched politely, robots.txt honoured) plus the catalogue data we already hold; the model is told to
 /// leave out anything the source does not support. The result is stored as a draft for an editor to review.
 /// </summary>
-public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory httpFactory, IConfiguration config)
+public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory httpFactory, AiSettings settings)
 {
     public const string OpenAiClientName = "openai";
     private const int MaxSourceChars = 14_000;
 
-    public bool IsConfigured => !string.IsNullOrWhiteSpace(ApiKey);
-    private string? ApiKey => config["OpenAI:ApiKey"];
-    public string Model => string.IsNullOrWhiteSpace(config["OpenAI:Model"]) ? "gpt-5" : config["OpenAI:Model"]!;
+    public async Task<bool> IsConfiguredAsync(CancellationToken ct) => await settings.GetApiKeyAsync(ct) is not null;
+
+    /// <summary>Checks a key against the OpenAI API without generating anything (lists models).</summary>
+    public async Task<(bool Ok, string Message)> TestAsync(CancellationToken ct)
+    {
+        var key = await settings.GetApiKeyAsync(ct);
+        if (key is null) return (false, "No API key is configured.");
+        var model = await settings.GetModelAsync(ct);
+        using var request = new HttpRequestMessage(HttpMethod.Get, $"https://api.openai.com/v1/models/{Uri.EscapeDataString(model)}");
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", key);
+        try
+        {
+            using var response = await httpFactory.CreateClient(OpenAiClientName).SendAsync(request, ct);
+            if (response.IsSuccessStatusCode) return (true, $"Connected. Model “{model}” is available to this key.");
+            var body = await response.Content.ReadAsStringAsync(ct);
+            var message = JsonNode.Parse(body)?["error"]?["message"]?.GetValue<string>() ?? response.ReasonPhrase ?? "error";
+            return (false, $"OpenAI {(int)response.StatusCode}: {Truncate(message, 200)}");
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException)
+        {
+            return (false, $"Could not reach OpenAI: {Truncate(ex.Message, 200)}");
+        }
+    }
 
     private const string Instructions = """
         You are a senior software editor writing product pages for Alternivo, a site that helps people compare
@@ -54,7 +73,8 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
 
     public async Task GenerateAsync(ContentDraft draft, CancellationToken ct)
     {
-        if (!IsConfigured) throw new ImportException("OpenAI API key is not configured (OPENAI_API_KEY).");
+        var apiKey = await settings.GetApiKeyAsync(ct) ?? throw new ImportException("OpenAI API key is not configured (Admin → Ayarlar).");
+        var model = await settings.GetModelAsync(ct);
 
         var app = await db.Applications
             .Include(a => a.License)
@@ -88,7 +108,7 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
 
         var body = new JsonObject
         {
-            ["model"] = Model,
+            ["model"] = model,
             ["messages"] = new JsonArray
             {
                 new JsonObject { ["role"] = "system", ["content"] = Instructions },
@@ -106,7 +126,7 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
         {
             Content = JsonContent.Create(body),
         };
-        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", ApiKey);
+        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
         using var response = await http.SendAsync(request, ct);
         var json = await response.Content.ReadAsStringAsync(ct);
         if (!response.IsSuccessStatusCode)
@@ -143,7 +163,7 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
             parsed.Faq.Select(f => new ContentFaqDto(f.Question.Trim(), f.Answer.Trim())).ToList()));
         draft.SourceUrl = sourceUrl;
         draft.SourceChars = source.Length;
-        draft.Model = root["model"]?.GetValue<string>() ?? Model;
+        draft.Model = root["model"]?.GetValue<string>() ?? model;
         draft.InputTokens = root["usage"]?["prompt_tokens"]?.GetValue<int>() ?? 0;
         draft.OutputTokens = root["usage"]?["completion_tokens"]?.GetValue<int>() ?? 0;
     }

@@ -78,9 +78,10 @@ export default async function AdminContentPage({ searchParams }: Props) {
           <div>
             <p className="font-semibold">OpenAI API anahtarı tanımlı değil.</p>
             <p className="mt-1 text-foreground/80">
-              Sunucudaki <code className="rounded bg-surface-secondary px-1">/opt/alternivo/.env</code> dosyasına{" "}
-              <code className="rounded bg-surface-secondary px-1">OPENAI_API_KEY=sk-...</code> satırını ekleyip API&apos;yi yeniden başlatın. İsteğe bağlı:{" "}
-              <code className="rounded bg-surface-secondary px-1">OPENAI_MODEL</code> (varsayılan {cfg.model}). Kuyruğa eklenenler anahtar tanımlanınca işlenmeye başlar.
+              <Link href="/admin/settings" className="font-medium text-accent hover:underline">
+                Ayarlar
+              </Link>{" "}
+              sayfasından OpenAI API anahtarınızı ekleyin. Kuyruğa eklenenler anahtar tanımlanınca kendiliğinden işlenmeye başlar.
             </p>
           </div>
         </div>

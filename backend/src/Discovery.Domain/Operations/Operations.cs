@@ -116,3 +116,12 @@ public class ContentDraft
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 }
+
+/// <summary>Key/value site setting edited from the admin panel. Secret values are stored encrypted.</summary>
+public class AppSetting
+{
+    public required string Key { get; set; }
+    public required string Value { get; set; }
+    public Guid? UpdatedByUserId { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+}

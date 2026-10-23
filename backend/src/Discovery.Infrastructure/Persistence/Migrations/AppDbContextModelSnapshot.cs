@@ -804,6 +804,28 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.ToTable("UserBookmarks", (string)null);
                 });
 
+            modelBuilder.Entity("Discovery.Domain.Operations.AppSetting", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(4000)
+                        .HasColumnType("character varying(4000)");
+
+                    b.HasKey("Key");
+
+                    b.ToTable("AppSettings", (string)null);
+                });
+
             modelBuilder.Entity("Discovery.Domain.Operations.AuditLog", b =>
                 {
                     b.Property<Guid>("Id")

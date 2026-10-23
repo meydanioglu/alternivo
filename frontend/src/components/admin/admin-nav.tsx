@@ -11,6 +11,7 @@ import {
   Inbox,
   LayoutDashboard,
   MessageSquare,
+  Settings,
   Signpost,
   Users,
 } from "lucide-react";
@@ -31,6 +32,7 @@ const ITEMS = [
   { href: "/admin/categories", label: "Kategoriler", icon: FolderTree },
   { href: "/admin/users", label: "Kullanıcılar", icon: Users },
   { href: "/admin/redirects", label: "Yönlendirmeler", icon: Signpost },
+  { href: "/admin/settings", label: "Ayarlar", icon: Settings },
 ];
 
 export function AdminNav({ displayName, roles }: { displayName: string; roles: string[] }) {
