@@ -1,0 +1,29 @@
+# Secrets
+.env
+.env.local
+**/appsettings.*.local.json
+
+# .NET
+**/bin/
+**/obj/
+**/.keys/
+*.user
+.vs/
+TestResults/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+npm-debug.log*
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
+
+# Local run
+.env.local.ps1
+backend/.tools/
+*-log.txt

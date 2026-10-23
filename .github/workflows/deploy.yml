@@ -1,0 +1,37 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          command_timeout: 45m
+          script: |
+            set -euo pipefail
+            cd /opt/alternivo
+            git fetch --prune origin main
+            git reset --hard origin/main
+            docker compose up -d --build --remove-orphans
+            for i in $(seq 1 60); do
+              if curl -fsS http://127.0.0.1:8080/health >/dev/null; then echo "API healthy"; break; fi
+              if [ "$i" -eq 60 ]; then docker compose logs --tail=100 api; exit 1; fi
+              sleep 5
+            done
+            curl -fsS -o /dev/null http://127.0.0.1:3000/ && echo "Web OK"
+            docker image prune -f

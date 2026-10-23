@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <RootNamespace>Discovery.Domain</RootNamespace>
+  </PropertyGroup>
+</Project>

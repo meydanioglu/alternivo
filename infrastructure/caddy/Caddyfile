@@ -1,0 +1,24 @@
+(site) {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
+	}
+
+	# Next.js serves pages, sitemaps and the /bff proxy. The API is never exposed directly.
+	reverse_proxy web:3000
+}
+
+{$DOMAIN} {
+	import site
+}
+
+www.{$DOMAIN} {
+	redir https://{$DOMAIN}{uri} permanent
+}
+
+# Plain HTTP on the server IP (health checks, access before DNS points here).
+:80 {
+	import site
+}

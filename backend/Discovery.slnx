@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Discovery.Domain/Discovery.Domain.csproj" />
+    <Project Path="src/Discovery.Application/Discovery.Application.csproj" />
+    <Project Path="src/Discovery.Infrastructure/Discovery.Infrastructure.csproj" />
+    <Project Path="src/Discovery.Api/Discovery.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Discovery.UnitTests/Discovery.UnitTests.csproj" />
+  </Folder>
+</Solution>

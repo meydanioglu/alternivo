@@ -1,0 +1,4603 @@
+{
+  "platforms": [
+    {
+      "slug": "windows",
+      "name": "Windows",
+      "kind": "desktop",
+      "sortOrder": 0
+    },
+    {
+      "slug": "macos",
+      "name": "macOS",
+      "kind": "desktop",
+      "sortOrder": 1
+    },
+    {
+      "slug": "linux",
+      "name": "Linux",
+      "kind": "desktop",
+      "sortOrder": 2
+    },
+    {
+      "slug": "android",
+      "name": "Android",
+      "kind": "mobile",
+      "sortOrder": 3
+    },
+    {
+      "slug": "ios",
+      "name": "iOS",
+      "kind": "mobile",
+      "sortOrder": 4
+    },
+    {
+      "slug": "ipados",
+      "name": "iPadOS",
+      "kind": "mobile",
+      "sortOrder": 5
+    },
+    {
+      "slug": "web",
+      "name": "Web",
+      "kind": "web",
+      "sortOrder": 6
+    },
+    {
+      "slug": "browser-extension",
+      "name": "Browser extension",
+      "kind": "extension",
+      "sortOrder": 7
+    },
+    {
+      "slug": "self-hosted",
+      "name": "Self-hosted",
+      "kind": "server",
+      "sortOrder": 8
+    },
+    {
+      "slug": "docker",
+      "name": "Docker",
+      "kind": "server",
+      "sortOrder": 9
+    }
+  ],
+  "licenses": [
+    {
+      "slug": "proprietary",
+      "name": "Proprietary",
+      "isOpenSource": false,
+      "family": "proprietary",
+      "spdx": null
+    },
+    {
+      "slug": "mit",
+      "name": "MIT License",
+      "isOpenSource": true,
+      "family": "mit",
+      "spdx": "MIT"
+    },
+    {
+      "slug": "apache-2-0",
+      "name": "Apache License 2.0",
+      "isOpenSource": true,
+      "family": "apache",
+      "spdx": "Apache-2.0"
+    },
+    {
+      "slug": "gpl-2-0",
+      "name": "GNU GPL v2 or later",
+      "isOpenSource": true,
+      "family": "gpl",
+      "spdx": "GPL-2.0-or-later"
+    },
+    {
+      "slug": "gpl-3-0",
+      "name": "GNU GPL v3",
+      "isOpenSource": true,
+      "family": "gpl",
+      "spdx": "GPL-3.0-or-later"
+    },
+    {
+      "slug": "agpl-3-0",
+      "name": "GNU AGPL v3",
+      "isOpenSource": true,
+      "family": "gpl",
+      "spdx": "AGPL-3.0-or-later"
+    },
+    {
+      "slug": "mpl-2-0",
+      "name": "Mozilla Public License 2.0",
+      "isOpenSource": true,
+      "family": "other",
+      "spdx": "MPL-2.0"
+    },
+    {
+      "slug": "postgresql",
+      "name": "PostgreSQL License",
+      "isOpenSource": true,
+      "family": "other",
+      "spdx": "PostgreSQL"
+    },
+    {
+      "slug": "public-domain",
+      "name": "Public domain",
+      "isOpenSource": true,
+      "family": "other",
+      "spdx": null
+    },
+    {
+      "slug": "sspl",
+      "name": "Server Side Public License",
+      "isOpenSource": false,
+      "family": "other",
+      "spdx": "SSPL-1.0"
+    },
+    {
+      "slug": "source-available",
+      "name": "Source-available (non-OSI)",
+      "isOpenSource": false,
+      "family": "other",
+      "spdx": null
+    }
+  ],
+  "categories": [
+    {
+      "slug": "ai-tools",
+      "name": "AI Tools",
+      "description": "Assistants, copilots and local models that use machine learning to help you work.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": true,
+      "icon": "sparkles",
+      "sortOrder": 0
+    },
+    {
+      "slug": "ai-assistants",
+      "name": "AI Assistants",
+      "description": "Conversational AI assistants for writing, research, analysis and everyday questions.",
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": true,
+      "icon": "message-square-text",
+      "sortOrder": 1
+    },
+    {
+      "slug": "ai-coding-tools",
+      "name": "AI Coding Tools",
+      "description": "Code completion, chat and agents that help developers write and understand code.",
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": true,
+      "icon": "code-xml",
+      "sortOrder": 2
+    },
+    {
+      "slug": "productivity",
+      "name": "Productivity",
+      "description": "Tools for notes, tasks, documents and getting organised.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": true,
+      "icon": "list-checks",
+      "sortOrder": 3
+    },
+    {
+      "slug": "note-taking",
+      "name": "Note Taking",
+      "description": "Apps for capturing notes, building a knowledge base and linking ideas.",
+      "seoIntro": "Note-taking apps range from cloud workspaces built for teams to local-first Markdown editors that keep your files on your own device. Compare them by where your data lives, whether they work offline, how they sync and whether they support linking notes together.",
+      "parent": "productivity",
+      "featured": true,
+      "icon": "notebook-pen",
+      "sortOrder": 4
+    },
+    {
+      "slug": "project-management",
+      "name": "Project Management",
+      "description": "Plan, track and ship work with boards, timelines and tasks.",
+      "seoIntro": null,
+      "parent": "productivity",
+      "featured": true,
+      "icon": "kanban",
+      "sortOrder": 5
+    },
+    {
+      "slug": "office-suites",
+      "name": "Office Suites",
+      "description": "Word processors, spreadsheets and presentation software.",
+      "seoIntro": null,
+      "parent": "productivity",
+      "featured": false,
+      "icon": "file-text",
+      "sortOrder": 6
+    },
+    {
+      "slug": "pdf-tools",
+      "name": "PDF Tools",
+      "description": "View, annotate, edit, merge and convert PDF documents.",
+      "seoIntro": null,
+      "parent": "productivity",
+      "featured": true,
+      "icon": "file-type",
+      "sortOrder": 7
+    },
+    {
+      "slug": "automation",
+      "name": "Automation",
+      "description": "Connect apps and automate repetitive workflows.",
+      "seoIntro": null,
+      "parent": "productivity",
+      "featured": true,
+      "icon": "workflow",
+      "sortOrder": 8
+    },
+    {
+      "slug": "design",
+      "name": "Design",
+      "description": "Graphic design, photo and video creation tools.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": true,
+      "icon": "pen-tool",
+      "sortOrder": 9
+    },
+    {
+      "slug": "graphic-design",
+      "name": "Graphic Design",
+      "description": "Vector, UI and illustration tools for designers.",
+      "seoIntro": null,
+      "parent": "design",
+      "featured": true,
+      "icon": "shapes",
+      "sortOrder": 10
+    },
+    {
+      "slug": "photo-editing",
+      "name": "Photo Editing",
+      "description": "Raster image editors and RAW photo developers.",
+      "seoIntro": "Photo editors split into layer-based raster editors for retouching and compositing, and RAW developers built around a non-destructive photography workflow. Free open-source options cover most needs; paid suites add AI tools and ecosystem integration.",
+      "parent": "design",
+      "featured": true,
+      "icon": "image",
+      "sortOrder": 11
+    },
+    {
+      "slug": "video-editing",
+      "name": "Video Editing",
+      "description": "Non-linear editors for cutting, grading and finishing video.",
+      "seoIntro": "Video editors differ in timeline depth, colour tools, performance and price. Several professional-grade editors are free, while subscription suites focus on ecosystem integration.",
+      "parent": "design",
+      "featured": true,
+      "icon": "clapperboard",
+      "sortOrder": 12
+    },
+    {
+      "slug": "developer-tools",
+      "name": "Developer Tools",
+      "description": "Editors, databases and tools for building software.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": true,
+      "icon": "terminal",
+      "sortOrder": 13
+    },
+    {
+      "slug": "code-editors",
+      "name": "Code Editors",
+      "description": "Text editors and IDEs for writing code.",
+      "seoIntro": null,
+      "parent": "developer-tools",
+      "featured": false,
+      "icon": "braces",
+      "sortOrder": 14
+    },
+    {
+      "slug": "databases",
+      "name": "Databases",
+      "description": "Database engines and database management tools.",
+      "seoIntro": null,
+      "parent": "developer-tools",
+      "featured": true,
+      "icon": "database",
+      "sortOrder": 15
+    },
+    {
+      "slug": "security",
+      "name": "Security & Privacy",
+      "description": "Protect accounts, data and browsing.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": true,
+      "icon": "shield",
+      "sortOrder": 16
+    },
+    {
+      "slug": "password-managers",
+      "name": "Password Managers",
+      "description": "Store, generate and autofill passwords securely.",
+      "seoIntro": "A password manager generates strong, unique passwords and fills them in for you. The main differences are whether the vault lives in the cloud or only on your device, whether the code is open source, and which platforms and browsers are supported.",
+      "parent": "security",
+      "featured": true,
+      "icon": "key-round",
+      "sortOrder": 17
+    },
+    {
+      "slug": "internet",
+      "name": "Internet",
+      "description": "Browsers and cloud storage.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": false,
+      "icon": "globe",
+      "sortOrder": 18
+    },
+    {
+      "slug": "web-browsers",
+      "name": "Web Browsers",
+      "description": "Browsers for desktop and mobile.",
+      "seoIntro": "Most browsers today use either Chromium or Mozilla's Gecko engine. Compare them on privacy defaults, built-in blocking, sync and extension support.",
+      "parent": "internet",
+      "featured": true,
+      "icon": "compass",
+      "sortOrder": 19
+    },
+    {
+      "slug": "cloud-storage",
+      "name": "Cloud Storage",
+      "description": "Sync, store and share files across devices.",
+      "seoIntro": null,
+      "parent": "internet",
+      "featured": true,
+      "icon": "cloud",
+      "sortOrder": 20
+    },
+    {
+      "slug": "business",
+      "name": "Business",
+      "description": "CRM and analytics for running a business.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": false,
+      "icon": "briefcase",
+      "sortOrder": 21
+    },
+    {
+      "slug": "crm",
+      "name": "CRM",
+      "description": "Customer relationship management: contacts, deals and pipelines.",
+      "seoIntro": null,
+      "parent": "business",
+      "featured": true,
+      "icon": "contact",
+      "sortOrder": 22
+    },
+    {
+      "slug": "analytics",
+      "name": "Web Analytics",
+      "description": "Measure website traffic and user behaviour.",
+      "seoIntro": "Web analytics tools measure visits and conversions. Privacy-focused tools avoid cookies and personal data, which can simplify consent requirements, while larger platforms offer deeper advertising integration.",
+      "parent": "business",
+      "featured": true,
+      "icon": "chart-line",
+      "sortOrder": 23
+    },
+    {
+      "slug": "marketing",
+      "name": "Marketing",
+      "description": "Email marketing and website building.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": false,
+      "icon": "megaphone",
+      "sortOrder": 24
+    },
+    {
+      "slug": "email-marketing",
+      "name": "Email Marketing",
+      "description": "Newsletters, campaigns and email automation.",
+      "seoIntro": null,
+      "parent": "marketing",
+      "featured": true,
+      "icon": "mail",
+      "sortOrder": 25
+    },
+    {
+      "slug": "website-builders",
+      "name": "Website Builders",
+      "description": "Build and publish websites and blogs.",
+      "seoIntro": null,
+      "parent": "marketing",
+      "featured": true,
+      "icon": "layout-template",
+      "sortOrder": 26
+    },
+    {
+      "slug": "communication",
+      "name": "Communication",
+      "description": "Team chat, messaging and calls.",
+      "seoIntro": null,
+      "parent": null,
+      "featured": true,
+      "icon": "messages-square",
+      "sortOrder": 27
+    }
+  ],
+  "features": [
+    {
+      "slug": "markdown-support",
+      "name": "Markdown support"
+    },
+    {
+      "slug": "offline-mode",
+      "name": "Offline mode"
+    },
+    {
+      "slug": "real-time-collaboration",
+      "name": "Real-time collaboration"
+    },
+    {
+      "slug": "end-to-end-encryption",
+      "name": "End-to-end encryption"
+    },
+    {
+      "slug": "cross-device-sync",
+      "name": "Cross-device sync"
+    },
+    {
+      "slug": "plugins-and-extensions",
+      "name": "Plugins and extensions"
+    },
+    {
+      "slug": "templates",
+      "name": "Templates"
+    },
+    {
+      "slug": "kanban-boards",
+      "name": "Kanban boards"
+    },
+    {
+      "slug": "gantt-charts",
+      "name": "Gantt charts"
+    },
+    {
+      "slug": "api-access",
+      "name": "API access"
+    },
+    {
+      "slug": "backlinks",
+      "name": "Backlinks"
+    },
+    {
+      "slug": "graph-view",
+      "name": "Graph view"
+    },
+    {
+      "slug": "structured-databases",
+      "name": "Structured databases"
+    },
+    {
+      "slug": "version-history",
+      "name": "Version history"
+    },
+    {
+      "slug": "vector-editing",
+      "name": "Vector editing"
+    },
+    {
+      "slug": "prototyping",
+      "name": "Prototyping"
+    },
+    {
+      "slug": "layers",
+      "name": "Layers"
+    },
+    {
+      "slug": "raw-photo-editing",
+      "name": "RAW photo editing"
+    },
+    {
+      "slug": "non-destructive-editing",
+      "name": "Non-destructive editing"
+    },
+    {
+      "slug": "psd-file-support",
+      "name": "PSD file support"
+    },
+    {
+      "slug": "multi-track-timeline",
+      "name": "Multi-track timeline"
+    },
+    {
+      "slug": "color-grading",
+      "name": "Color grading"
+    },
+    {
+      "slug": "password-generator",
+      "name": "Password generator"
+    },
+    {
+      "slug": "autofill",
+      "name": "Autofill"
+    },
+    {
+      "slug": "totp-authenticator",
+      "name": "TOTP authenticator"
+    },
+    {
+      "slug": "tracking-protection",
+      "name": "Tracking protection"
+    },
+    {
+      "slug": "built-in-ad-blocking",
+      "name": "Built-in ad blocking"
+    },
+    {
+      "slug": "chat-interface",
+      "name": "Chat interface"
+    },
+    {
+      "slug": "web-search",
+      "name": "Web search"
+    },
+    {
+      "slug": "file-uploads",
+      "name": "File uploads"
+    },
+    {
+      "slug": "image-generation",
+      "name": "Image generation"
+    },
+    {
+      "slug": "code-completion",
+      "name": "Code completion"
+    },
+    {
+      "slug": "local-ai-models",
+      "name": "Local AI models"
+    },
+    {
+      "slug": "git-integration",
+      "name": "Git integration"
+    },
+    {
+      "slug": "debugger",
+      "name": "Debugger"
+    },
+    {
+      "slug": "sql-editor",
+      "name": "SQL editor"
+    },
+    {
+      "slug": "threads",
+      "name": "Threads"
+    },
+    {
+      "slug": "video-calls",
+      "name": "Video calls"
+    },
+    {
+      "slug": "screen-sharing",
+      "name": "Screen sharing"
+    },
+    {
+      "slug": "file-sync",
+      "name": "File sync"
+    },
+    {
+      "slug": "file-sharing",
+      "name": "File sharing"
+    },
+    {
+      "slug": "workflow-automation",
+      "name": "Workflow automation"
+    },
+    {
+      "slug": "visual-workflow-builder",
+      "name": "Visual workflow builder"
+    },
+    {
+      "slug": "event-tracking",
+      "name": "Event tracking"
+    },
+    {
+      "slug": "cookieless-tracking",
+      "name": "Cookieless tracking"
+    },
+    {
+      "slug": "dashboards",
+      "name": "Dashboards"
+    },
+    {
+      "slug": "email-campaigns",
+      "name": "Email campaigns"
+    },
+    {
+      "slug": "newsletter-publishing",
+      "name": "Newsletter publishing"
+    },
+    {
+      "slug": "blogging",
+      "name": "Blogging"
+    },
+    {
+      "slug": "visual-page-builder",
+      "name": "Visual page builder"
+    },
+    {
+      "slug": "contact-management",
+      "name": "Contact management"
+    },
+    {
+      "slug": "sales-pipeline",
+      "name": "Sales pipeline"
+    },
+    {
+      "slug": "word-processing",
+      "name": "Word processing"
+    },
+    {
+      "slug": "spreadsheets",
+      "name": "Spreadsheets"
+    },
+    {
+      "slug": "presentations",
+      "name": "Presentations"
+    },
+    {
+      "slug": "pdf-editing",
+      "name": "PDF editing"
+    },
+    {
+      "slug": "pdf-annotation",
+      "name": "PDF annotation"
+    },
+    {
+      "slug": "form-filling",
+      "name": "Form filling"
+    },
+    {
+      "slug": "merge-and-split-pdfs",
+      "name": "Merge and split PDFs"
+    }
+  ],
+  "applications": [
+    {
+      "slug": "chatgpt",
+      "name": "ChatGPT",
+      "shortDescription": "OpenAI's conversational AI assistant for writing, analysis, coding help and research.",
+      "description": "ChatGPT is a chat-based assistant built on OpenAI's language models. It can draft and edit text, answer questions, analyse uploaded files and search the web, with a free tier and paid plans.",
+      "website": "https://chatgpt.com",
+      "developer": "OpenAI",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": "2022-11-30",
+      "editorialScore": 80,
+      "categories": [
+        "ai-assistants"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "chat-interface",
+        "web-search",
+        "file-uploads",
+        "image-generation"
+      ],
+      "tags": [
+        "LLM",
+        "Chatbot"
+      ],
+      "aliases": [
+        "OpenAI ChatGPT"
+      ],
+      "alternatives": [
+        "claude",
+        "gemini",
+        "perplexity",
+        "lm-studio",
+        "ollama"
+      ]
+    },
+    {
+      "slug": "claude",
+      "name": "Claude",
+      "shortDescription": "Anthropic's AI assistant for writing, analysis, coding and long documents.",
+      "description": "Claude is an AI assistant developed by Anthropic. It handles long documents and files, helps with writing and code, and offers a free tier alongside paid plans.",
+      "website": "https://claude.ai",
+      "developer": "Anthropic",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": "2023-03-14",
+      "editorialScore": 80,
+      "categories": [
+        "ai-assistants"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "chat-interface",
+        "file-uploads",
+        "web-search"
+      ],
+      "tags": [
+        "LLM",
+        "Chatbot"
+      ],
+      "aliases": [
+        "Claude AI",
+        "Anthropic Claude"
+      ],
+      "alternatives": [
+        "chatgpt",
+        "gemini",
+        "perplexity",
+        "lm-studio",
+        "ollama"
+      ]
+    },
+    {
+      "slug": "gemini",
+      "name": "Google Gemini",
+      "shortDescription": "Google's AI assistant, integrated with Google search and Workspace.",
+      "description": "Gemini is Google's conversational AI assistant. It can search the web, work with uploaded files and connects to Google services, with free and paid tiers.",
+      "website": "https://gemini.google.com",
+      "developer": "Google",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 75,
+      "categories": [
+        "ai-assistants"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "chat-interface",
+        "web-search",
+        "file-uploads",
+        "image-generation"
+      ],
+      "tags": [
+        "LLM",
+        "Chatbot"
+      ],
+      "aliases": [
+        "Gemini",
+        "Bard"
+      ],
+      "alternatives": [
+        "chatgpt",
+        "claude",
+        "perplexity",
+        "lm-studio",
+        "ollama"
+      ]
+    },
+    {
+      "slug": "perplexity",
+      "name": "Perplexity",
+      "shortDescription": "An AI answer engine that searches the web and cites its sources.",
+      "description": "Perplexity combines a language model with live web search and shows the sources behind each answer. A free tier is available with a paid Pro plan.",
+      "website": "https://www.perplexity.ai",
+      "developer": "Perplexity AI",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "ai-assistants"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "chat-interface",
+        "web-search",
+        "file-uploads"
+      ],
+      "tags": [
+        "LLM",
+        "Search"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "chatgpt",
+        "claude",
+        "gemini",
+        "lm-studio",
+        "ollama"
+      ]
+    },
+    {
+      "slug": "lm-studio",
+      "name": "LM Studio",
+      "shortDescription": "Desktop app for downloading and running open large language models locally.",
+      "description": "LM Studio lets you discover, download and chat with open-weight language models entirely on your own computer, and can expose them through a local API server.",
+      "website": "https://lmstudio.ai",
+      "developer": "Element Labs",
+      "pricing": [
+        "free"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 65,
+      "categories": [
+        "ai-assistants"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "chat-interface",
+        "local-ai-models",
+        "api-access"
+      ],
+      "tags": [
+        "LLM",
+        "Local AI"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "chatgpt",
+        "claude",
+        "gemini",
+        "perplexity",
+        "ollama"
+      ]
+    },
+    {
+      "slug": "ollama",
+      "name": "Ollama",
+      "shortDescription": "Run open large language models locally from the command line or a local API.",
+      "description": "Ollama is an open-source tool for running open-weight language models on your own machine. It provides a CLI and a local HTTP API and can run in Docker.",
+      "website": "https://ollama.com",
+      "developer": "Ollama",
+      "pricing": [
+        "free"
+      ],
+      "license": "mit",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 68,
+      "categories": [
+        "ai-assistants"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "docker",
+        "self-hosted"
+      ],
+      "features": [
+        "local-ai-models",
+        "api-access"
+      ],
+      "tags": [
+        "LLM",
+        "Local AI",
+        "CLI"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "chatgpt",
+        "claude",
+        "gemini",
+        "perplexity",
+        "lm-studio"
+      ]
+    },
+    {
+      "slug": "github-copilot",
+      "name": "GitHub Copilot",
+      "shortDescription": "AI pair programmer that suggests code and answers questions inside your editor.",
+      "description": "GitHub Copilot provides inline code completions, chat and agent features in editors such as VS Code, Visual Studio and JetBrains IDEs. It has a free tier and paid plans.",
+      "website": "https://github.com/features/copilot",
+      "developer": "GitHub",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 75,
+      "categories": [
+        "ai-coding-tools"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "web"
+      ],
+      "features": [
+        "code-completion",
+        "chat-interface"
+      ],
+      "tags": [
+        "Developer",
+        "LLM"
+      ],
+      "aliases": [
+        "Copilot"
+      ],
+      "alternatives": [
+        "cursor",
+        "continue"
+      ]
+    },
+    {
+      "slug": "cursor",
+      "name": "Cursor",
+      "shortDescription": "An AI-first code editor built on the VS Code foundation.",
+      "description": "Cursor is a code editor with AI completion, chat and multi-file editing built in. It supports VS Code extensions and offers a free tier with paid plans.",
+      "website": "https://cursor.com",
+      "developer": "Anysphere",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "ai-coding-tools",
+        "code-editors"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "code-completion",
+        "chat-interface",
+        "git-integration",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Developer",
+        "LLM"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "github-copilot",
+        "continue",
+        "vscode",
+        "vscodium",
+        "sublime-text"
+      ]
+    },
+    {
+      "slug": "continue",
+      "name": "Continue",
+      "shortDescription": "Open-source AI code assistant extension for VS Code and JetBrains.",
+      "description": "Continue is an open-source extension that adds chat, autocomplete and editing powered by the model of your choice, including local models, to VS Code and JetBrains IDEs.",
+      "website": "https://www.continue.dev",
+      "developer": "Continue",
+      "pricing": [
+        "free"
+      ],
+      "license": "apache-2-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "ai-coding-tools"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "code-completion",
+        "chat-interface",
+        "local-ai-models"
+      ],
+      "tags": [
+        "Developer",
+        "LLM",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "github-copilot",
+        "cursor"
+      ]
+    },
+    {
+      "slug": "notion",
+      "name": "Notion",
+      "shortDescription": "All-in-one workspace for notes, docs, wikis and lightweight databases.",
+      "description": "Notion combines pages, wikis, task boards and relational databases in one collaborative workspace. Teams use it for documentation and planning; a free plan is available.",
+      "website": "https://www.notion.com",
+      "developer": "Notion Labs",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 82,
+      "categories": [
+        "note-taking",
+        "project-management"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "real-time-collaboration",
+        "templates",
+        "structured-databases",
+        "kanban-boards",
+        "backlinks",
+        "cross-device-sync",
+        "api-access",
+        "version-history"
+      ],
+      "tags": [
+        "Wiki",
+        "Knowledge base"
+      ],
+      "aliases": [
+        "Notion.so"
+      ],
+      "alternatives": [
+        "obsidian",
+        "joplin",
+        "logseq",
+        "evernote",
+        "standard-notes",
+        "appflowy",
+        "trello",
+        "asana",
+        "clickup",
+        "plane",
+        "openproject",
+        "google-docs"
+      ]
+    },
+    {
+      "slug": "obsidian",
+      "name": "Obsidian",
+      "shortDescription": "Local-first Markdown knowledge base with backlinks and a large plugin ecosystem.",
+      "description": "Obsidian stores notes as plain Markdown files on your device and links them together with backlinks and a graph view. The app is free; sync and publishing are paid add-ons.",
+      "website": "https://obsidian.md",
+      "developer": "Dynalist Inc.",
+      "pricing": [
+        "freemium"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 80,
+      "categories": [
+        "note-taking"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "markdown-support",
+        "offline-mode",
+        "backlinks",
+        "graph-view",
+        "plugins-and-extensions",
+        "templates",
+        "cross-device-sync"
+      ],
+      "tags": [
+        "Knowledge base",
+        "Local-first",
+        "PKM"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "notion",
+        "joplin",
+        "logseq",
+        "evernote",
+        "standard-notes",
+        "appflowy"
+      ]
+    },
+    {
+      "slug": "joplin",
+      "name": "Joplin",
+      "shortDescription": "Open-source note-taking app with Markdown and end-to-end encrypted sync.",
+      "description": "Joplin organises notes into notebooks using Markdown and can sync through Joplin Cloud, Dropbox, OneDrive, WebDAV or a self-hosted Joplin Server, with optional end-to-end encryption.",
+      "website": "https://joplinapp.org",
+      "developer": "Laurent Cozic",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "note-taking"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "markdown-support",
+        "offline-mode",
+        "end-to-end-encryption",
+        "cross-device-sync",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Open source",
+        "Evernote alternative"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "notion",
+        "obsidian",
+        "logseq",
+        "evernote",
+        "standard-notes",
+        "appflowy"
+      ]
+    },
+    {
+      "slug": "logseq",
+      "name": "Logseq",
+      "shortDescription": "Open-source outliner for networked notes and journals stored as local files.",
+      "description": "Logseq is a privacy-first outliner where every block can be linked and referenced. Notes are stored locally as Markdown or Org files and visualised in a graph.",
+      "website": "https://logseq.com",
+      "developer": "Logseq",
+      "pricing": [
+        "free"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 66,
+      "categories": [
+        "note-taking"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "markdown-support",
+        "offline-mode",
+        "backlinks",
+        "graph-view",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Outliner",
+        "PKM",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "notion",
+        "obsidian",
+        "joplin",
+        "evernote",
+        "standard-notes",
+        "appflowy"
+      ]
+    },
+    {
+      "slug": "evernote",
+      "name": "Evernote",
+      "shortDescription": "Long-running note-taking app with web clipping, notebooks and search.",
+      "description": "Evernote captures notes, web clippings, documents and images into searchable notebooks synced across devices, with a limited free plan and paid tiers.",
+      "website": "https://evernote.com",
+      "developer": "Bending Spoons",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 55,
+      "categories": [
+        "note-taking"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "cross-device-sync",
+        "templates"
+      ],
+      "tags": [
+        "Web clipper"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "notion",
+        "obsidian",
+        "joplin",
+        "logseq",
+        "standard-notes",
+        "appflowy"
+      ]
+    },
+    {
+      "slug": "standard-notes",
+      "name": "Standard Notes",
+      "shortDescription": "End-to-end encrypted notes app focused on privacy and longevity.",
+      "description": "Standard Notes encrypts every note end-to-end and syncs across devices. The server can be self-hosted, and paid plans unlock extra editors and storage.",
+      "website": "https://standardnotes.com",
+      "developer": "Standard Notes",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "note-taking"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "end-to-end-encryption",
+        "cross-device-sync",
+        "markdown-support",
+        "offline-mode"
+      ],
+      "tags": [
+        "Encrypted",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "notion",
+        "obsidian",
+        "joplin",
+        "logseq",
+        "evernote",
+        "appflowy"
+      ]
+    },
+    {
+      "slug": "appflowy",
+      "name": "AppFlowy",
+      "shortDescription": "Open-source, self-hostable workspace for docs, wikis and databases.",
+      "description": "AppFlowy offers Notion-style documents, boards and grid databases. It is open source, works offline and can be self-hosted, with an optional paid cloud.",
+      "website": "https://appflowy.com",
+      "developer": "AppFlowy",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 64,
+      "categories": [
+        "note-taking",
+        "project-management"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "structured-databases",
+        "kanban-boards",
+        "offline-mode",
+        "real-time-collaboration",
+        "templates"
+      ],
+      "tags": [
+        "Open source",
+        "Notion alternative"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "notion",
+        "obsidian",
+        "joplin",
+        "logseq",
+        "evernote",
+        "standard-notes"
+      ]
+    },
+    {
+      "slug": "trello",
+      "name": "Trello",
+      "shortDescription": "Visual Kanban boards for organising tasks and projects.",
+      "description": "Trello organises work into boards, lists and cards that teams move through stages. Power-Ups add integrations; a free plan is available.",
+      "website": "https://trello.com",
+      "developer": "Atlassian",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "project-management"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "kanban-boards",
+        "real-time-collaboration",
+        "templates",
+        "plugins-and-extensions",
+        "workflow-automation"
+      ],
+      "tags": [
+        "Kanban"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "asana",
+        "clickup",
+        "plane",
+        "openproject",
+        "notion"
+      ]
+    },
+    {
+      "slug": "asana",
+      "name": "Asana",
+      "shortDescription": "Work management platform for tasks, projects, timelines and portfolios.",
+      "description": "Asana helps teams plan projects with lists, boards, timelines and goals, and automate routine work with rules. A free plan covers small teams.",
+      "website": "https://asana.com",
+      "developer": "Asana",
+      "pricing": [
+        "freemium",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "project-management"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "kanban-boards",
+        "gantt-charts",
+        "real-time-collaboration",
+        "templates",
+        "workflow-automation",
+        "api-access"
+      ],
+      "tags": [
+        "Task management"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "trello",
+        "clickup",
+        "plane",
+        "openproject",
+        "notion"
+      ]
+    },
+    {
+      "slug": "clickup",
+      "name": "ClickUp",
+      "shortDescription": "All-in-one productivity platform with tasks, docs, goals and whiteboards.",
+      "description": "ClickUp combines task management with docs, chat, whiteboards and dashboards and offers many views including list, board and Gantt. A free plan is available.",
+      "website": "https://clickup.com",
+      "developer": "ClickUp",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 65,
+      "categories": [
+        "project-management"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "kanban-boards",
+        "gantt-charts",
+        "real-time-collaboration",
+        "templates",
+        "workflow-automation",
+        "dashboards"
+      ],
+      "tags": [
+        "Task management"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "trello",
+        "asana",
+        "plane",
+        "openproject",
+        "notion"
+      ]
+    },
+    {
+      "slug": "plane",
+      "name": "Plane",
+      "shortDescription": "Open-source project tracking for issues, cycles and roadmaps.",
+      "description": "Plane is an open-source alternative to tools like Jira and Linear with issues, cycles, modules and multiple layouts. It can be self-hosted with Docker or used in the cloud.",
+      "website": "https://plane.so",
+      "developer": "Plane Software",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "project-management"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "kanban-boards",
+        "gantt-charts",
+        "real-time-collaboration",
+        "api-access"
+      ],
+      "tags": [
+        "Issue tracking",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "trello",
+        "asana",
+        "clickup",
+        "openproject",
+        "notion"
+      ]
+    },
+    {
+      "slug": "openproject",
+      "name": "OpenProject",
+      "shortDescription": "Open-source project management with Gantt charts, work packages and agile boards.",
+      "description": "OpenProject supports classic, agile and hybrid project management, including Gantt charts, time tracking and boards. The Community edition is free to self-host.",
+      "website": "https://www.openproject.org",
+      "developer": "OpenProject GmbH",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 58,
+      "categories": [
+        "project-management"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "gantt-charts",
+        "kanban-boards",
+        "api-access"
+      ],
+      "tags": [
+        "Open source",
+        "Self-hosted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "trello",
+        "asana",
+        "clickup",
+        "plane",
+        "notion"
+      ]
+    },
+    {
+      "slug": "figma",
+      "name": "Figma",
+      "shortDescription": "Collaborative interface design and prototyping tool in the browser.",
+      "description": "Figma is a vector design tool for UI and product design with real-time multiplayer editing, prototyping and a plugin ecosystem. It runs in the browser and as a desktop app.",
+      "website": "https://www.figma.com",
+      "developer": "Figma",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 82,
+      "categories": [
+        "graphic-design"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos"
+      ],
+      "features": [
+        "vector-editing",
+        "prototyping",
+        "real-time-collaboration",
+        "plugins-and-extensions",
+        "version-history"
+      ],
+      "tags": [
+        "UI design",
+        "Prototyping"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "penpot",
+        "sketch",
+        "canva",
+        "inkscape"
+      ]
+    },
+    {
+      "slug": "penpot",
+      "name": "Penpot",
+      "shortDescription": "Open-source design and prototyping platform built on open web standards.",
+      "description": "Penpot is a browser-based design and prototyping tool that uses SVG as its native format. Teams can use the hosted service or self-host it with Docker.",
+      "website": "https://penpot.app",
+      "developer": "Kaleidos",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "mpl-2-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 68,
+      "categories": [
+        "graphic-design"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "vector-editing",
+        "prototyping",
+        "real-time-collaboration",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "UI design",
+        "Open source",
+        "Figma alternative"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "figma",
+        "sketch",
+        "canva",
+        "inkscape"
+      ]
+    },
+    {
+      "slug": "inkscape",
+      "name": "Inkscape",
+      "shortDescription": "Free and open-source vector graphics editor for illustration and SVG.",
+      "description": "Inkscape is a professional vector graphics editor that uses SVG as its native format, suited to illustrations, diagrams, logos and print layouts.",
+      "website": "https://inkscape.org",
+      "developer": "Inkscape Project",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-2-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 66,
+      "categories": [
+        "graphic-design"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "vector-editing",
+        "layers",
+        "plugins-and-extensions",
+        "offline-mode"
+      ],
+      "tags": [
+        "SVG",
+        "Illustration",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "figma",
+        "penpot",
+        "sketch",
+        "canva"
+      ]
+    },
+    {
+      "slug": "canva",
+      "name": "Canva",
+      "shortDescription": "Online design platform with templates for social posts, presentations and print.",
+      "description": "Canva provides drag-and-drop design with a large template library for social media, presentations, documents and marketing materials. A free plan is available.",
+      "website": "https://www.canva.com",
+      "developer": "Canva",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 74,
+      "categories": [
+        "graphic-design"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "templates",
+        "real-time-collaboration",
+        "image-generation"
+      ],
+      "tags": [
+        "Social media",
+        "Templates"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "figma",
+        "penpot",
+        "sketch",
+        "inkscape"
+      ]
+    },
+    {
+      "slug": "sketch",
+      "name": "Sketch",
+      "shortDescription": "Native macOS design tool for interfaces, icons and prototypes.",
+      "description": "Sketch is a vector design app for macOS focused on UI and icon design, with symbols, prototyping, a web app for collaboration and a plugin ecosystem.",
+      "website": "https://www.sketch.com",
+      "developer": "Sketch B.V.",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 58,
+      "categories": [
+        "graphic-design"
+      ],
+      "platforms": [
+        "macos"
+      ],
+      "features": [
+        "vector-editing",
+        "prototyping",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "UI design",
+        "Mac"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "figma",
+        "penpot",
+        "canva",
+        "inkscape"
+      ]
+    },
+    {
+      "slug": "krita",
+      "name": "Krita",
+      "shortDescription": "Free and open-source digital painting application.",
+      "description": "Krita is a painting program made by artists for concept art, illustration, comics and textures, with brush engines, layers and animation tools.",
+      "website": "https://krita.org",
+      "developer": "Krita Foundation",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 64,
+      "categories": [
+        "graphic-design",
+        "photo-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android"
+      ],
+      "features": [
+        "layers",
+        "plugins-and-extensions",
+        "offline-mode"
+      ],
+      "tags": [
+        "Digital painting",
+        "Illustration",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "photoshop",
+        "gimp",
+        "photopea",
+        "darktable"
+      ]
+    },
+    {
+      "slug": "photoshop",
+      "name": "Adobe Photoshop",
+      "shortDescription": "Industry-standard raster image editor for photography and design.",
+      "description": "Photoshop is Adobe's image editor for retouching, compositing and graphic design, with layers, masks, Camera Raw and generative tools. It is sold by subscription.",
+      "website": "https://www.adobe.com/products/photoshop.html",
+      "developer": "Adobe",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 80,
+      "categories": [
+        "photo-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "ipados",
+        "web"
+      ],
+      "features": [
+        "layers",
+        "raw-photo-editing",
+        "non-destructive-editing",
+        "plugins-and-extensions",
+        "image-generation",
+        "psd-file-support"
+      ],
+      "tags": [
+        "Image editing",
+        "Adobe"
+      ],
+      "aliases": [
+        "Photoshop",
+        "PS"
+      ],
+      "alternatives": [
+        "gimp",
+        "photopea",
+        "krita",
+        "darktable"
+      ]
+    },
+    {
+      "slug": "gimp",
+      "name": "GIMP",
+      "shortDescription": "Free and open-source raster image editor.",
+      "description": "GIMP (GNU Image Manipulation Program) is a cross-platform image editor for retouching, composition and authoring, extensible with plugins and scripts.",
+      "website": "https://www.gimp.org",
+      "developer": "The GIMP Team",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "photo-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "layers",
+        "non-destructive-editing",
+        "plugins-and-extensions",
+        "psd-file-support",
+        "offline-mode"
+      ],
+      "tags": [
+        "Image editing",
+        "Open source"
+      ],
+      "aliases": [
+        "GNU Image Manipulation Program"
+      ],
+      "alternatives": [
+        "photoshop",
+        "photopea",
+        "krita",
+        "darktable"
+      ]
+    },
+    {
+      "slug": "photopea",
+      "name": "Photopea",
+      "shortDescription": "Browser-based image editor that opens PSD, XCF and Sketch files.",
+      "description": "Photopea is an online image editor with a Photoshop-like interface. It runs entirely in the browser, supports layered PSD files and is free with ads or ad-free with a premium account.",
+      "website": "https://www.photopea.com",
+      "developer": "Ivan Kutskir",
+      "pricing": [
+        "freemium"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 64,
+      "categories": [
+        "photo-editing"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "layers",
+        "psd-file-support"
+      ],
+      "tags": [
+        "Image editing",
+        "Online"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "photoshop",
+        "gimp",
+        "krita",
+        "darktable"
+      ]
+    },
+    {
+      "slug": "darktable",
+      "name": "darktable",
+      "shortDescription": "Open-source RAW photo developer and photography workflow app.",
+      "description": "darktable manages digital negatives in a database and lets you develop RAW photos with a non-destructive editing pipeline.",
+      "website": "https://www.darktable.org",
+      "developer": "darktable",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "photo-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "raw-photo-editing",
+        "non-destructive-editing",
+        "offline-mode"
+      ],
+      "tags": [
+        "Photography",
+        "RAW",
+        "Open source",
+        "Lightroom alternative"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "photoshop",
+        "gimp",
+        "photopea",
+        "krita"
+      ]
+    },
+    {
+      "slug": "davinci-resolve",
+      "name": "DaVinci Resolve",
+      "shortDescription": "Professional editing, color grading, VFX and audio post-production in one app.",
+      "description": "DaVinci Resolve by Blackmagic Design combines editing, colour correction, visual effects and audio post-production. A capable free version is available; Resolve Studio is a one-time purchase.",
+      "website": "https://www.blackmagicdesign.com/products/davinciresolve",
+      "developer": "Blackmagic Design",
+      "pricing": [
+        "freemium",
+        "one-time-purchase"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 78,
+      "categories": [
+        "video-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "ipados"
+      ],
+      "features": [
+        "multi-track-timeline",
+        "color-grading",
+        "offline-mode"
+      ],
+      "tags": [
+        "Video",
+        "Color grading"
+      ],
+      "aliases": [
+        "Resolve"
+      ],
+      "alternatives": [
+        "premiere-pro",
+        "kdenlive",
+        "shotcut",
+        "openshot",
+        "capcut"
+      ]
+    },
+    {
+      "slug": "premiere-pro",
+      "name": "Adobe Premiere Pro",
+      "shortDescription": "Professional non-linear video editor by Adobe.",
+      "description": "Premiere Pro is Adobe's timeline-based video editor used in film, TV and online video, integrated with After Effects and other Creative Cloud apps.",
+      "website": "https://www.adobe.com/products/premiere.html",
+      "developer": "Adobe",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 75,
+      "categories": [
+        "video-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos"
+      ],
+      "features": [
+        "multi-track-timeline",
+        "color-grading",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Video",
+        "Adobe"
+      ],
+      "aliases": [
+        "Premiere"
+      ],
+      "alternatives": [
+        "davinci-resolve",
+        "kdenlive",
+        "shotcut",
+        "openshot",
+        "capcut"
+      ]
+    },
+    {
+      "slug": "kdenlive",
+      "name": "Kdenlive",
+      "shortDescription": "Open-source non-linear video editor from the KDE community.",
+      "description": "Kdenlive is a multi-track video editor supporting many formats, effects, transitions and proxy editing.",
+      "website": "https://kdenlive.org",
+      "developer": "KDE",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "video-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "multi-track-timeline",
+        "offline-mode"
+      ],
+      "tags": [
+        "Video",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "davinci-resolve",
+        "premiere-pro",
+        "shotcut",
+        "openshot",
+        "capcut"
+      ]
+    },
+    {
+      "slug": "shotcut",
+      "name": "Shotcut",
+      "shortDescription": "Free, open-source, cross-platform video editor.",
+      "description": "Shotcut is a video editor built on the MLT framework with wide format support, native timeline editing and a range of filters.",
+      "website": "https://shotcut.org",
+      "developer": "Meltytech",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 58,
+      "categories": [
+        "video-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "multi-track-timeline",
+        "offline-mode"
+      ],
+      "tags": [
+        "Video",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "davinci-resolve",
+        "premiere-pro",
+        "kdenlive",
+        "openshot",
+        "capcut"
+      ]
+    },
+    {
+      "slug": "openshot",
+      "name": "OpenShot",
+      "shortDescription": "Simple open-source video editor for beginners.",
+      "description": "OpenShot is an easy-to-use video editor with drag-and-drop, unlimited tracks, transitions and title templates.",
+      "website": "https://www.openshot.org",
+      "developer": "OpenShot Studios",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 52,
+      "categories": [
+        "video-editing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "multi-track-timeline",
+        "offline-mode",
+        "templates"
+      ],
+      "tags": [
+        "Video",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "davinci-resolve",
+        "premiere-pro",
+        "kdenlive",
+        "shotcut",
+        "capcut"
+      ]
+    },
+    {
+      "slug": "capcut",
+      "name": "CapCut",
+      "shortDescription": "Template-driven video editor for short-form social video.",
+      "description": "CapCut is a video editor from ByteDance aimed at social video, with templates, auto captions and effects across mobile, desktop and web. Core features are free with a paid Pro plan.",
+      "website": "https://www.capcut.com",
+      "developer": "ByteDance",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-editing"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "templates",
+        "multi-track-timeline"
+      ],
+      "tags": [
+        "Video",
+        "Social media"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "davinci-resolve",
+        "premiere-pro",
+        "kdenlive",
+        "shotcut",
+        "openshot"
+      ]
+    },
+    {
+      "slug": "bitwarden",
+      "name": "Bitwarden",
+      "shortDescription": "Open-source password manager with end-to-end encryption and self-hosting.",
+      "description": "Bitwarden stores passwords, passkeys and notes in an end-to-end encrypted vault available on every major platform. The free plan includes unlimited devices; the server can be self-hosted.",
+      "website": "https://bitwarden.com",
+      "developer": "Bitwarden Inc.",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 82,
+      "categories": [
+        "password-managers"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "browser-extension",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "end-to-end-encryption",
+        "password-generator",
+        "autofill",
+        "totp-authenticator",
+        "cross-device-sync"
+      ],
+      "tags": [
+        "Open source",
+        "Security"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "1password",
+        "keepassxc",
+        "proton-pass"
+      ]
+    },
+    {
+      "slug": "1password",
+      "name": "1Password",
+      "shortDescription": "Password manager for individuals, families and businesses.",
+      "description": "1Password keeps passwords, passkeys and sensitive documents in an end-to-end encrypted vault with autofill on desktop, mobile and the browser. It is subscription-based with a free trial.",
+      "website": "https://1password.com",
+      "developer": "AgileBits",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 76,
+      "categories": [
+        "password-managers"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "browser-extension"
+      ],
+      "features": [
+        "end-to-end-encryption",
+        "password-generator",
+        "autofill",
+        "totp-authenticator",
+        "cross-device-sync"
+      ],
+      "tags": [
+        "Security"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "bitwarden",
+        "keepassxc",
+        "proton-pass"
+      ]
+    },
+    {
+      "slug": "keepassxc",
+      "name": "KeePassXC",
+      "shortDescription": "Offline, open-source password manager storing an encrypted local database.",
+      "description": "KeePassXC is a community fork of KeePassX that keeps passwords in an encrypted KDBX file on your device. It works offline, integrates with browsers and can generate TOTP codes.",
+      "website": "https://keepassxc.org",
+      "developer": "KeePassXC Team",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 68,
+      "categories": [
+        "password-managers"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "browser-extension"
+      ],
+      "features": [
+        "password-generator",
+        "autofill",
+        "totp-authenticator",
+        "offline-mode"
+      ],
+      "tags": [
+        "Open source",
+        "Security",
+        "KeePass"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "bitwarden",
+        "1password",
+        "proton-pass"
+      ]
+    },
+    {
+      "slug": "proton-pass",
+      "name": "Proton Pass",
+      "shortDescription": "End-to-end encrypted password manager from the makers of Proton Mail.",
+      "description": "Proton Pass stores logins, passkeys and notes with end-to-end encryption and offers hide-my-email aliases. Apps are open source; a free plan is available.",
+      "website": "https://proton.me/pass",
+      "developer": "Proton AG",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 66,
+      "categories": [
+        "password-managers"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "browser-extension"
+      ],
+      "features": [
+        "end-to-end-encryption",
+        "password-generator",
+        "autofill",
+        "totp-authenticator",
+        "cross-device-sync"
+      ],
+      "tags": [
+        "Security",
+        "Privacy",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "bitwarden",
+        "1password",
+        "keepassxc"
+      ]
+    },
+    {
+      "slug": "firefox",
+      "name": "Mozilla Firefox",
+      "shortDescription": "Independent open-source web browser with built-in tracking protection.",
+      "description": "Firefox is developed by Mozilla on its own Gecko engine. It includes Enhanced Tracking Protection, sync across devices and a large add-on catalogue.",
+      "website": "https://www.mozilla.org/firefox/",
+      "developer": "Mozilla",
+      "pricing": [
+        "free"
+      ],
+      "license": "mpl-2-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": "2004-11-09",
+      "editorialScore": 78,
+      "categories": [
+        "web-browsers"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "tracking-protection",
+        "cross-device-sync",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Open source",
+        "Privacy"
+      ],
+      "aliases": [
+        "Firefox"
+      ],
+      "alternatives": [
+        "chrome",
+        "brave",
+        "vivaldi"
+      ]
+    },
+    {
+      "slug": "chrome",
+      "name": "Google Chrome",
+      "shortDescription": "Google's Chromium-based web browser.",
+      "description": "Chrome is Google's web browser built on the open-source Chromium project, with sync through a Google account and the Chrome Web Store for extensions.",
+      "website": "https://www.google.com/chrome/",
+      "developer": "Google",
+      "pricing": [
+        "free"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": "2008-09-02",
+      "editorialScore": 72,
+      "categories": [
+        "web-browsers"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "cross-device-sync",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Chromium"
+      ],
+      "aliases": [
+        "Chrome"
+      ],
+      "alternatives": [
+        "firefox",
+        "brave",
+        "vivaldi"
+      ]
+    },
+    {
+      "slug": "brave",
+      "name": "Brave",
+      "shortDescription": "Chromium-based browser that blocks ads and trackers by default.",
+      "description": "Brave is an open-source browser built on Chromium with built-in ad and tracker blocking (Brave Shields) and support for Chrome extensions.",
+      "website": "https://brave.com",
+      "developer": "Brave Software",
+      "pricing": [
+        "free"
+      ],
+      "license": "mpl-2-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": "2019-11-13",
+      "editorialScore": 72,
+      "categories": [
+        "web-browsers"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "built-in-ad-blocking",
+        "tracking-protection",
+        "cross-device-sync",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Privacy",
+        "Chromium",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "firefox",
+        "chrome",
+        "vivaldi"
+      ]
+    },
+    {
+      "slug": "vivaldi",
+      "name": "Vivaldi",
+      "shortDescription": "Highly customisable browser with built-in tools like mail, calendar and tab stacking.",
+      "description": "Vivaldi is a Chromium-based browser focused on customisation, with tab stacking, a built-in ad and tracker blocker, mail client and notes.",
+      "website": "https://vivaldi.com",
+      "developer": "Vivaldi Technologies",
+      "pricing": [
+        "free"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "web-browsers"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "built-in-ad-blocking",
+        "tracking-protection",
+        "cross-device-sync",
+        "plugins-and-extensions"
+      ],
+      "tags": [
+        "Chromium",
+        "Customisation"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "firefox",
+        "chrome",
+        "brave"
+      ]
+    },
+    {
+      "slug": "vscode",
+      "name": "Visual Studio Code",
+      "shortDescription": "Free code editor from Microsoft with a huge extension marketplace.",
+      "description": "Visual Studio Code is a lightweight, extensible source-code editor with debugging, Git integration, IntelliSense and thousands of extensions. It runs on desktop and in the browser.",
+      "website": "https://code.visualstudio.com",
+      "developer": "Microsoft",
+      "pricing": [
+        "free"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 85,
+      "categories": [
+        "code-editors"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "web"
+      ],
+      "features": [
+        "plugins-and-extensions",
+        "git-integration",
+        "debugger",
+        "code-completion"
+      ],
+      "tags": [
+        "IDE",
+        "Developer"
+      ],
+      "aliases": [
+        "VS Code",
+        "VSCode"
+      ],
+      "alternatives": [
+        "vscodium",
+        "sublime-text",
+        "cursor"
+      ]
+    },
+    {
+      "slug": "vscodium",
+      "name": "VSCodium",
+      "shortDescription": "Community-built, telemetry-free binaries of the open-source VS Code project.",
+      "description": "VSCodium distributes builds of Microsoft's MIT-licensed VS Code source without Microsoft branding and telemetry, using the Open VSX extension registry.",
+      "website": "https://vscodium.com",
+      "developer": "VSCodium community",
+      "pricing": [
+        "free"
+      ],
+      "license": "mit",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "code-editors"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "plugins-and-extensions",
+        "git-integration",
+        "debugger"
+      ],
+      "tags": [
+        "IDE",
+        "Developer",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "vscode",
+        "sublime-text",
+        "cursor"
+      ]
+    },
+    {
+      "slug": "sublime-text",
+      "name": "Sublime Text",
+      "shortDescription": "Fast, sophisticated text editor for code and prose.",
+      "description": "Sublime Text is a cross-platform text editor known for speed, multiple selections and a command palette. It can be evaluated for free and requires a one-time licence for continued use.",
+      "website": "https://www.sublimetext.com",
+      "developer": "Sublime HQ",
+      "pricing": [
+        "paid",
+        "one-time-purchase",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 58,
+      "categories": [
+        "code-editors"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "plugins-and-extensions",
+        "offline-mode"
+      ],
+      "tags": [
+        "Developer"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "vscode",
+        "vscodium",
+        "cursor"
+      ]
+    },
+    {
+      "slug": "postgresql",
+      "name": "PostgreSQL",
+      "shortDescription": "Powerful open-source object-relational database system.",
+      "description": "PostgreSQL is an advanced open-source relational database with strong standards compliance, extensibility, JSON support and a large extension ecosystem.",
+      "website": "https://www.postgresql.org",
+      "developer": "PostgreSQL Global Development Group",
+      "pricing": [
+        "free"
+      ],
+      "license": "postgresql",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 82,
+      "categories": [
+        "databases"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "sql-editor"
+      ],
+      "tags": [
+        "SQL",
+        "Open source",
+        "RDBMS"
+      ],
+      "aliases": [
+        "Postgres"
+      ],
+      "alternatives": [
+        "mysql",
+        "mongodb",
+        "sqlite"
+      ]
+    },
+    {
+      "slug": "mysql",
+      "name": "MySQL",
+      "shortDescription": "Widely used open-source relational database by Oracle.",
+      "description": "MySQL is a popular relational database available as a free Community Edition under the GPL and commercial editions from Oracle.",
+      "website": "https://www.mysql.com",
+      "developer": "Oracle",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "gpl-2-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "databases"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "sql-editor"
+      ],
+      "tags": [
+        "SQL",
+        "RDBMS"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "postgresql",
+        "mongodb",
+        "sqlite"
+      ]
+    },
+    {
+      "slug": "mongodb",
+      "name": "MongoDB",
+      "shortDescription": "Document database storing data as flexible JSON-like documents.",
+      "description": "MongoDB is a document-oriented database. The Community Server is free under the SSPL, and MongoDB Atlas is a managed cloud service with a free tier.",
+      "website": "https://www.mongodb.com",
+      "developer": "MongoDB Inc.",
+      "pricing": [
+        "freemium"
+      ],
+      "license": "sspl",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 66,
+      "categories": [
+        "databases"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "self-hosted",
+        "docker",
+        "web"
+      ],
+      "features": [
+        "api-access"
+      ],
+      "tags": [
+        "NoSQL",
+        "Document database"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "postgresql",
+        "mysql",
+        "sqlite"
+      ]
+    },
+    {
+      "slug": "sqlite",
+      "name": "SQLite",
+      "shortDescription": "Small, fast, self-contained, embedded SQL database engine.",
+      "description": "SQLite is a serverless SQL database engine stored in a single file. It is in the public domain and embedded in countless applications and devices.",
+      "website": "https://www.sqlite.org",
+      "developer": "SQLite Consortium",
+      "pricing": [
+        "free"
+      ],
+      "license": "public-domain",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "databases"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "sql-editor",
+        "offline-mode"
+      ],
+      "tags": [
+        "SQL",
+        "Embedded"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "postgresql",
+        "mysql",
+        "mongodb"
+      ]
+    },
+    {
+      "slug": "dbeaver",
+      "name": "DBeaver",
+      "shortDescription": "Universal database client for SQL and NoSQL databases.",
+      "description": "DBeaver is a cross-platform database tool supporting many databases via JDBC. The Community edition is open source; commercial editions add NoSQL and cloud features.",
+      "website": "https://dbeaver.io",
+      "developer": "DBeaver Corp",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "apache-2-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "databases"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "sql-editor"
+      ],
+      "tags": [
+        "Database client",
+        "SQL"
+      ],
+      "aliases": [],
+      "alternatives": []
+    },
+    {
+      "slug": "slack",
+      "name": "Slack",
+      "shortDescription": "Team messaging organised into channels with integrations and huddles.",
+      "description": "Slack brings team conversations into channels and threads, with file sharing, audio and video huddles and thousands of integrations. A limited free plan is available.",
+      "website": "https://slack.com",
+      "developer": "Salesforce",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 76,
+      "categories": [
+        "communication"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "threads",
+        "video-calls",
+        "screen-sharing",
+        "file-sharing",
+        "api-access"
+      ],
+      "tags": [
+        "Team chat"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "discord",
+        "microsoft-teams",
+        "mattermost",
+        "element"
+      ]
+    },
+    {
+      "slug": "discord",
+      "name": "Discord",
+      "shortDescription": "Voice, video and text chat for communities and friends.",
+      "description": "Discord organises communities into servers with text channels, voice channels and video calls. It is free to use, with an optional Nitro subscription.",
+      "website": "https://discord.com",
+      "developer": "Discord Inc.",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "communication"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "threads",
+        "video-calls",
+        "screen-sharing",
+        "file-sharing"
+      ],
+      "tags": [
+        "Community",
+        "Voice chat"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "slack",
+        "microsoft-teams",
+        "mattermost",
+        "element"
+      ]
+    },
+    {
+      "slug": "microsoft-teams",
+      "name": "Microsoft Teams",
+      "shortDescription": "Chat, meetings and collaboration in Microsoft 365.",
+      "description": "Microsoft Teams combines chat, video meetings, file collaboration and integrations with Microsoft 365 apps. A free version is available for personal use.",
+      "website": "https://www.microsoft.com/microsoft-teams",
+      "developer": "Microsoft",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 66,
+      "categories": [
+        "communication"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "threads",
+        "video-calls",
+        "screen-sharing",
+        "file-sharing"
+      ],
+      "tags": [
+        "Team chat",
+        "Meetings"
+      ],
+      "aliases": [
+        "Teams",
+        "MS Teams"
+      ],
+      "alternatives": [
+        "slack",
+        "discord",
+        "mattermost",
+        "element"
+      ]
+    },
+    {
+      "slug": "mattermost",
+      "name": "Mattermost",
+      "shortDescription": "Open-source, self-hostable team messaging and collaboration platform.",
+      "description": "Mattermost provides channel-based messaging, playbooks and integrations that organisations can self-host for control over their data.",
+      "website": "https://mattermost.com",
+      "developer": "Mattermost Inc.",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "communication"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "threads",
+        "file-sharing",
+        "api-access",
+        "video-calls"
+      ],
+      "tags": [
+        "Team chat",
+        "Open source",
+        "Slack alternative"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "slack",
+        "discord",
+        "microsoft-teams",
+        "element"
+      ]
+    },
+    {
+      "slug": "element",
+      "name": "Element",
+      "shortDescription": "Secure messaging and collaboration built on the open Matrix protocol.",
+      "description": "Element is a Matrix client offering end-to-end encrypted chat, voice and video. Users can join any Matrix homeserver or host their own.",
+      "website": "https://element.io",
+      "developer": "Element",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "communication"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "self-hosted"
+      ],
+      "features": [
+        "end-to-end-encryption",
+        "video-calls",
+        "threads",
+        "file-sharing"
+      ],
+      "tags": [
+        "Matrix",
+        "Open source",
+        "Encrypted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "slack",
+        "discord",
+        "microsoft-teams",
+        "mattermost",
+        "signal"
+      ]
+    },
+    {
+      "slug": "signal",
+      "name": "Signal",
+      "shortDescription": "Private messenger with end-to-end encryption for messages and calls.",
+      "description": "Signal is a non-profit, open-source messaging app using the Signal Protocol to end-to-end encrypt messages, voice and video calls by default.",
+      "website": "https://signal.org",
+      "developer": "Signal Foundation",
+      "pricing": [
+        "free"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 76,
+      "categories": [
+        "communication"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "end-to-end-encryption",
+        "video-calls",
+        "file-sharing"
+      ],
+      "tags": [
+        "Messaging",
+        "Encrypted",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "element"
+      ]
+    },
+    {
+      "slug": "dropbox",
+      "name": "Dropbox",
+      "shortDescription": "Cloud storage and file sync for individuals and teams.",
+      "description": "Dropbox syncs files across devices, shares folders and links, and keeps version history. A small free plan is available with paid tiers for more storage.",
+      "website": "https://www.dropbox.com",
+      "developer": "Dropbox Inc.",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "cloud-storage"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "file-sync",
+        "file-sharing",
+        "version-history"
+      ],
+      "tags": [
+        "Cloud"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-drive",
+        "nextcloud",
+        "proton-drive",
+        "syncthing"
+      ]
+    },
+    {
+      "slug": "google-drive",
+      "name": "Google Drive",
+      "shortDescription": "Cloud storage integrated with Google Docs, Sheets and Slides.",
+      "description": "Google Drive stores and syncs files and is the home for Google Docs, Sheets and Slides with real-time collaboration. Free storage is shared across Google services.",
+      "website": "https://drive.google.com",
+      "developer": "Google",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 74,
+      "categories": [
+        "cloud-storage"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "file-sync",
+        "file-sharing",
+        "real-time-collaboration",
+        "version-history"
+      ],
+      "tags": [
+        "Cloud"
+      ],
+      "aliases": [
+        "Drive"
+      ],
+      "alternatives": [
+        "dropbox",
+        "nextcloud",
+        "proton-drive",
+        "syncthing"
+      ]
+    },
+    {
+      "slug": "nextcloud",
+      "name": "Nextcloud",
+      "shortDescription": "Self-hosted content collaboration platform for files, calendars and more.",
+      "description": "Nextcloud lets organisations run their own file sync and share service with calendars, contacts, office editing and many apps, on their own servers.",
+      "website": "https://nextcloud.com",
+      "developer": "Nextcloud GmbH",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "cloud-storage"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "file-sync",
+        "file-sharing",
+        "version-history",
+        "real-time-collaboration",
+        "end-to-end-encryption"
+      ],
+      "tags": [
+        "Self-hosted",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "dropbox",
+        "google-drive",
+        "proton-drive",
+        "syncthing"
+      ]
+    },
+    {
+      "slug": "proton-drive",
+      "name": "Proton Drive",
+      "shortDescription": "End-to-end encrypted cloud storage from Proton.",
+      "description": "Proton Drive encrypts files end-to-end before they leave your device and syncs them across platforms. A free plan with limited storage is available.",
+      "website": "https://proton.me/drive",
+      "developer": "Proton AG",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "cloud-storage"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "end-to-end-encryption",
+        "file-sync",
+        "file-sharing",
+        "version-history"
+      ],
+      "tags": [
+        "Privacy",
+        "Encrypted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "dropbox",
+        "google-drive",
+        "nextcloud",
+        "syncthing"
+      ]
+    },
+    {
+      "slug": "syncthing",
+      "name": "Syncthing",
+      "shortDescription": "Open-source continuous file synchronisation between your own devices.",
+      "description": "Syncthing syncs folders directly between devices over encrypted connections without a central cloud server.",
+      "website": "https://syncthing.net",
+      "developer": "Syncthing Foundation",
+      "pricing": [
+        "free"
+      ],
+      "license": "mpl-2-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 64,
+      "categories": [
+        "cloud-storage"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "file-sync",
+        "offline-mode"
+      ],
+      "tags": [
+        "P2P",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "dropbox",
+        "google-drive",
+        "nextcloud",
+        "proton-drive"
+      ]
+    },
+    {
+      "slug": "zapier",
+      "name": "Zapier",
+      "shortDescription": "No-code automation connecting thousands of web apps.",
+      "description": "Zapier connects web apps through triggers and actions so routine tasks run automatically. A free plan covers simple automations.",
+      "website": "https://zapier.com",
+      "developer": "Zapier",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 74,
+      "categories": [
+        "automation"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "workflow-automation",
+        "api-access"
+      ],
+      "tags": [
+        "No-code",
+        "Integrations"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "make",
+        "n8n",
+        "node-red"
+      ]
+    },
+    {
+      "slug": "make",
+      "name": "Make",
+      "shortDescription": "Visual automation platform for building multi-step scenarios.",
+      "description": "Make (formerly Integromat) lets you design automation scenarios on a visual canvas with branching, iterators and error handling. A free plan is available.",
+      "website": "https://www.make.com",
+      "developer": "Celonis",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 66,
+      "categories": [
+        "automation"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "workflow-automation",
+        "visual-workflow-builder",
+        "api-access"
+      ],
+      "tags": [
+        "No-code",
+        "Integrations"
+      ],
+      "aliases": [
+        "Integromat"
+      ],
+      "alternatives": [
+        "zapier",
+        "n8n",
+        "node-red"
+      ]
+    },
+    {
+      "slug": "n8n",
+      "name": "n8n",
+      "shortDescription": "Fair-code workflow automation you can self-host.",
+      "description": "n8n is a node-based workflow automation tool that can be self-hosted or used in the cloud. Its source is available under the Sustainable Use License.",
+      "website": "https://n8n.io",
+      "developer": "n8n GmbH",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "source-available",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "automation"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "workflow-automation",
+        "visual-workflow-builder",
+        "api-access"
+      ],
+      "tags": [
+        "Self-hosted",
+        "Low-code"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "zapier",
+        "make",
+        "node-red"
+      ]
+    },
+    {
+      "slug": "node-red",
+      "name": "Node-RED",
+      "shortDescription": "Open-source flow-based programming tool for wiring together devices and APIs.",
+      "description": "Node-RED provides a browser-based editor to wire together flows from a palette of nodes. It runs on Node.js, including on low-cost hardware.",
+      "website": "https://nodered.org",
+      "developer": "OpenJS Foundation",
+      "pricing": [
+        "free"
+      ],
+      "license": "apache-2-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "automation"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "workflow-automation",
+        "visual-workflow-builder"
+      ],
+      "tags": [
+        "IoT",
+        "Low-code",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "zapier",
+        "make",
+        "n8n"
+      ]
+    },
+    {
+      "slug": "google-analytics",
+      "name": "Google Analytics",
+      "shortDescription": "Google's web and app analytics service.",
+      "description": "Google Analytics measures website and app traffic with event-based tracking, reports and audiences. The standard product is free; Analytics 360 is a paid enterprise tier.",
+      "website": "https://marketingplatform.google.com/about/analytics/",
+      "developer": "Google",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "analytics"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "event-tracking",
+        "dashboards"
+      ],
+      "tags": [
+        "Marketing"
+      ],
+      "aliases": [
+        "GA4",
+        "GA"
+      ],
+      "alternatives": [
+        "plausible",
+        "matomo",
+        "umami"
+      ]
+    },
+    {
+      "slug": "plausible",
+      "name": "Plausible Analytics",
+      "shortDescription": "Lightweight, privacy-friendly website analytics without cookies.",
+      "description": "Plausible is an open-source web analytics tool that does not use cookies and collects no personal data. It is offered as a paid cloud service or a self-hosted Community Edition.",
+      "website": "https://plausible.io",
+      "developer": "Plausible Insights",
+      "pricing": [
+        "subscription",
+        "free-trial"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "analytics"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "cookieless-tracking",
+        "dashboards",
+        "event-tracking",
+        "api-access"
+      ],
+      "tags": [
+        "Privacy",
+        "GDPR",
+        "Open source"
+      ],
+      "aliases": [
+        "Plausible"
+      ],
+      "alternatives": [
+        "google-analytics",
+        "matomo",
+        "umami"
+      ]
+    },
+    {
+      "slug": "matomo",
+      "name": "Matomo",
+      "shortDescription": "Open-source analytics platform that gives you full data ownership.",
+      "description": "Matomo (formerly Piwik) is a web analytics platform you can self-host for free or use in Matomo Cloud, with heatmaps and other premium plugins available.",
+      "website": "https://matomo.org",
+      "developer": "InnoCraft",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 66,
+      "categories": [
+        "analytics"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "event-tracking",
+        "dashboards",
+        "cookieless-tracking",
+        "api-access"
+      ],
+      "tags": [
+        "Privacy",
+        "GDPR",
+        "Open source"
+      ],
+      "aliases": [
+        "Piwik"
+      ],
+      "alternatives": [
+        "google-analytics",
+        "plausible",
+        "umami"
+      ]
+    },
+    {
+      "slug": "umami",
+      "name": "Umami",
+      "shortDescription": "Simple, open-source, privacy-focused website analytics.",
+      "description": "Umami is a lightweight analytics tool that does not use cookies. It can be self-hosted for free or used through Umami Cloud.",
+      "website": "https://umami.is",
+      "developer": "Umami Software",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "mit",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 64,
+      "categories": [
+        "analytics"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "cookieless-tracking",
+        "dashboards",
+        "event-tracking",
+        "api-access"
+      ],
+      "tags": [
+        "Privacy",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-analytics",
+        "plausible",
+        "matomo"
+      ]
+    },
+    {
+      "slug": "hubspot",
+      "name": "HubSpot CRM",
+      "shortDescription": "Free CRM with marketing, sales and service hubs on top.",
+      "description": "HubSpot CRM tracks contacts, companies and deals for free, with paid Marketing, Sales and Service Hubs adding automation and reporting.",
+      "website": "https://www.hubspot.com/products/crm",
+      "developer": "HubSpot",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "crm"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "contact-management",
+        "sales-pipeline",
+        "email-campaigns",
+        "api-access"
+      ],
+      "tags": [
+        "Sales",
+        "Marketing"
+      ],
+      "aliases": [
+        "HubSpot"
+      ],
+      "alternatives": [
+        "salesforce",
+        "twenty",
+        "suitecrm"
+      ]
+    },
+    {
+      "slug": "salesforce",
+      "name": "Salesforce Sales Cloud",
+      "shortDescription": "Enterprise CRM for sales teams.",
+      "description": "Salesforce Sales Cloud manages leads, opportunities and forecasts with extensive customisation and a large app marketplace. It is sold by subscription with a free trial.",
+      "website": "https://www.salesforce.com/sales/",
+      "developer": "Salesforce",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "crm"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "contact-management",
+        "sales-pipeline",
+        "dashboards",
+        "api-access",
+        "workflow-automation"
+      ],
+      "tags": [
+        "Sales",
+        "Enterprise"
+      ],
+      "aliases": [
+        "Salesforce",
+        "SFDC"
+      ],
+      "alternatives": [
+        "hubspot",
+        "twenty",
+        "suitecrm"
+      ]
+    },
+    {
+      "slug": "twenty",
+      "name": "Twenty",
+      "shortDescription": "Open-source CRM with a modern interface, self-hostable or in the cloud.",
+      "description": "Twenty is an open-source CRM for managing companies, people and opportunities with customisable objects and an API. It can be self-hosted with Docker.",
+      "website": "https://twenty.com",
+      "developer": "Twenty",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "crm"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "contact-management",
+        "sales-pipeline",
+        "api-access",
+        "kanban-boards"
+      ],
+      "tags": [
+        "Open source",
+        "Salesforce alternative"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "hubspot",
+        "salesforce",
+        "suitecrm"
+      ]
+    },
+    {
+      "slug": "suitecrm",
+      "name": "SuiteCRM",
+      "shortDescription": "Open-source CRM originally forked from SugarCRM.",
+      "description": "SuiteCRM is a self-hosted open-source CRM covering sales, marketing and customer service, with workflows and reporting.",
+      "website": "https://suitecrm.com",
+      "developer": "SalesAgility",
+      "pricing": [
+        "free"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 54,
+      "categories": [
+        "crm"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted"
+      ],
+      "features": [
+        "contact-management",
+        "sales-pipeline",
+        "workflow-automation",
+        "email-campaigns"
+      ],
+      "tags": [
+        "Open source",
+        "Self-hosted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "hubspot",
+        "salesforce",
+        "twenty"
+      ]
+    },
+    {
+      "slug": "mailchimp",
+      "name": "Mailchimp",
+      "shortDescription": "Email marketing and automation platform for small businesses.",
+      "description": "Mailchimp provides email campaigns, audience management, templates and marketing automation, with a limited free plan.",
+      "website": "https://mailchimp.com",
+      "developer": "Intuit",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 68,
+      "categories": [
+        "email-marketing"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "email-campaigns",
+        "templates",
+        "workflow-automation",
+        "dashboards"
+      ],
+      "tags": [
+        "Newsletter",
+        "Marketing"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "listmonk",
+        "ghost"
+      ]
+    },
+    {
+      "slug": "listmonk",
+      "name": "listmonk",
+      "shortDescription": "Self-hosted, high-performance newsletter and mailing list manager.",
+      "description": "listmonk is an open-source, single-binary newsletter and mailing list manager with templates, analytics and an API.",
+      "website": "https://listmonk.app",
+      "developer": "Kailash Nadh",
+      "pricing": [
+        "free"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "email-marketing"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "email-campaigns",
+        "newsletter-publishing",
+        "templates",
+        "api-access"
+      ],
+      "tags": [
+        "Newsletter",
+        "Open source",
+        "Self-hosted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "mailchimp",
+        "ghost"
+      ]
+    },
+    {
+      "slug": "wordpress",
+      "name": "WordPress",
+      "shortDescription": "Open-source CMS powering a large share of the web.",
+      "description": "WordPress is a free, open-source content management system for blogs and websites, extended with themes and plugins. It can be self-hosted or used via managed hosts.",
+      "website": "https://wordpress.org",
+      "developer": "WordPress community",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-2-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 78,
+      "categories": [
+        "website-builders"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "blogging",
+        "plugins-and-extensions",
+        "templates"
+      ],
+      "tags": [
+        "CMS",
+        "Open source"
+      ],
+      "aliases": [
+        "WP"
+      ],
+      "alternatives": [
+        "ghost",
+        "wix",
+        "webflow"
+      ]
+    },
+    {
+      "slug": "ghost",
+      "name": "Ghost",
+      "shortDescription": "Open-source publishing platform for blogs, newsletters and memberships.",
+      "description": "Ghost is a Node.js publishing platform with built-in newsletters and paid memberships. It can be self-hosted for free or run on Ghost(Pro).",
+      "website": "https://ghost.org",
+      "developer": "Ghost Foundation",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "mit",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 68,
+      "categories": [
+        "website-builders",
+        "email-marketing"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "blogging",
+        "newsletter-publishing",
+        "templates",
+        "api-access"
+      ],
+      "tags": [
+        "CMS",
+        "Newsletter",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "mailchimp",
+        "listmonk",
+        "wordpress",
+        "wix",
+        "webflow"
+      ]
+    },
+    {
+      "slug": "wix",
+      "name": "Wix",
+      "shortDescription": "Drag-and-drop website builder with hosting included.",
+      "description": "Wix lets you build websites from templates with a visual editor, and adds blogging, booking and online store features. A free plan shows Wix branding.",
+      "website": "https://www.wix.com",
+      "developer": "Wix.com",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "website-builders"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "visual-page-builder",
+        "templates",
+        "blogging"
+      ],
+      "tags": [
+        "No-code"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "wordpress",
+        "ghost",
+        "webflow"
+      ]
+    },
+    {
+      "slug": "webflow",
+      "name": "Webflow",
+      "shortDescription": "Visual web design platform that produces clean, production-ready sites.",
+      "description": "Webflow combines a visual designer with a CMS and hosting, aimed at designers who want control over layout and interactions without hand-coding.",
+      "website": "https://webflow.com",
+      "developer": "Webflow",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 64,
+      "categories": [
+        "website-builders"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "visual-page-builder",
+        "templates",
+        "blogging"
+      ],
+      "tags": [
+        "No-code",
+        "CMS"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "wordpress",
+        "ghost",
+        "wix"
+      ]
+    },
+    {
+      "slug": "libreoffice",
+      "name": "LibreOffice",
+      "shortDescription": "Free and open-source office suite.",
+      "description": "LibreOffice includes Writer, Calc, Impress, Draw and Base, works offline and uses the OpenDocument format while opening Microsoft Office files.",
+      "website": "https://www.libreoffice.org",
+      "developer": "The Document Foundation",
+      "pricing": [
+        "free"
+      ],
+      "license": "mpl-2-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "office-suites"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "features": [
+        "word-processing",
+        "spreadsheets",
+        "presentations",
+        "offline-mode",
+        "pdf-editing"
+      ],
+      "tags": [
+        "Office",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "microsoft-365",
+        "google-docs",
+        "onlyoffice"
+      ]
+    },
+    {
+      "slug": "microsoft-365",
+      "name": "Microsoft 365",
+      "shortDescription": "Microsoft's Word, Excel, PowerPoint and Outlook with cloud services.",
+      "description": "Microsoft 365 bundles the Office apps with OneDrive storage and collaboration. Web versions are free with a Microsoft account; desktop apps need a subscription.",
+      "website": "https://www.microsoft.com/microsoft-365",
+      "developer": "Microsoft",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 76,
+      "categories": [
+        "office-suites"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "word-processing",
+        "spreadsheets",
+        "presentations",
+        "real-time-collaboration"
+      ],
+      "tags": [
+        "Office"
+      ],
+      "aliases": [
+        "Office 365",
+        "Microsoft Office",
+        "MS Office"
+      ],
+      "alternatives": [
+        "libreoffice",
+        "google-docs",
+        "onlyoffice"
+      ]
+    },
+    {
+      "slug": "google-docs",
+      "name": "Google Docs",
+      "shortDescription": "Browser-based word processor with real-time collaboration.",
+      "description": "Google Docs, along with Sheets and Slides, lets people write and edit documents together in real time in the browser, free with a Google account.",
+      "website": "https://docs.google.com",
+      "developer": "Google",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 74,
+      "categories": [
+        "office-suites"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "word-processing",
+        "spreadsheets",
+        "presentations",
+        "real-time-collaboration",
+        "version-history"
+      ],
+      "tags": [
+        "Office",
+        "Collaboration"
+      ],
+      "aliases": [
+        "Google Sheets",
+        "Google Slides",
+        "Google Workspace"
+      ],
+      "alternatives": [
+        "libreoffice",
+        "microsoft-365",
+        "onlyoffice",
+        "notion"
+      ]
+    },
+    {
+      "slug": "onlyoffice",
+      "name": "ONLYOFFICE",
+      "shortDescription": "Open-source office suite with collaborative editing, desktop and self-hosted.",
+      "description": "ONLYOFFICE offers document, spreadsheet and presentation editors with strong Microsoft Office format compatibility. Docs can be self-hosted and integrated with platforms like Nextcloud.",
+      "website": "https://www.onlyoffice.com",
+      "developer": "Ascensio System SIA",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 62,
+      "categories": [
+        "office-suites"
+      ],
+      "platforms": [
+        "web",
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "word-processing",
+        "spreadsheets",
+        "presentations",
+        "real-time-collaboration"
+      ],
+      "tags": [
+        "Office",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "libreoffice",
+        "microsoft-365",
+        "google-docs"
+      ]
+    },
+    {
+      "slug": "adobe-acrobat",
+      "name": "Adobe Acrobat",
+      "shortDescription": "Adobe's PDF viewer and editor.",
+      "description": "Adobe Acrobat Reader is a free PDF viewer with annotation and form filling; Acrobat Pro adds editing, conversion and e-signature features by subscription.",
+      "website": "https://www.adobe.com/acrobat.html",
+      "developer": "Adobe",
+      "pricing": [
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 72,
+      "categories": [
+        "pdf-tools"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "pdf-editing",
+        "pdf-annotation",
+        "form-filling",
+        "merge-and-split-pdfs"
+      ],
+      "tags": [
+        "PDF",
+        "Adobe"
+      ],
+      "aliases": [
+        "Acrobat Reader",
+        "Adobe Reader"
+      ],
+      "alternatives": [
+        "okular",
+        "stirling-pdf"
+      ]
+    },
+    {
+      "slug": "okular",
+      "name": "Okular",
+      "shortDescription": "KDE's universal document viewer with PDF annotation.",
+      "description": "Okular views PDF, EPUB, comics and many other formats, with annotations, form filling and digital signature support.",
+      "website": "https://okular.kde.org",
+      "developer": "KDE",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-2-0",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": true,
+      "releasedOn": null,
+      "editorialScore": 56,
+      "categories": [
+        "pdf-tools"
+      ],
+      "platforms": [
+        "linux",
+        "windows"
+      ],
+      "features": [
+        "pdf-annotation",
+        "form-filling",
+        "offline-mode"
+      ],
+      "tags": [
+        "PDF",
+        "Open source",
+        "KDE"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "adobe-acrobat",
+        "stirling-pdf"
+      ]
+    },
+    {
+      "slug": "stirling-pdf",
+      "name": "Stirling-PDF",
+      "shortDescription": "Self-hosted web app for merging, splitting, converting and editing PDFs.",
+      "description": "Stirling-PDF runs locally or on your server via Docker and offers dozens of PDF operations without sending documents to third-party services.",
+      "website": "https://www.stirlingpdf.com",
+      "developer": "Stirling Tools",
+      "pricing": [
+        "free",
+        "freemium"
+      ],
+      "license": "mit",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "pdf-tools"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "pdf-editing",
+        "merge-and-split-pdfs"
+      ],
+      "tags": [
+        "PDF",
+        "Open source",
+        "Self-hosted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "adobe-acrobat",
+        "okular"
+      ]
+    }
+  ]
+}

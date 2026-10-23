@@ -1,0 +1,98 @@
+name: alternivo
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-discovery}
+      POSTGRES_USER: ${POSTGRES_USER:-discovery}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    # Pure cache: no persistence, bounded memory with LRU eviction.
+    command: ["redis-server", "--save", "", "--appendonly", "no", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=${POSTGRES_DB:-discovery};Username=${POSTGRES_USER:-discovery};Password=${POSTGRES_PASSWORD}
+      ConnectionStrings__Redis: redis:6379
+      Api__InternalKey: ${API_INTERNAL_KEY:?Set API_INTERNAL_KEY in .env}
+      Admin__Email: ${ADMIN_EMAIL:-}
+      Admin__Password: ${ADMIN_PASSWORD:-}
+      Auth__RequireConfirmedEmail: ${REQUIRE_CONFIRMED_EMAIL:-true}
+      Database__MigrateOnStartup: "true"
+      Seed__OnStartup: ${SEED_ON_STARTUP:-true}
+      Catalog__ShowDemoData: "false"
+      Swagger__Enabled: ${SWAGGER_ENABLED:-false}
+      Smtp__Host: ${SMTP_HOST:-}
+      Smtp__Port: ${SMTP_PORT:-587}
+      Smtp__Username: ${SMTP_USERNAME:-}
+      Smtp__Password: ${SMTP_PASSWORD:-}
+      Smtp__From: ${SMTP_FROM:-no-reply@alternivo.com}
+    volumes:
+      - apikeys:/app/keys
+    # Not public: reachable from the web container, and from the host only (SSH tunnel for Swagger/admin API).
+    ports:
+      - "127.0.0.1:8080:8080"
+
+  web:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_SITE_NAME: ${SITE_NAME:-Alternivo}
+        NEXT_PUBLIC_SITE_URL: ${SITE_URL:-https://alternivo.com}
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      API_INTERNAL_URL: http://api:8080
+      API_INTERNAL_KEY: ${API_INTERNAL_KEY}
+      MEDIA_HOST: ${MEDIA_HOST:-}
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - web
+    environment:
+      # ":80" serves plain HTTP on any host (use while DNS is not pointed yet).
+      # Set DOMAIN=alternivo.com in .env to get automatic HTTPS from Let's Encrypt.
+      DOMAIN: ${DOMAIN:-alternivo.com}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  apikeys:
+  caddy_data:
+  caddy_config:
