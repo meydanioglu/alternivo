@@ -2,7 +2,8 @@
 	encode zstd gzip
 
 	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
 		-Server
 	}
 
@@ -18,7 +19,7 @@ www.{$DOMAIN} {
 	redir https://{$DOMAIN}{uri} permanent
 }
 
-# Plain HTTP on the server IP (health checks, access before DNS points here).
+# Requests to the bare server IP (or any other host name) go to the canonical HTTPS domain.
 :80 {
-	import site
+	redir https://{$DOMAIN}{uri} permanent
 }

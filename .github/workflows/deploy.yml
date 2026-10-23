@@ -47,6 +47,7 @@ jobs:
             git fetch --prune origin main
             git reset --hard origin/main
             docker compose up -d --build --remove-orphans
+            docker compose exec -T caddy caddy reload --config /etc/caddy/Caddyfile
             for i in $(seq 1 60); do
               if curl -fsS http://127.0.0.1:8080/health >/dev/null; then echo "API healthy"; break; fi
               if [ "$i" -eq 60 ]; then docker compose logs --tail=100 api; exit 1; fi
