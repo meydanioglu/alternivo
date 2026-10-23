@@ -1,7 +1,8 @@
 import { absoluteUrl, site } from "@/config/site";
 import { api } from "@/lib/api/client";
 
-export const revalidate = 3600;
+// Rendered per request (the API is not reachable at build time); API responses themselves are cached.
+export const dynamic = "force-dynamic";
 
 /** llms.txt: a plain-text map of the site for AI assistants and answer engines (https://llmstxt.org). */
 export async function GET() {
