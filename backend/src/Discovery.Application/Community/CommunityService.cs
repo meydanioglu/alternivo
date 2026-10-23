@@ -158,6 +158,35 @@ public sealed class CommunityService(
         return ids.Where(summaries.ContainsKey).Select(id => summaries[id]).ToList();
     }
 
+    /// <summary>Public activity for a profile page: published reviews, liked apps and launched products.</summary>
+    public async Task<UserActivityDto> GetUserActivityAsync(Guid userId, string authorName, bool includeLikes, CancellationToken ct)
+    {
+        var reviews = await db.Reviews
+            .Where(r => r.UserId == userId && r.Status == ReviewStatus.Published)
+            .Include(r => r.Application)
+            .OrderByDescending(r => r.CreatedAt)
+            .Take(50)
+            .ToListAsync(ct);
+
+        var likedIds = includeLikes
+            ? await db.ApplicationVotes.Where(v => v.UserId == userId).OrderByDescending(v => v.CreatedAt)
+                .Select(v => v.ApplicationId).Take(60).ToListAsync(ct)
+            : [];
+        var launchedIds = await db.Submissions
+            .Where(s => s.SubmittedByUserId == userId && s.Status == SubmissionStatus.Approved && s.CreatedApplicationId != null)
+            .OrderByDescending(s => s.CreatedAt)
+            .Select(s => s.CreatedApplicationId!.Value)
+            .Take(60)
+            .ToListAsync(ct);
+
+        var summaries = await catalog.LoadSummariesAsync(likedIds.Concat(launchedIds).Distinct().ToList(), ct);
+        return new UserActivityDto(
+            reviews.Where(r => r.Application is not null && r.Application.IsPubliclyVisible)
+                .Select(r => r.ToDto(authorName, new NamedRef(r.Application!.Slug, r.Application.Name))).ToList(),
+            likedIds.Where(summaries.ContainsKey).Select(id => summaries[id]).ToList(),
+            launchedIds.Where(summaries.ContainsKey).Select(id => summaries[id]).ToList());
+    }
+
     // ---------- Reviews ----------
 
     public async Task<PagedResult<ReviewDto>> GetReviewsAsync(Guid applicationId, int? page, CancellationToken ct)

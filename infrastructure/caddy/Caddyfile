@@ -7,8 +7,14 @@
 		-Server
 	}
 
-	# Next.js serves pages, sitemaps and the /bff proxy. The API is never exposed directly.
-	reverse_proxy web:3000
+	# Uploaded images are served straight from the API's media store; everything else by Next.js.
+	# The API itself is never exposed directly.
+	handle /media/* {
+		reverse_proxy api:8080
+	}
+	handle {
+		reverse_proxy web:3000
+	}
 }
 
 {$DOMAIN} {

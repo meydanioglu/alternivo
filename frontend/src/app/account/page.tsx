@@ -1,9 +1,9 @@
-import { Bookmark, Clock, LogOut, Plus, Rocket, ShieldCheck } from "lucide-react";
+import { Bookmark, Clock, LogOut, Plus, Rocket, Settings, ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logoutAction } from "@/app/actions";
-import { ProfileForm } from "@/components/account/profile-form";
+import { UserAvatar } from "@/components/account/user-avatar";
 import { ApplicationGrid } from "@/components/catalog/application-card";
 import { Container, EmptyState } from "@/components/layout/page-parts";
 import { buttonClass, chipClass } from "@/components/ui/styles";
@@ -44,12 +44,10 @@ export default async function AccountPage({ searchParams }: Props) {
   return (
     <Container className="py-8">
       <header className="flex flex-wrap items-center gap-4 border-b border-border pb-6">
-        <span className="grid size-14 place-items-center rounded-full bg-accent text-xl font-bold text-accent-foreground">
-          {user.displayName.slice(0, 1).toUpperCase()}
-        </span>
+        <UserAvatar name={user.displayName} url={user.avatarUrl} size="md" />
         <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold tracking-tight">{user.displayName}</h1>
-          <p className="text-sm text-muted">{user.email}</p>
+          <p className="text-sm text-muted">{user.username ? `@${user.username}` : user.email}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           {isStaff(user) && (
@@ -60,6 +58,14 @@ export default async function AccountPage({ searchParams }: Props) {
           <Link href="/submit/new" className={buttonClass("primary", "md")}>
             <Plus className="size-4" aria-hidden="true" /> Submit a product
           </Link>
+          <Link href="/settings" className={buttonClass("outline", "md")}>
+            <Settings className="size-4" aria-hidden="true" /> Settings
+          </Link>
+          {user.username && (
+            <Link href={`/u/${user.username}`} className={buttonClass("ghost", "md")}>
+              Public profile
+            </Link>
+          )}
           <form action={logoutAction}>
             <button type="submit" className={buttonClass("ghost", "md")}>
               <LogOut className="size-4" aria-hidden="true" /> Sign out
@@ -127,8 +133,14 @@ export default async function AccountPage({ searchParams }: Props) {
 
         <aside>
           <section className="rounded-lg border border-border bg-surface p-5">
-            <h2 className="mb-4 text-lg font-semibold">Profile</h2>
-            <ProfileForm displayName={user.displayName} email={user.email} />
+            <h2 className="text-lg font-semibold">Profile</h2>
+            {user.bio && <p className="mt-2 text-sm text-foreground/85">{user.bio}</p>}
+            <p className="mt-2 text-sm text-muted">
+              Avatar, username, bio, social links, privacy and password are managed in settings.
+            </p>
+            <Link href="/settings" className={buttonClass("outline", "sm", "mt-4")}>
+              Edit profile & settings
+            </Link>
           </section>
         </aside>
       </div>

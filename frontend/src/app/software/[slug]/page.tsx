@@ -169,8 +169,13 @@ export default async function SoftwarePage({ params }: Props) {
             )}
           </section>
 
-          <section>
-            <h2 className="mb-3 text-lg font-semibold">Reviews</h2>
+          <section id="reviews" className="scroll-mt-24">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold">Reviews</h2>
+              <a href={user ? "#write-review" : `/login?next=/software/${s.slug}`} className={buttonClass("outline", "sm")}>
+                Write a review
+              </a>
+            </div>
             <RatingSummary average={s.ratingAverage} count={s.reviewCount} />
             <div className="mt-4">
               <ReviewForm applicationId={s.id} slug={s.slug} name={s.name} signedIn={!!user} />

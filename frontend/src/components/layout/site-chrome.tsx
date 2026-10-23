@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/styles";
+import { UserAvatar } from "@/components/account/user-avatar";
 import { CategoriesMenu } from "@/components/catalog/category-directory";
 import { api } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -58,9 +59,9 @@ export async function MainHeader() {
               href="/account"
               aria-label={`Your account (${user.displayName})`}
               title={user.displayName}
-              className="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-sm font-bold text-accent-foreground ring-offset-2 ring-offset-background hover:ring-2 hover:ring-accent"
+              className="shrink-0 rounded-full ring-offset-2 ring-offset-background hover:ring-2 hover:ring-accent"
             >
-              {user.displayName.slice(0, 1).toUpperCase()}
+              <UserAvatar name={user.displayName} url={user.avatarUrl} size="sm" />
             </Link>
           ) : (
             <Link href="/login" className={buttonClass("primary", "sm", "whitespace-nowrap")}>

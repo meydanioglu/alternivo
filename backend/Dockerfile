@@ -13,7 +13,7 @@ RUN dotnet publish src/Discovery.Api/Discovery.Api.csproj -c Release -o /app/pub
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
-RUN mkdir -p /app/keys && chown -R app:app /app
+RUN mkdir -p /app/keys /app/media && chown -R app:app /app
 COPY --from=build --chown=app:app /app/publish .
 USER app
 ENV ASPNETCORE_URLS=http://+:8080 \

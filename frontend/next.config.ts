@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: { serverActions: { bodySizeLimit: "2mb" } },
   images: {
     // Application logos/screenshots are served from the configured media host only.
     remotePatterns: process.env.MEDIA_HOST

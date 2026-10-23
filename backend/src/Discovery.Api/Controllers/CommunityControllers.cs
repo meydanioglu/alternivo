@@ -6,7 +6,9 @@ using Discovery.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Discovery.Api.Controllers;
 
@@ -129,36 +131,89 @@ public sealed class ReportsController(CommunityService community, HttpCurrentUse
     }
 }
 
-public sealed record UpdateProfileRequest(string? DisplayName, string? Bio);
+public sealed record UpdateProfileRequest(
+    string? DisplayName,
+    string? Bio,
+    string? Username = null,
+    string? Website = null,
+    string? Twitter = null,
+    string? GitHub = null,
+    string? LinkedIn = null,
+    bool? IsProfilePublic = null,
+    bool? ShowLikes = null);
+
+public sealed record MeDto(
+    Guid Id,
+    string Email,
+    string DisplayName,
+    IReadOnlyList<string> Roles,
+    bool EmailConfirmed,
+    string? Username,
+    string? Bio,
+    string? AvatarUrl,
+    string? Website,
+    string? Twitter,
+    string? GitHub,
+    string? LinkedIn,
+    bool IsProfilePublic,
+    bool ShowLikes,
+    DateTimeOffset CreatedAt);
 
 [ApiController]
 [Route("api/v1/users")]
 [Produces("application/json")]
 [Authorize]
-public sealed class UsersController(UserManager<AppUser> users, CommunityService community, HttpCurrentUser current) : ControllerBase
+public sealed partial class UsersController(
+    UserManager<AppUser> users,
+    CommunityService community,
+    HttpCurrentUser current,
+    IConfiguration config) : ControllerBase
 {
-    [HttpGet("me")]
-    public async Task<ActionResult<UserProfileDto>> Me()
+    private static readonly string[] ReservedUsernames = ["admin", "root", "support", "alternivo", "me", "settings", "moderator", "staff"];
+
+    private static readonly Dictionary<string, string> ImageTypes = new()
     {
-        var user = await users.FindByIdAsync(current.RequireUserId().ToString());
-        if (user is null)
+        ["image/jpeg"] = ".jpg",
+        ["image/png"] = ".png",
+        ["image/gif"] = ".gif",
+        ["image/webp"] = ".webp",
+    };
+
+    [GeneratedRegex("^[a-z0-9_-]{3,30}$")]
+    private static partial Regex UsernamePattern();
+
+    private async Task<AppUser> RequireUserAsync() =>
+        await users.FindByIdAsync(current.RequireUserId().ToString()) ?? throw new ForbiddenException("Authentication is required.");
+
+    [HttpGet("me")]
+    public async Task<MeDto> Me()
+    {
+        var u = await RequireUserAsync();
+        var roles = await users.GetRolesAsync(u);
+        return new MeDto(u.Id, u.Email ?? string.Empty, u.DisplayName ?? "Community member", roles.ToList(), u.EmailConfirmed,
+            u.Username, u.Bio, u.AvatarUrl, u.Website, u.Twitter, u.GitHub, u.LinkedIn, u.IsProfilePublic, u.ShowLikes, u.CreatedAt);
+    }
+
+    [AllowAnonymous]
+    [HttpGet("username-available")]
+    public async Task<object> UsernameAvailable([FromQuery] string? u)
+    {
+        var name = (u ?? string.Empty).Trim().ToLowerInvariant();
+        if (!UsernamePattern().IsMatch(name) || ReservedUsernames.Contains(name))
         {
-            return Unauthorized();
+            return new { available = false, reason = "invalid" };
         }
 
-        var roles = await users.GetRolesAsync(user);
-        return new UserProfileDto(user.Id, user.Email ?? string.Empty, user.DisplayName ?? "Community member", roles.ToList(), user.EmailConfirmed);
+        var me = current.UserId;
+        var taken = await users.Users.AnyAsync(x => x.Username == name && x.Id != me);
+        return new { available = !taken, reason = taken ? "taken" : null };
     }
 
     [HttpPatch("me")]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public async Task<IActionResult> UpdateMe(UpdateProfileRequest request)
     {
-        var user = await users.FindByIdAsync(current.RequireUserId().ToString());
-        if (user is null)
-        {
-            return Unauthorized();
-        }
+        var user = await RequireUserAsync();
 
         if (request.DisplayName is { } name)
         {
@@ -181,8 +236,113 @@ public sealed class UsersController(UserManager<AppUser> users, CommunityService
             user.Bio = bio.Trim();
         }
 
+        if (request.Username is { } username)
+        {
+            username = username.Trim().ToLowerInvariant();
+            if (username.Length == 0)
+            {
+                user.Username = null;
+            }
+            else
+            {
+                if (!UsernamePattern().IsMatch(username) || ReservedUsernames.Contains(username))
+                {
+                    throw new BadRequestException("Username must be 3-30 characters: lowercase letters, numbers, - or _.");
+                }
+
+                if (await users.Users.AnyAsync(x => x.Username == username && x.Id != user.Id))
+                {
+                    throw new ConflictException("This username is already taken.");
+                }
+
+                user.Username = username;
+            }
+        }
+
+        user.Website = CleanLink(request.Website, user.Website, "Website");
+        user.Twitter = CleanLink(request.Twitter, user.Twitter, "X / Twitter");
+        user.GitHub = CleanLink(request.GitHub, user.GitHub, "GitHub");
+        user.LinkedIn = CleanLink(request.LinkedIn, user.LinkedIn, "LinkedIn");
+        if (request.IsProfilePublic is { } isPublic) user.IsProfilePublic = isPublic;
+        if (request.ShowLikes is { } showLikes) user.ShowLikes = showLikes;
+
         var result = await users.UpdateAsync(user);
         return result.Succeeded ? NoContent() : Problem(string.Join("; ", result.Errors.Select(e => e.Description)), statusCode: 400);
+    }
+
+    /// <summary>null keeps the current value, "" clears it, anything else must be a public http(s) URL.</summary>
+    private static string? CleanLink(string? value, string? currentValue, string label)
+    {
+        if (value is null) return currentValue;
+        value = value.Trim();
+        if (value.Length == 0) return null;
+        if (value.Length > 200 || !UrlSafety.IsSafePublicWebUrl(value))
+        {
+            throw new BadRequestException($"{label} must be a full https:// link.");
+        }
+
+        return value;
+    }
+
+    [HttpPost("me/avatar")]
+    [EnableRateLimiting(Policies.WritesRateLimit)]
+    [RequestSizeLimit(2 * 1024 * 1024)]
+    public async Task<object> UploadAvatar(IFormFile file, CancellationToken ct)
+    {
+        if (file.Length is 0 or > 1024 * 1024)
+        {
+            throw new BadRequestException("Avatar must be an image up to 1 MB.");
+        }
+
+        if (!ImageTypes.TryGetValue(file.ContentType, out var ext) || !await LooksLikeImageAsync(file, ct))
+        {
+            throw new BadRequestException("Use a JPG, PNG, GIF or WebP image.");
+        }
+
+        var user = await RequireUserAsync();
+        var root = config["Media:Path"] ?? "/app/media";
+        var dir = Path.Combine(root, "avatars");
+        Directory.CreateDirectory(dir);
+        var fileName = $"{user.Id:N}-{Guid.NewGuid():N}"[..44] + ext;
+        await using (var stream = System.IO.File.Create(Path.Combine(dir, fileName)))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        DeleteOwnedAvatar(root, user.AvatarUrl);
+        user.AvatarUrl = $"/media/avatars/{fileName}";
+        await users.UpdateAsync(user);
+        return new { avatarUrl = user.AvatarUrl };
+    }
+
+    [HttpDelete("me/avatar")]
+    public async Task<IActionResult> RemoveAvatar()
+    {
+        var user = await RequireUserAsync();
+        DeleteOwnedAvatar(config["Media:Path"] ?? "/app/media", user.AvatarUrl);
+        user.AvatarUrl = null;
+        await users.UpdateAsync(user);
+        return NoContent();
+    }
+
+    private static void DeleteOwnedAvatar(string root, string? url)
+    {
+        if (url is null || !url.StartsWith("/media/avatars/")) return;
+        var full = Path.GetFullPath(Path.Combine(root, "avatars", Path.GetFileName(url)));
+        if (full.StartsWith(Path.GetFullPath(root)) && System.IO.File.Exists(full)) System.IO.File.Delete(full);
+    }
+
+    /// <summary>Checks the file signature so a renamed non-image is never stored.</summary>
+    private static async Task<bool> LooksLikeImageAsync(IFormFile file, CancellationToken ct)
+    {
+        var head = new byte[12];
+        await using var s = file.OpenReadStream();
+        var read = await s.ReadAsync(head, ct);
+        if (read < 4) return false;
+        return (head[0] == 0xFF && head[1] == 0xD8)
+            || (head[0] == 0x89 && head[1] == 0x50 && head[2] == 0x4E && head[3] == 0x47)
+            || (head[0] == 0x47 && head[1] == 0x49 && head[2] == 0x46)
+            || (read >= 12 && head[0] == 0x52 && head[1] == 0x49 && head[8] == 0x57 && head[9] == 0x45);
     }
 
     [HttpGet("me/bookmarks")]
@@ -192,4 +352,40 @@ public sealed class UsersController(UserManager<AppUser> users, CommunityService
     [HttpGet("me/submissions")]
     public Task<IReadOnlyList<object>> Submissions(CancellationToken ct) =>
         community.GetMySubmissionsAsync(current.RequireUserId(), ct);
+}
+
+public sealed record PublicProfileDto(
+    string Username,
+    string DisplayName,
+    string? Bio,
+    string? AvatarUrl,
+    string? Website,
+    string? Twitter,
+    string? GitHub,
+    string? LinkedIn,
+    DateTimeOffset JoinedAt,
+    bool ShowLikes,
+    UserActivityDto Activity);
+
+[ApiController]
+[Route("api/v1/profiles")]
+[Produces("application/json")]
+public sealed class ProfilesController(UserManager<AppUser> users, CommunityService community, HttpCurrentUser current) : ControllerBase
+{
+    /// <summary>Public profile by username. Private profiles are visible only to their owner.</summary>
+    [HttpGet("{username}")]
+    public async Task<ActionResult<PublicProfileDto>> Get(string username, CancellationToken ct)
+    {
+        var name = username.Trim().ToLowerInvariant();
+        var u = await users.Users.FirstOrDefaultAsync(x => x.Username == name, ct);
+        if (u is null || (!u.IsProfilePublic && u.Id != current.UserId))
+        {
+            return NotFound();
+        }
+
+        var display = u.DisplayName ?? "Community member";
+        var activity = await community.GetUserActivityAsync(u.Id, display, u.ShowLikes, ct);
+        return new PublicProfileDto(u.Username!, display, u.Bio, u.AvatarUrl, u.Website, u.Twitter, u.GitHub, u.LinkedIn,
+            u.CreatedAt, u.ShowLikes, activity);
+    }
 }

@@ -140,6 +140,21 @@ if (app.Environment.IsDevelopment() || app.Configuration.GetValue("Swagger:Enabl
     app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "Discovery API v1"));
 }
 
+// Uploaded media (avatars, logos). Served by the API; the web app proxies /media/* to here.
+var mediaPath = builder.Configuration["Media:Path"] ?? "/app/media";
+Directory.CreateDirectory(mediaPath);
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(mediaPath),
+    RequestPath = "/media",
+    ServeUnknownFileTypes = false,
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+        ctx.Context.Response.Headers.XContentTypeOptions = "nosniff";
+    },
+});
+
 app.MapHealthChecks("/health");
 app.MapGroup("/api/v1/auth").WithTags("Auth").MapIdentityApi<AppUser>();
 app.MapControllers();

@@ -170,11 +170,9 @@ export function ReviewForm({ applicationId, slug, name, signedIn }: {
   if (state.ok) return <FormMessage state={state} />;
 
   return (
-    <details className="group rounded-lg border border-border bg-surface">
-      <summary className="cursor-pointer list-none px-5 py-4 font-medium">
-        <span className="text-accent">+</span> Write a review of {name}
-      </summary>
-      <form action={action} className="flex flex-col gap-4 border-t border-border p-5">
+    <div id="write-review" className="scroll-mt-24 rounded-lg border border-border bg-surface">
+      <h3 className="border-b border-border px-5 py-4 font-semibold">Write a review of {name}</h3>
+      <form action={action} className="flex flex-col gap-4 p-5">
         <input type="hidden" name="applicationId" value={applicationId} />
         <input type="hidden" name="slug" value={slug} />
         <FormMessage state={state} />
@@ -195,7 +193,7 @@ export function ReviewForm({ applicationId, slug, name, signedIn }: {
         </div>
         <SubmitButton className="self-start">Post review</SubmitButton>
       </form>
-    </details>
+    </div>
   );
 }
 

@@ -15,6 +15,16 @@ export interface UserProfile {
   displayName: string;
   roles: string[];
   emailConfirmed: boolean;
+  username: string | null;
+  bio: string | null;
+  avatarUrl: string | null;
+  website: string | null;
+  twitter: string | null;
+  gitHub: string | null;
+  linkedIn: string | null;
+  isProfilePublic: boolean;
+  showLikes: boolean;
+  createdAt: string;
 }
 
 interface TokenResponse {
@@ -136,6 +146,20 @@ export async function userApi<T>(
   if (!response.ok) throw await readProblem(response);
   const text = await response.text();
   return (text ? JSON.parse(text) : null) as T;
+}
+
+/** Authenticated multipart upload (e.g. avatar). Throws AuthApiError. */
+export async function userUpload<T>(path: string, form: FormData): Promise<T> {
+  const token = await accessToken(true);
+  if (!token) throw new AuthApiError(401, "Please sign in to continue.");
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    method: "POST",
+    headers: { ...(await forwardHeaders()), authorization: `Bearer ${token}` },
+    body: form,
+    cache: "no-store",
+  });
+  if (!response.ok) throw await readProblem(response);
+  return (await response.json()) as T;
 }
 
 /** Current user for Server Components; null when signed out or the session is no longer valid. */

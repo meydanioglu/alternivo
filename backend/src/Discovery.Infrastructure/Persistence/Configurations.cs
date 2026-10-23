@@ -337,5 +337,13 @@ internal sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
         b.Property(x => x.DisplayName).HasMaxLength(60);
         b.Property(x => x.Bio).HasMaxLength(500);
         b.Property(x => x.AvatarUrl).HasMaxLength(2048);
+        b.Property(x => x.Username).HasMaxLength(30);
+        b.HasIndex(x => x.Username).IsUnique().HasFilter("\"Username\" IS NOT NULL");
+        b.Property(x => x.Website).HasMaxLength(200);
+        b.Property(x => x.Twitter).HasMaxLength(200);
+        b.Property(x => x.GitHub).HasMaxLength(200);
+        b.Property(x => x.LinkedIn).HasMaxLength(200);
+        b.Property(x => x.IsProfilePublic).HasDefaultValue(true);
+        b.Property(x => x.ShowLikes).HasDefaultValue(true);
     }
 }

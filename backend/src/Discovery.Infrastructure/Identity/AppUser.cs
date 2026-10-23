@@ -13,6 +13,14 @@ public class AppUser : IdentityUser<Guid>
     public string? DisplayName { get; set; }
     public string? Bio { get; set; }
     public string? AvatarUrl { get; set; }
+    /// <summary>Public handle for /u/{username}; lowercase, unique.</summary>
+    public string? Username { get; set; }
+    public string? Website { get; set; }
+    public string? Twitter { get; set; }
+    public string? GitHub { get; set; }
+    public string? LinkedIn { get; set; }
+    public bool IsProfilePublic { get; set; } = true;
+    public bool ShowLikes { get; set; } = true;
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 }
 

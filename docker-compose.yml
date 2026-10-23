@@ -55,6 +55,7 @@ services:
       Site__Url: ${SITE_URL:-https://alternivo.com}
     volumes:
       - apikeys:/app/keys
+      - media:/app/media
     # Not public: reachable from the web container, and from the host only (SSH tunnel for Swagger/admin API).
     ports:
       - "127.0.0.1:8080:8080"
@@ -94,6 +95,7 @@ services:
       - caddy_config:/config
 
 volumes:
+  media:
   pgdata:
   apikeys:
   caddy_data:

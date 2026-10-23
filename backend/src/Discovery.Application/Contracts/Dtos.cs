@@ -167,3 +167,8 @@ public sealed record RedirectDto(string FromPath, string? ToPath, int StatusCode
 public sealed record UserProfileDto(Guid Id, string Email, string DisplayName, IReadOnlyList<string> Roles, bool EmailConfirmed);
 
 public sealed record VoteStateDto(bool Voted, int Count);
+
+public sealed record UserActivityDto(
+    IReadOnlyList<ReviewDto> Reviews,
+    IReadOnlyList<ApplicationSummaryDto> Liked,
+    IReadOnlyList<ApplicationSummaryDto> Launched);

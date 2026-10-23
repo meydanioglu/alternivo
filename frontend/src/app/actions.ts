@@ -188,7 +188,7 @@ export async function createReviewAction(_: FormState, form: FormData): Promise<
     return failure(error, "Your review could not be posted.");
   }
   revalidatePath(`/software/${slug}`);
-  return { ok: "Thanks! Your review has been submitted and will appear after moderation." };
+  return { ok: "Thanks! Your review is now live." };
 }
 
 export async function suggestAlternativeAction(_: FormState, form: FormData): Promise<FormState> {
