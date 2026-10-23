@@ -21,7 +21,8 @@ public sealed record UpsertApplicationRequest(
     string[]? TagSlugs,
     string[]? Aliases,
     bool MarkVerified,
-    uint? Version);
+    uint? Version,
+    string? LogoUrl = null);
 
 public sealed record AdminApplicationRow(
     Guid Id,

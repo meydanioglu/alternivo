@@ -1,3 +1,5 @@
+using Discovery.Api.Infrastructure;
+using Discovery.Application.Admin;
 using Discovery.Application.Catalog;
 using Discovery.Application.Common;
 using Discovery.Application.Contracts;
@@ -152,4 +154,18 @@ public sealed class LeaderboardController(LaunchService launches) : ControllerBa
     [HttpGet]
     public Task<PagedResult<LeaderboardItemDto>> Get([FromQuery] string? period, [FromQuery] int? page, CancellationToken ct) =>
         launches.GetLeaderboardAsync(period, page, ct);
+}
+
+[ApiController]
+[Route("api/v1/analytics")]
+public sealed class AnalyticsController(PanelService panel, HttpCurrentUser current, IConfiguration config) : ControllerBase
+{
+    /// <summary>Anonymous page-view beacon, called server-side by the web app.</summary>
+    [HttpPost("pageview")]
+    public async Task<IActionResult> PageView(TrackPageViewRequest request, CancellationToken ct)
+    {
+        var secret = config["Api:InternalKey"] ?? "alternivo";
+        await panel.TrackAsync(request, ClientIp.Resolve(HttpContext), Request.Headers.UserAgent.ToString(), current.UserId, secret, ct);
+        return NoContent();
+    }
 }

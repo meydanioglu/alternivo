@@ -316,6 +316,20 @@ internal sealed class SearchQueryLogConfiguration : IEntityTypeConfiguration<Sea
     }
 }
 
+internal sealed class PageViewConfiguration : IEntityTypeConfiguration<PageView>
+{
+    public void Configure(EntityTypeBuilder<PageView> b)
+    {
+        b.ToTable("PageViews");
+        b.Property(x => x.Id).UseIdentityAlwaysColumn();
+        b.Property(x => x.Path).HasMaxLength(300).IsRequired();
+        b.Property(x => x.ReferrerHost).HasMaxLength(200);
+        b.Property(x => x.VisitorId).HasMaxLength(32).IsRequired();
+        b.Property(x => x.Device).HasMaxLength(20).IsRequired();
+        b.HasIndex(x => x.CreatedAt);
+    }
+}
+
 internal sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 {
     public void Configure(EntityTypeBuilder<AppUser> b)

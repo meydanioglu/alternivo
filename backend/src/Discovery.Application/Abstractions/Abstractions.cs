@@ -30,6 +30,7 @@ public interface IAppDbContext
     DbSet<SlugRedirect> SlugRedirects { get; }
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<SearchQueryLog> SearchQueryLogs { get; }
+    DbSet<PageView> PageViews { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

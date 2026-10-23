@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { site } from "@/config/site";
 import { Footer, MainHeader } from "@/components/layout/site-chrome";
 import { themeInitScript } from "@/components/layout/theme-switch";
+import { PageViewTracker } from "@/components/analytics/page-view-tracker";
 import "./globals.css";
 
 const inter = Inter({
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <MainHeader />
         <main id="main">{children}</main>
         <Footer />
+        <PageViewTracker />
       </body>
     </html>
   );

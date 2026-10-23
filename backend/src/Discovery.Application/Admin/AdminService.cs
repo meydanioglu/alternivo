@@ -100,6 +100,11 @@ public sealed class AdminService(
         app.ShortDescription = request.ShortDescription.Trim();
         app.Description = request.Description?.Trim();
         app.WebsiteUrl = request.WebsiteUrl?.Trim();
+        if (request.LogoUrl is not null)
+        {
+            app.LogoUrl = string.IsNullOrWhiteSpace(request.LogoUrl) ? null : request.LogoUrl.Trim();
+        }
+
         app.Developer = request.Developer?.Trim();
         app.Pricing = PricingNames.Combine(request.Pricing);
         app.IsSelfHostable = request.IsSelfHostable;
@@ -401,6 +406,8 @@ public sealed class AdminService(
             throw new BadRequestException("Description is too long.");
         if (r.WebsiteUrl is not null && !UrlSafety.IsSafePublicWebUrl(r.WebsiteUrl))
             throw new BadRequestException("Website must be a public http(s) URL.");
+        if (!string.IsNullOrWhiteSpace(r.LogoUrl) && !UrlSafety.IsSafePublicWebUrl(r.LogoUrl))
+            throw new BadRequestException("Logo must be a public http(s) image URL.");
         if (r.EditorialScore is < 0 or > 100)
             throw new BadRequestException("Editorial score must be between 0 and 100.");
     }

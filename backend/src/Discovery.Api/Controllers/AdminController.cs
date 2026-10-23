@@ -6,6 +6,7 @@ using Discovery.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Discovery.Api.Controllers;
 
@@ -145,5 +146,137 @@ public sealed class AdminUsersController(UserManager<AppUser> users) : Controlle
             ? await users.AddToRoleAsync(user, request.Role)
             : await users.RemoveFromRoleAsync(user, request.Role);
         return result.Succeeded ? NoContent() : Problem(string.Join("; ", result.Errors.Select(e => e.Description)), statusCode: 400);
+    }
+}
+
+// ----- Admin panel: analytics, application detail, categories, users -----
+
+[ApiController]
+[Route("api/v1/admin")]
+[Produces("application/json")]
+[Authorize(Policy = Policies.Staff)]
+public sealed class AdminPanelController(PanelService panel, HttpCurrentUser current, IConfiguration config) : ControllerBase
+{
+    [HttpGet("analytics")]
+    public Task<AnalyticsDto> Analytics([FromQuery] int? days, CancellationToken ct)
+    {
+        var siteUrl = config["Site:Url"];
+        var host = Uri.TryCreate(siteUrl, UriKind.Absolute, out var u) ? u.Host : null;
+        return panel.AnalyticsAsync(days ?? 30, host, ct);
+    }
+
+    [HttpGet("applications/{id:guid}")]
+    [Authorize(Policy = Policies.Editorial)]
+    public Task<AdminApplicationDetail> Application(Guid id, CancellationToken ct) => panel.GetApplicationAsync(id, ct);
+
+    [HttpGet("categories")]
+    public Task<IReadOnlyList<AdminCategoryRow>> Categories(CancellationToken ct) => panel.ListCategoriesAsync(ct);
+
+    [HttpPost("categories")]
+    [Authorize(Policy = Policies.Editorial)]
+    public async Task<IActionResult> CreateCategory(UpsertCategoryRequest request, CancellationToken ct)
+    {
+        var id = await panel.UpsertCategoryAsync(current.RequireUserId(), null, request, ct);
+        return StatusCode(StatusCodes.Status201Created, new { id });
+    }
+
+    [HttpPut("categories/{id:guid}")]
+    [Authorize(Policy = Policies.Editorial)]
+    public async Task<IActionResult> UpdateCategory(Guid id, UpsertCategoryRequest request, CancellationToken ct)
+    {
+        await panel.UpsertCategoryAsync(current.RequireUserId(), id, request, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("categories/{id:guid}")]
+    [Authorize(Policy = Policies.Editorial)]
+    public async Task<IActionResult> DeleteCategory(Guid id, CancellationToken ct)
+    {
+        await panel.DeleteCategoryAsync(current.RequireUserId(), id, ct);
+        return NoContent();
+    }
+}
+
+public sealed record AdminUserRow(
+    Guid Id,
+    string Email,
+    string? DisplayName,
+    IReadOnlyList<string> Roles,
+    bool EmailConfirmed,
+    bool Locked,
+    DateTimeOffset CreatedAt);
+
+public sealed record SetRolesRequest(string[] Roles);
+
+[ApiController]
+[Route("api/v1/admin/members")]
+[Produces("application/json")]
+[Authorize(Policy = Policies.Administration)]
+public sealed class AdminMembersController(UserManager<AppUser> users, HttpCurrentUser current) : ControllerBase
+{
+    [HttpGet]
+    public async Task<PagedResult<AdminUserRow>> List([FromQuery] string? q, [FromQuery] int? page, CancellationToken ct)
+    {
+        var (p, size) = Paging.Normalize(page, 50);
+        var query = users.Users;
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            var term = q.Trim().ToUpperInvariant();
+            query = query.Where(u => u.NormalizedEmail!.Contains(term) || (u.DisplayName != null && u.DisplayName.ToUpper().Contains(term)));
+        }
+
+        var total = await query.CountAsync(ct);
+        var page1 = await query.OrderByDescending(u => u.CreatedAt).Skip((p - 1) * size).Take(size).ToListAsync(ct);
+        var now = DateTimeOffset.UtcNow;
+        var rows = new List<AdminUserRow>(page1.Count);
+        foreach (var u in page1)
+        {
+            rows.Add(new AdminUserRow(u.Id, u.Email ?? string.Empty, u.DisplayName, (await users.GetRolesAsync(u)).ToList(),
+                u.EmailConfirmed, u.LockoutEnd is { } end && end > now, u.CreatedAt));
+        }
+
+        return new PagedResult<AdminUserRow>(rows, p, size, total);
+    }
+
+    /// <summary>Replaces a member's roles. Only a SuperAdmin can grant or revoke staff roles.</summary>
+    [HttpPut("{id:guid}/roles")]
+    [Authorize(Policy = Policies.SuperAdmin)]
+    public async Task<IActionResult> SetRoles(Guid id, SetRolesRequest request)
+    {
+        if (request.Roles.Any(r => !Roles.All.Contains(r)))
+        {
+            throw new BadRequestException("Unknown role.");
+        }
+
+        var user = await users.FindByIdAsync(id.ToString()) ?? throw new NotFoundException("User", id.ToString());
+        if (user.Id == current.RequireUserId() && !request.Roles.Contains(Roles.SuperAdmin))
+        {
+            throw new BadRequestException("You cannot remove your own SuperAdmin role.");
+        }
+
+        var existing = await users.GetRolesAsync(user);
+        var remove = await users.RemoveFromRolesAsync(user, existing.Except(request.Roles));
+        var add = await users.AddToRolesAsync(user, request.Roles.Except(existing));
+        return remove.Succeeded && add.Succeeded ? NoContent() : Problem("Roles could not be updated.", statusCode: 400);
+    }
+
+    /// <summary>Blocks or unblocks sign-in for a member.</summary>
+    [HttpPost("{id:guid}/lock")]
+    public async Task<IActionResult> SetLock(Guid id, [FromQuery] bool locked)
+    {
+        var user = await users.FindByIdAsync(id.ToString()) ?? throw new NotFoundException("User", id.ToString());
+        if (user.Id == current.RequireUserId())
+        {
+            throw new BadRequestException("You cannot block your own account.");
+        }
+
+        await users.SetLockoutEnabledAsync(user, true);
+        await users.SetLockoutEndDateAsync(user, locked ? DateTimeOffset.MaxValue : null);
+        if (locked)
+        {
+            await users.UpdateSecurityStampAsync(user);
+        }
+
+        return NoContent();
     }
 }

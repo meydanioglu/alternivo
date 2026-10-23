@@ -29,3 +29,18 @@ public class SearchQueryLog
     public int ResultCount { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 }
+
+/// <summary>
+/// One anonymous page view. No IP or cookie is stored: the visitor id is a salted daily hash,
+/// so unique visitors can be counted per day without tracking people across days.
+/// </summary>
+public class PageView
+{
+    public long Id { get; set; }
+    public required string Path { get; set; }
+    public string? ReferrerHost { get; set; }
+    public required string VisitorId { get; set; }
+    public required string Device { get; set; }
+    public Guid? UserId { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+}

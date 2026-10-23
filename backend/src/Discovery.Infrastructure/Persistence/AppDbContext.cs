@@ -35,6 +35,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<SlugRedirect> SlugRedirects => Set<SlugRedirect>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<SearchQueryLog> SearchQueryLogs => Set<SearchQueryLog>();
+    public DbSet<PageView> PageViews => Set<PageView>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
