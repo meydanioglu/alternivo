@@ -1,7 +1,7 @@
 export const NAV_LINKS = [
   { href: "/software", label: "All software" },
   { href: "/categories", label: "Categories" },
-  { href: "/new-apps", label: "New apps" },
-  { href: "/trending", label: "Most liked" },
+  { href: "/launches", label: "Launches" },
+  { href: "/leaderboard", label: "Leaderboard" },
   { href: "/compare", label: "Compare" },
 ] as const;

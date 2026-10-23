@@ -218,3 +218,33 @@ export interface Redirect {
   toPath: string | null;
   statusCode: number;
 }
+
+export interface LaunchItem {
+  rank: number;
+  application: ApplicationSummary;
+  votes: number;
+  launchedAt: string;
+}
+
+export interface LaunchWeek {
+  week: string;
+  startsAt: string;
+  endsAt: string;
+  isCurrent: boolean;
+  previousWeek: string | null;
+  nextWeek: string | null;
+  items: LaunchItem[];
+}
+
+export interface LaunchArchiveWeek {
+  week: string;
+  startsAt: string;
+  launchCount: number;
+  winners: LaunchItem[];
+}
+
+export interface LeaderboardItem {
+  rank: number;
+  application: ApplicationSummary;
+  votes: number;
+}

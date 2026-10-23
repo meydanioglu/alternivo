@@ -7,6 +7,9 @@ import type {
   Compare,
   ComparisonRef,
   Home,
+  LaunchArchiveWeek,
+  LaunchWeek,
+  LeaderboardItem,
   Paged,
   PlatformRef,
   Redirect,
@@ -99,6 +102,14 @@ export const api = {
 
   search: (q: string, page: number) =>
     get<SearchResult>(`/api/v1/search?${toSearchParams({ q, page })}`, { revalidate: 0 }),
+
+  launches: (week?: string) =>
+    get<LaunchWeek>(`/api/v1/launches?${toSearchParams({ week })}`, { revalidate: 30, tags: ["launches"] }),
+
+  launchArchive: () => get<LaunchArchiveWeek[]>("/api/v1/launches/archive", { revalidate: 300, tags: ["launches"] }),
+
+  leaderboard: (period: string, page: number) =>
+    get<Paged<LeaderboardItem>>(`/api/v1/leaderboard?${toSearchParams({ period, page })}`, { revalidate: 60 }),
 
   sitemap: (type: string) => get<SitemapEntry[]>(`/api/v1/seo/sitemaps/${enc(type)}`, { revalidate: 3600 }),
 

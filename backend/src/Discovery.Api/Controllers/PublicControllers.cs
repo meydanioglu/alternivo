@@ -128,3 +128,28 @@ public sealed class SeoController(SeoService seo) : ControllerBase
         return redirect;
     }
 }
+
+[ApiController]
+[Route("api/v1/launches")]
+[Produces("application/json")]
+public sealed class LaunchesController(LaunchService launches) : ControllerBase
+{
+    /// <summary>week: ISO week such as 2026-W43; defaults to the current week.</summary>
+    [HttpGet]
+    public Task<LaunchWeekDto> Week([FromQuery] string? week, CancellationToken ct) => launches.GetWeekAsync(week, ct);
+
+    [HttpGet("archive")]
+    public Task<IReadOnlyList<LaunchArchiveWeekDto>> Archive([FromQuery] int? weeks, CancellationToken ct) =>
+        launches.GetArchiveAsync(weeks ?? 26, ct);
+}
+
+[ApiController]
+[Route("api/v1/leaderboard")]
+[Produces("application/json")]
+public sealed class LeaderboardController(LaunchService launches) : ControllerBase
+{
+    /// <summary>period: week | month | all (default).</summary>
+    [HttpGet]
+    public Task<PagedResult<LeaderboardItemDto>> Get([FromQuery] string? period, [FromQuery] int? page, CancellationToken ct) =>
+        launches.GetLeaderboardAsync(period, page, ct);
+}

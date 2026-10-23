@@ -1,4 +1,4 @@
-import { ArrowRight, MessageSquareQuote, Rocket } from "lucide-react";
+import { ArrowRight, MessageSquareQuote, Rocket, Trophy } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
@@ -8,6 +8,9 @@ import { formatNumber } from "@/lib/format";
 import { pageMetadata, websiteJsonLd } from "@/lib/seo";
 import { ApplicationGrid, CompactApplicationRow } from "@/components/catalog/application-card";
 import { ReviewCard } from "@/components/catalog/review-card";
+import { RankedRow } from "@/components/launches/launch-list";
+import { Countdown } from "@/components/launches/launch-parts";
+import { getCurrentUser } from "@/lib/auth/session";
 import { Container, SectionHeader } from "@/components/layout/page-parts";
 import { SearchCommand } from "@/components/search/search-command";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -41,7 +44,12 @@ function AppSection({ title, description, href, apps }: { title: string; descrip
 }
 
 export default async function HomePage() {
-  const home = await api.home();
+  const [home, launches, leaders, user] = await Promise.all([
+    api.home(),
+    api.launches().catch(() => null),
+    api.leaderboard("all", 1).catch(() => null),
+    getCurrentUser(),
+  ]);
 
   return (
     <>
@@ -100,6 +108,56 @@ export default async function HomePage() {
             </ul>
           </section>
         )}
+
+        <div className="grid gap-8 py-8 lg:grid-cols-2">
+          <section>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight sm:text-xl">
+                  <Rocket className="size-5 text-accent" aria-hidden="true" /> This week&apos;s launches
+                </h2>
+                <p className="mt-0.5 text-sm text-muted">New products competing for the most upvotes.</p>
+              </div>
+              {launches?.isCurrent && <Countdown endsAt={launches.endsAt} />}
+            </div>
+            {launches && launches.items.length > 0 ? (
+              <ol className="flex flex-col gap-2">
+                {launches.items.slice(0, 5).map((item) => (
+                  <RankedRow key={item.application.id} rank={item.rank} app={item.application} votes={item.votes} signedIn={!!user} votingOpen compact />
+                ))}
+              </ol>
+            ) : (
+              <div className="rounded-xl border border-dashed border-border p-6 text-center text-sm text-muted">
+                No launches yet this week.{" "}
+                <Link href="/submit" className="font-medium text-accent hover:underline">
+                  Be the first to launch
+                </Link>
+              </div>
+            )}
+            <Link href="/launches" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline">
+              Full launch board <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </section>
+
+          {leaders && leaders.items.length > 0 && (
+            <section>
+              <div className="mb-4">
+                <h2 className="flex items-center gap-2 text-lg font-semibold tracking-tight sm:text-xl">
+                  <Trophy className="size-5 text-amber-400" aria-hidden="true" /> Leaderboard
+                </h2>
+                <p className="mt-0.5 text-sm text-muted">The most upvoted software of all time.</p>
+              </div>
+              <ol className="flex flex-col gap-2">
+                {leaders.items.slice(0, 5).map((item) => (
+                  <RankedRow key={item.application.id} rank={item.rank} app={item.application} votes={item.votes} signedIn={!!user} votingOpen compact />
+                ))}
+              </ol>
+              <Link href="/leaderboard" className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline">
+                Full leaderboard <ArrowRight className="size-4" aria-hidden="true" />
+              </Link>
+            </section>
+          )}
+        </div>
 
         <AppSection
           title="Popular picks"

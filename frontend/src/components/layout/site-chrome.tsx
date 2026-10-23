@@ -76,6 +76,8 @@ const FOOTER_COLUMNS = [
       { href: "/new-apps", label: "New apps" },
       { href: "/trending", label: "Most liked" },
       { href: "/compare", label: "Comparisons" },
+      { href: "/launches", label: "This week's launches" },
+      { href: "/leaderboard", label: "Leaderboard" },
     ],
   },
   {
@@ -92,7 +94,7 @@ const FOOTER_COLUMNS = [
     links: [
       { href: "/submit", label: "Submit a product" },
       { href: "/register", label: "Create an account" },
-      { href: "/account", label: "Your account" },
+      { href: "/launches/archive", label: "Launch archive" },
       { href: "/new-apps", label: "Recently added" },
     ],
   },

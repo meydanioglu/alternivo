@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<CatalogService>();
         services.AddScoped<TaxonomyService>();
         services.AddScoped<HomeService>();
+        services.AddScoped<LaunchService>();
         services.AddScoped<SearchService>();
         services.AddScoped<SeoService>();
         services.AddScoped<CommunityService>();
