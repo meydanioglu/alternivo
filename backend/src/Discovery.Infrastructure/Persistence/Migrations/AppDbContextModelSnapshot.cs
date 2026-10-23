@@ -1019,6 +1019,10 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<string>("Handle")
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
                     b.Property<bool>("IsProfilePublic")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -1070,15 +1074,15 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<string>("Username")
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)");
-
                     b.Property<string>("Website")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Handle")
+                        .IsUnique()
+                        .HasFilter("\"Handle\" IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1086,10 +1090,6 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
-
-                    b.HasIndex("Username")
-                        .IsUnique()
-                        .HasFilter("\"Username\" IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });

@@ -191,7 +191,7 @@ public sealed partial class UsersController(
         var u = await RequireUserAsync();
         var roles = await users.GetRolesAsync(u);
         return new MeDto(u.Id, u.Email ?? string.Empty, u.DisplayName ?? "Community member", roles.ToList(), u.EmailConfirmed,
-            u.Username, u.Bio, u.AvatarUrl, u.Website, u.Twitter, u.GitHub, u.LinkedIn, u.IsProfilePublic, u.ShowLikes, u.CreatedAt);
+            u.Handle, u.Bio, u.AvatarUrl, u.Website, u.Twitter, u.GitHub, u.LinkedIn, u.IsProfilePublic, u.ShowLikes, u.CreatedAt);
     }
 
     [AllowAnonymous]
@@ -205,7 +205,7 @@ public sealed partial class UsersController(
         }
 
         var me = current.UserId;
-        var taken = await users.Users.AnyAsync(x => x.Username == name && x.Id != me);
+        var taken = await users.Users.AnyAsync(x => x.Handle == name && x.Id != me);
         return new { available = !taken, reason = taken ? "taken" : null };
     }
 
@@ -241,7 +241,7 @@ public sealed partial class UsersController(
             username = username.Trim().ToLowerInvariant();
             if (username.Length == 0)
             {
-                user.Username = null;
+                user.Handle = null;
             }
             else
             {
@@ -250,12 +250,12 @@ public sealed partial class UsersController(
                     throw new BadRequestException("Username must be 3-30 characters: lowercase letters, numbers, - or _.");
                 }
 
-                if (await users.Users.AnyAsync(x => x.Username == username && x.Id != user.Id))
+                if (await users.Users.AnyAsync(x => x.Handle == username && x.Id != user.Id))
                 {
                     throw new ConflictException("This username is already taken.");
                 }
 
-                user.Username = username;
+                user.Handle = username;
             }
         }
 
@@ -377,7 +377,7 @@ public sealed class ProfilesController(UserManager<AppUser> users, CommunityServ
     public async Task<ActionResult<PublicProfileDto>> Get(string username, CancellationToken ct)
     {
         var name = username.Trim().ToLowerInvariant();
-        var u = await users.Users.FirstOrDefaultAsync(x => x.Username == name, ct);
+        var u = await users.Users.FirstOrDefaultAsync(x => x.Handle == name, ct);
         if (u is null || (!u.IsProfilePublic && u.Id != current.UserId))
         {
             return NotFound();
@@ -385,7 +385,7 @@ public sealed class ProfilesController(UserManager<AppUser> users, CommunityServ
 
         var display = u.DisplayName ?? "Community member";
         var activity = await community.GetUserActivityAsync(u.Id, display, u.ShowLikes, ct);
-        return new PublicProfileDto(u.Username!, display, u.Bio, u.AvatarUrl, u.Website, u.Twitter, u.GitHub, u.LinkedIn,
+        return new PublicProfileDto(u.Handle!, display, u.Bio, u.AvatarUrl, u.Website, u.Twitter, u.GitHub, u.LinkedIn,
             u.CreatedAt, u.ShowLikes, activity);
     }
 }

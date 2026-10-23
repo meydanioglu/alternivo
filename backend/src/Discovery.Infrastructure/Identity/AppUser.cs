@@ -14,7 +14,8 @@ public class AppUser : IdentityUser<Guid>
     public string? Bio { get; set; }
     public string? AvatarUrl { get; set; }
     /// <summary>Public handle for /u/{username}; lowercase, unique.</summary>
-    public string? Username { get; set; }
+    // Not "Username": that differs from IdentityUser.UserName only by case and EF maps them onto one column.
+    public string? Handle { get; set; }
     public string? Website { get; set; }
     public string? Twitter { get; set; }
     public string? GitHub { get; set; }
