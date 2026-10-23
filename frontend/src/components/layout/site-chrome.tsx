@@ -15,10 +15,11 @@ import { NAV_LINKS } from "./nav-links";
 import { ThemeSwitch } from "./theme-switch";
 
 export function Logo() {
+  // Full wordmark artwork, one version per theme (white lettering on dark, dark lettering on light).
   return (
-    <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label={`${site.name} home`}>
-      <Image src="/brand/logo-mark.png" alt="" width={154} height={131} priority className="h-7 w-auto" />
-      <span className="text-lg">{site.name}</span>
+    <Link href="/" className="flex shrink-0 items-center" aria-label={`${site.name} home`}>
+      <Image src="/brand/logo-on-light.png" alt={site.name} width={753} height={175} priority className="h-7 w-auto dark:hidden" />
+      <Image src="/brand/logo-on-dark.png" alt={site.name} width={699} height={163} priority className="hidden h-7 w-auto dark:block" />
     </Link>
   );
 }

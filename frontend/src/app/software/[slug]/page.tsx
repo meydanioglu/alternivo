@@ -119,6 +119,26 @@ export default async function SoftwarePage({ params }: Props) {
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] [&>*]:min-w-0">
         <div className="flex min-w-0 flex-col gap-8">
+          {app.screenshots.length > 0 && (
+            <section aria-label={`${s.name} preview`}>
+              <div className="flex snap-x gap-3 overflow-x-auto pb-2">
+                {app.screenshots.map((shot) => (
+                  <figure key={shot.url} className="w-full shrink-0 snap-start sm:w-auto">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- first-party media with known dimensions */}
+                    <img
+                      src={shot.url}
+                      alt={shot.caption ?? `${s.name} screenshot`}
+                      width={shot.width || 1200}
+                      height={shot.height || 630}
+                      loading="lazy"
+                      className="aspect-[1200/630] w-full max-w-3xl rounded-xl border border-border bg-surface object-cover"
+                    />
+                  </figure>
+                ))}
+              </div>
+            </section>
+          )}
+
           {app.description && (
             <section>
               <h2 className="mb-2 text-lg font-semibold">About {s.name}</h2>

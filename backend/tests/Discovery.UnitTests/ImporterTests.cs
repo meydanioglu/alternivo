@@ -25,4 +25,20 @@ public class ImporterTests
         Assert.Equal(".svg", ProductImporter.DetectImage("<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>"u8.ToArray()));
         Assert.Null(ProductImporter.DetectImage("<!doctype html><html><body>blocked</body></html>"u8.ToArray()));
     }
+
+    [Fact]
+    public void Measures_png_and_ico_sizes()
+    {
+        byte[] png = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0, 0, 0, 13, 0x49, 0x48, 0x44, 0x52, 0, 0, 0, 180, 0, 0, 0, 180, 8, 6, 0, 0, 0];
+        Assert.Equal((180, 180), ProductImporter.ImageSize(png));
+
+        // ICO directory with a 16px and a 256px (stored as 0) entry: the largest wins.
+        var ico = new byte[6 + 32];
+        ico[2] = 1; ico[4] = 2;
+        ico[6] = 16; ico[7] = 16;
+        ico[22] = 0; ico[23] = 0;
+        Assert.Equal((256, 256), ProductImporter.ImageSize(ico));
+
+        Assert.Equal((0, 0), ProductImporter.ImageSize("<svg/>"u8.ToArray()));
+    }
 }

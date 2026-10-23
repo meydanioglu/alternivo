@@ -20,13 +20,20 @@ export const metadata: Metadata = {
   applicationName: site.name,
   openGraph: { siteName: site.name, type: "website", locale: "en_US" },
   twitter: { card: "summary_large_image" },
+  icons: {
+    // Browser tab icon follows the OS/browser theme; favicon.ico is the fallback.
+    icon: [
+      { url: "/brand/favicon-on-light.png", type: "image/png", sizes: "192x192", media: "(prefers-color-scheme: light)" },
+      { url: "/brand/favicon-on-dark.png", type: "image/png", sizes: "192x192", media: "(prefers-color-scheme: dark)" },
+    ],
+  },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafc" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
     { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
 };
