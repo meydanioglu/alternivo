@@ -123,7 +123,8 @@ public sealed partial class ProductImporter(
 
         if (logo is not null)
         {
-            DeleteImported(app.LogoUrl, "logos");
+            // Same image ⇒ same content-hash file name: never delete the file we are about to keep.
+            if (app.LogoUrl != logo) DeleteImported(app.LogoUrl, "logos");
             app.LogoUrl = logo;
         }
         else
@@ -136,7 +137,7 @@ public sealed partial class ProductImporter(
             var size = ReadImageSize(Path.Combine(MediaRoot, "shots", Path.GetFileName(shot)));
             foreach (var old in app.Screenshots.Where(s => s.Url.StartsWith("/media/shots/")).ToList())
             {
-                DeleteImported(old.Url, "shots");
+                if (old.Url != shot) DeleteImported(old.Url, "shots");
                 db.ApplicationScreenshots.Remove(old);
             }
 
