@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Discovery.Application.Abstractions;
 using Discovery.Application.Catalog;
 using Discovery.Application.Common;
 using Discovery.Domain;
@@ -24,6 +25,7 @@ public sealed class CatalogSeeder(
     RoleManager<IdentityRole<Guid>> roles,
     UserManager<AppUser> users,
     IConfiguration configuration,
+    ICacheService cache,
     ILogger<CatalogSeeder> logger)
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web) { ReadCommentHandling = JsonCommentHandling.Skip };
@@ -225,6 +227,11 @@ public sealed class CatalogSeeder(
         }
 
         await db.SaveChangesAsync(ct);
+
+        // Taxonomy and the homepage are cached; drop them so new categories and counts show immediately.
+        await cache.RemoveAsync(CacheKeys.Categories, ct);
+        await cache.RemoveAsync(CacheKeys.Platforms, ct);
+        await cache.RemoveAsync(CacheKeys.Home, ct);
         logger.LogInformation(
             "Catalog seed complete: {Created} created, {Updated} updated applications, {Relationships} new relationships",
             created, updated, added);
