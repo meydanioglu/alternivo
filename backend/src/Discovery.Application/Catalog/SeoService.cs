@@ -2,6 +2,7 @@ using Discovery.Application.Abstractions;
 using Discovery.Application.Common;
 using Discovery.Application.Contracts;
 using Discovery.Application.Ranking;
+using Discovery.Domain;
 using Discovery.Domain.Community;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
