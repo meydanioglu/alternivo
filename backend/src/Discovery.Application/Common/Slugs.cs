@@ -36,8 +36,8 @@ public static partial class Slugs
             }
         }
 
-        // Turkish dotless i and similar characters that do not decompose.
-        var ascii = builder.ToString().Replace('ı', 'i').Replace('ß', 's');
+        // Characters that do not decompose (or are not decomposed under InvariantGlobalization).
+        var ascii = string.Concat(builder.ToString().Select(Fold));
         var slug = NonAlphanumeric().Replace(ascii, "-").Trim('-');
         if (slug.Length > 120)
         {
@@ -45,6 +45,15 @@ public static partial class Slugs
         }
 
         return slug;
+    }
+
+    private const string FoldFrom = "àáâãäåāăąçćčďđèéêëēėęěğìíîïīįıľłñńňòóôõöøōőŕřśšşťţùúûüūůűųýÿźżžß";
+    private const string FoldTo = "aaaaaaaaacccddeeeeeeeegiiiiiiillnnnoooooooorrsssttuuuuuuuuyyzzzs";
+
+    private static char Fold(char c)
+    {
+        var index = FoldFrom.IndexOf(c);
+        return index >= 0 ? FoldTo[index] : c;
     }
 }
 
