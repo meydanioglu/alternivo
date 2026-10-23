@@ -34,7 +34,7 @@ public sealed partial class ProductImporter(
 
     private string MediaRoot => config["Media:Path"] ?? "/app/media";
 
-    private sealed record PageMeta(string? Name, string? Title, string? Description, string? OgImage, List<(string Url, int Size, bool Apple)> Icons, string? Manifest);
+    private sealed record PageMeta(string? Name, string? Title, string? Description, string? OgImage, List<(string Url, int Size, bool Apple)> Icons, string? Manifest, List<string> BrandLogos);
 
     public async Task ProcessAsync(ImportItem item, CancellationToken ct)
     {
@@ -156,8 +156,13 @@ public sealed partial class ProductImporter(
         }
 
         candidates.AddRange((meta?.Icons ?? []).OrderByDescending(i => i.Apple).ThenByDescending(i => i.Size).Select(i => i.Url));
+        candidates.AddRange(meta?.BrandLogos ?? []);
         candidates.Add(new Uri(site, "/apple-touch-icon.png").ToString());
         candidates.Add(new Uri(site, "/apple-touch-icon-precomposed.png").ToString());
+        // Public favicon services, used only when the site itself offers nothing large enough.
+        var origin = Uri.EscapeDataString($"{site.Scheme}://{site.Host}");
+        candidates.Add($"https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url={origin}&size=256");
+        candidates.Add($"https://icon.horse/icon/{site.Host}");
         candidates.Add($"https://icons.duckduckgo.com/ip3/{site.Host}.ico");
         candidates.Add($"https://www.google.com/s2/favicons?domain={Uri.EscapeDataString(site.Host)}&sz=256");
         candidates.Add(new Uri(site, "/favicon.ico").ToString());
@@ -165,7 +170,7 @@ public sealed partial class ProductImporter(
         byte[]? best = null;
         string? bestExt = null;
         var bestSize = 0;
-        foreach (var url in candidates.Distinct().Take(10))
+        foreach (var url in candidates.Distinct().Take(14))
         {
             var image = await FetchImageAsync(http, url, ct);
             if (image is null) continue;
@@ -320,13 +325,25 @@ public sealed partial class ProductImporter(
             icons.Add((iconUri.ToString(), size, rel.Contains("apple-touch-icon")));
         }
 
+        var brandLogos = new List<string>();
+        foreach (Match m in JsonLdLogo().Matches(html.Length > 300_000 ? html[..300_000] : html))
+        {
+            var raw = m.Groups[1].Success ? m.Groups[1].Value : m.Groups[2].Value;
+            if (Uri.TryCreate(pageUri, raw.Replace("\\/", "/"), out var logoUri)) brandLogos.Add(logoUri.ToString());
+        }
+
+        if (metas.GetValueOrDefault("msapplication-TileImage") is { } tile && Uri.TryCreate(pageUri, tile, out var tileUri))
+        {
+            brandLogos.Add(tileUri.ToString());
+        }
+
         var title = TitleTag().Match(head) is { Success: true } t ? WebUtility.HtmlDecode(t.Groups[1].Value).Trim() : null;
         var description = new[] { metas.GetValueOrDefault("og:description"), metas.GetValueOrDefault("description"), metas.GetValueOrDefault("twitter:description") }
             .Select(Clean).Where(d => d is { Length: >= 20 }).OrderByDescending(d => d!.Length).FirstOrDefault();
         var ogImage = metas.GetValueOrDefault("og:image") ?? metas.GetValueOrDefault("twitter:image");
         if (ogImage is not null && Uri.TryCreate(pageUri, ogImage, out var ogUri)) ogImage = ogUri.ToString();
 
-        return new PageMeta(metas.GetValueOrDefault("og:site_name") ?? metas.GetValueOrDefault("application-name"), title, description, ogImage, icons, manifest);
+        return new PageMeta(metas.GetValueOrDefault("og:site_name") ?? metas.GetValueOrDefault("application-name"), title, description, ogImage, icons, manifest, brandLogos);
     }
 
     private static async Task<string> ReadLimitedAsync(HttpResponseMessage response, int limit, CancellationToken ct)
@@ -511,6 +528,10 @@ public sealed partial class ProductImporter(
 
     [GeneratedRegex(@"<link\s[^>]*>", RegexOptions.IgnoreCase)]
     private static partial Regex LinkTag();
+
+    // "logo": "https://..."  or  "logo": { ... "url": "https://..." }
+    [GeneratedRegex(@"""logo""\s*:\s*(?:""(https?:[^""]{5,500})""|\{[^{}]{0,300}?""url""\s*:\s*""(https?:[^""]{5,500})"")", RegexOptions.IgnoreCase)]
+    private static partial Regex JsonLdLogo();
 
     [GeneratedRegex(@"<title[^>]*>([^<]{1,300})</title>", RegexOptions.IgnoreCase)]
     private static partial Regex TitleTag();

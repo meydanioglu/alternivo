@@ -119,6 +119,21 @@ export default async function SoftwarePage({ params }: Props) {
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] [&>*]:min-w-0">
         <div className="flex min-w-0 flex-col gap-8">
+          {app.screenshots.length === 0 && (
+            // No preview image published by the product: show a generated brand card instead of an empty gap.
+            <div
+              aria-hidden="true"
+              className="relative flex aspect-[1200/630] w-full max-w-3xl items-center justify-center gap-5 overflow-hidden rounded-xl border border-border bg-gradient-to-br from-accent/25 via-surface to-surface p-8"
+            >
+              <div className="pointer-events-none absolute -right-16 -top-16 size-64 rounded-full bg-accent/20 blur-3xl" />
+              <ApplicationLogo name={s.name} logoUrl={s.logoUrl} size="lg" />
+              <div className="relative min-w-0">
+                <p className="truncate text-2xl font-bold tracking-tight sm:text-3xl">{s.name}</p>
+                <p className="mt-1 line-clamp-2 max-w-md text-sm text-muted">{s.shortDescription}</p>
+              </div>
+            </div>
+          )}
+
           {app.screenshots.length > 0 && (
             <section aria-label={`${s.name} preview`}>
               <div className="flex snap-x gap-3 overflow-x-auto pb-2">
