@@ -1,4 +1,7 @@
+import { Plus } from "lucide-react";
 import Link from "next/link";
+import { buttonClass } from "@/components/ui/styles";
+import { getCurrentUser } from "@/lib/auth/session";
 import { site } from "@/config/site";
 import { SearchCommand } from "@/components/search/search-command";
 import { Container } from "./page-parts";
@@ -19,26 +22,46 @@ export function Logo() {
   );
 }
 
-export function MainHeader() {
+export async function MainHeader() {
+  const user = await getCurrentUser();
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
       <Container className="flex h-16 items-center gap-3">
-        <MobileNav />
+        <MobileNav signedIn={!!user} />
         <Logo />
-        <nav aria-label="Main" className="ml-4 hidden items-center gap-1 md:flex">
+        <nav aria-label="Main" className="ml-2 hidden items-center gap-0.5 lg:flex">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-surface-secondary hover:text-foreground"
+              className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-surface-secondary hover:text-foreground"
             >
               {link.label}
             </Link>
           ))}
         </nav>
-        <div className="ml-auto flex w-full max-w-xs items-center gap-2 lg:max-w-sm">
-          <SearchCommand shortcut placeholder="Search apps…" />
+        <div className="ml-auto flex min-w-0 items-center gap-2">
+          <div className="hidden w-56 sm:block xl:w-72">
+            <SearchCommand shortcut placeholder="Search apps…" />
+          </div>
+          <Link href="/submit" className={buttonClass("ghost", "sm", "hidden whitespace-nowrap md:inline-flex")}>
+            <Plus className="size-4" aria-hidden="true" /> Submit
+          </Link>
           <ThemeSwitch />
+          {user ? (
+            <Link
+              href="/account"
+              aria-label={`Your account (${user.displayName})`}
+              title={user.displayName}
+              className="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-sm font-bold text-accent-foreground ring-offset-2 ring-offset-background hover:ring-2 hover:ring-accent"
+            >
+              {user.displayName.slice(0, 1).toUpperCase()}
+            </Link>
+          ) : (
+            <Link href="/login" className={buttonClass("primary", "sm", "whitespace-nowrap")}>
+              Sign in
+            </Link>
+          )}
         </div>
       </Container>
     </header>
@@ -65,6 +88,15 @@ const FOOTER_COLUMNS = [
     ],
   },
   {
+    title: "Makers & community",
+    links: [
+      { href: "/submit", label: "Submit a product" },
+      { href: "/register", label: "Create an account" },
+      { href: "/account", label: "Your account" },
+      { href: "/new-apps", label: "Recently added" },
+    ],
+  },
+  {
     title: "Browse",
     links: [
       { href: "/categories", label: "All categories" },
@@ -78,7 +110,7 @@ const FOOTER_COLUMNS = [
 export function Footer() {
   return (
     <footer className="mt-16 border-t border-border bg-surface">
-      <Container className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
+      <Container className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-5">
         <div className="flex flex-col gap-3">
           <Logo />
           <p className="max-w-xs text-sm text-muted">{site.tagline}</p>

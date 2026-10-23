@@ -15,6 +15,8 @@ import { FilterSidebar, MobileFilterDrawer, type FilterGroup, type ToggleOption 
 import { SortSelector } from "@/components/filters/sort-selector";
 import { BreadcrumbNavigation, Container, EmptyState, Pagination, pageHref } from "@/components/layout/page-parts";
 import { JsonLd } from "@/components/seo/json-ld";
+import { AlternativeVoteButton, SuggestAlternativeForm } from "@/components/catalog/community-actions";
+import { getCurrentUser } from "@/lib/auth/session";
 import { buttonClass, chipClass } from "@/components/ui/styles";
 
 export const dynamic = "force-dynamic";
@@ -83,15 +85,23 @@ function SignalBreakdown({ item }: { item: AlternativeItem }) {
   );
 }
 
-function AlternativeCard({ item, rank, sourceSlug, sourceName }: { item: AlternativeItem; rank: number; sourceSlug: string; sourceName: string }) {
+function AlternativeCard({ item, rank, sourceSlug, sourceName, signedIn }: { item: AlternativeItem; rank: number; sourceSlug: string; sourceName: string; signedIn: boolean }) {
   const app = item.application;
   const compareSlug = [sourceSlug, app.slug].sort().join("-vs-");
   return (
     <li className="rounded-lg border border-border bg-surface p-4">
       <div className="flex gap-4">
-        <span className="mt-2 w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-muted" aria-label={`Rank ${rank}`}>
-          {rank}
-        </span>
+        <div className="flex flex-col items-center gap-1">
+          <span className="text-xs font-semibold tabular-nums text-muted" aria-label={`Rank ${rank}`}>
+            #{rank}
+          </span>
+          <AlternativeVoteButton
+            relationshipId={item.relationshipId}
+            count={item.voteCount}
+            path={`/software/${sourceSlug}/alternatives`}
+            signedIn={signedIn}
+          />
+        </div>
         <ApplicationLogo name={app.name} logoUrl={app.logoUrl} />
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -167,6 +177,8 @@ export default async function AlternativesPageRoute({ params, searchParams }: Pr
     return facet ? [{ param: a.param, label: a.label, count: facet.count }] : [];
   });
 
+  const user = await getCurrentUser();
+
   return (
     <Container className="py-6">
       <JsonLd data={itemListJsonLd(`${source.name} alternatives`, results.items.map((i) => i.application), offset)} />
@@ -230,7 +242,7 @@ export default async function AlternativesPageRoute({ params, searchParams }: Pr
           ) : (
             <ol className="flex flex-col gap-3">
               {results.items.map((item, i) => (
-                <AlternativeCard key={item.relationshipId} item={item} rank={offset + i + 1} sourceSlug={source.slug} sourceName={source.name} />
+                <AlternativeCard key={item.relationshipId} item={item} rank={offset + i + 1} sourceSlug={source.slug} sourceName={source.name} signedIn={!!user} />
               ))}
             </ol>
           )}
@@ -240,6 +252,10 @@ export default async function AlternativesPageRoute({ params, searchParams }: Pr
             totalPages={results.totalPages}
             hrefFor={(p) => pageHref(`/software/${source.slug}/alternatives`, raw, p)}
           />
+
+          <div className="mt-8">
+            <SuggestAlternativeForm slug={source.slug} name={source.name} signedIn={!!user} />
+          </div>
 
           <p className="mt-8 text-xs text-muted">
             How ranking works: each alternative gets a transparent match score from community votes, feature overlap,

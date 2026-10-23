@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useState } from "react";
 import { NAV_LINKS } from "./nav-links";
 
-export function MobileNav() {
+export function MobileNav({ signedIn }: { signedIn: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <Button variant="ghost" size="sm" isIconOnly aria-label="Open menu" className="md:hidden" onPress={() => setIsOpen(true)}>
+      <Button variant="ghost" size="sm" isIconOnly aria-label="Open menu" className="lg:hidden" onPress={() => setIsOpen(true)}>
         <Menu className="size-5" aria-hidden="true" />
       </Button>
       <Drawer.Backdrop isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -35,6 +35,20 @@ export function MobileNav() {
                       </Link>
                     </li>
                   ))}
+                  <li className="mt-2 border-t border-border pt-2">
+                    <Link href="/submit" onClick={() => setIsOpen(false)} className="block rounded-md px-3 py-2 text-base hover:bg-surface-secondary">
+                      Submit a product
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={signedIn ? "/account" : "/login"}
+                      onClick={() => setIsOpen(false)}
+                      className="block rounded-md px-3 py-2 text-base hover:bg-surface-secondary"
+                    >
+                      {signedIn ? "Your account" : "Sign in"}
+                    </Link>
+                  </li>
                 </ul>
               </nav>
             </Drawer.Body>

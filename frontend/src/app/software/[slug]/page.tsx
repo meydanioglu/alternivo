@@ -12,6 +12,8 @@ import { CommunityStats, CompactApplicationRow } from "@/components/catalog/appl
 import { AttributeBadges, CategoryChip, LicenseBadge, PlatformBadge, PricingBadge } from "@/components/catalog/badges";
 import { RatingSummary, ReviewCard } from "@/components/catalog/review-card";
 import { ShareButton } from "@/components/catalog/share-button";
+import { LikeSaveButtons, ReviewForm } from "@/components/catalog/community-actions";
+import { getCurrentUser, userApi } from "@/lib/auth/session";
 import { BreadcrumbNavigation, Container, SectionHeader } from "@/components/layout/page-parts";
 import { JsonLd } from "@/components/seo/json-ld";
 import { buttonClass, chipClass } from "@/components/ui/styles";
@@ -55,6 +57,14 @@ export default async function SoftwarePage({ params }: Props) {
   const topAlternative = app.topAlternatives[0];
   const compareSlug = topAlternative ? [s.slug, topAlternative.slug].sort().join("-vs-") : null;
 
+  const user = await getCurrentUser();
+  const [vote, bookmarks] = user
+    ? await Promise.all([
+        userApi<{ voted: boolean; count: number }>(`/api/v1/applications/${s.id}/votes`, { persist: false }).catch(() => null),
+        userApi<ApplicationSummary[]>("/api/v1/users/me/bookmarks", { persist: false }).catch(() => []),
+      ])
+    : [null, []];
+
   return (
     <Container className="py-6">
       <JsonLd data={softwareJsonLd(app)} />
@@ -81,7 +91,15 @@ export default async function SoftwarePage({ params }: Props) {
             <AttributeBadges app={s} />
           </div>
         </div>
-        <div className="flex flex-wrap gap-2 md:flex-col md:items-stretch">
+        <div className="flex flex-wrap gap-2 md:w-64 md:flex-col md:items-stretch">
+          <LikeSaveButtons
+            applicationId={s.id}
+            path={`/software/${s.slug}`}
+            signedIn={!!user}
+            liked={vote?.voted ?? false}
+            likeCount={vote?.count ?? s.likeCount}
+            saved={bookmarks.some((b) => b.id === s.id)}
+          />
           <Link href={`/software/${s.slug}/alternatives`} className={buttonClass("primary", "md")}>
             Find alternatives <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
@@ -154,6 +172,9 @@ export default async function SoftwarePage({ params }: Props) {
           <section>
             <h2 className="mb-3 text-lg font-semibold">Reviews</h2>
             <RatingSummary average={s.ratingAverage} count={s.reviewCount} />
+            <div className="mt-4">
+              <ReviewForm applicationId={s.id} slug={s.slug} name={s.name} signedIn={!!user} />
+            </div>
             {app.recentReviews.length > 0 && (
               <div className="mt-4 flex flex-col gap-3">
                 {app.recentReviews.map((r) => (

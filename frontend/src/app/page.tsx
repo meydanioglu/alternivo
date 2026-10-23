@@ -1,4 +1,4 @@
-import { ArrowRight, MessageSquareQuote } from "lucide-react";
+import { ArrowRight, MessageSquareQuote, Rocket } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
@@ -107,6 +107,21 @@ export default async function HomePage() {
           href="/trending"
           apps={home.trending}
         />
+
+        <section className="my-4 flex flex-col items-start gap-4 overflow-hidden rounded-2xl bg-accent p-6 text-accent-foreground sm:flex-row sm:items-center sm:justify-between sm:p-8">
+          <div className="flex items-start gap-4">
+            <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-white/15">
+              <Rocket className="size-6" aria-hidden="true" />
+            </span>
+            <div>
+              <h2 className="text-lg font-semibold sm:text-xl">Building something people should switch to?</h2>
+              <p className="text-sm opacity-85">Submit your product for free and get listed as an alternative to the apps people already use.</p>
+            </div>
+          </div>
+          <Link href="/submit" className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-accent hover:bg-white/90">
+            Submit your product <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+        </section>
 
         {home.featuredCategories.length > 0 && (
           <section className="py-8">
