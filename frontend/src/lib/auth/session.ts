@@ -1,6 +1,6 @@
 import "server-only";
 import { cookies, headers } from "next/headers";
-import { apiBaseUrl } from "@/lib/api/client";
+import { apiBaseUrl, apiInternalKey } from "@/lib/api/client";
 
 /**
  * Backend-for-frontend session. The API issues bearer tokens (ASP.NET Identity); the browser never sees them:
@@ -52,6 +52,11 @@ async function forwardHeaders(): Promise<Record<string, string>> {
   const result: Record<string, string> = { accept: "application/json" };
   if (forwarded) result["X-Forwarded-For"] = forwarded;
   return result;
+}
+
+/** Shared key for server-side calls: exempts them from the global anonymous limit (writes keep a per-user limit). */
+function internalHeaders(): Record<string, string> {
+  return apiInternalKey ? { "X-Internal-Key": apiInternalKey } : {};
 }
 
 async function isHttps() {
@@ -137,6 +142,7 @@ export async function userApi<T>(
     method: init.method ?? "GET",
     headers: {
       ...(await forwardHeaders()),
+      ...internalHeaders(),
       authorization: `Bearer ${token}`,
       ...(init.body !== undefined ? { "content-type": "application/json" } : {}),
     },

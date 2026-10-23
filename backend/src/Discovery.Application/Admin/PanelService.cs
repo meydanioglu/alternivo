@@ -145,13 +145,17 @@ public sealed class PanelService(IAppDbContext db, ICacheService cache, TimeProv
         var visitors = await range.Select(v => v.VisitorId).Distinct().CountAsync(ct);
         var activeNow = await db.PageViews.Where(v => v.CreatedAt >= now.AddMinutes(-5)).Select(v => v.VisitorId).Distinct().CountAsync(ct);
 
-        var topPages = await range.GroupBy(v => v.Path)
-            .Select(g => new CountRow(g.Key, g.Count())).OrderByDescending(x => x.Count).Take(15).ToListAsync(ct);
-        var topReferrers = await range.Where(v => v.ReferrerHost != null && v.ReferrerHost != ownHost)
-            .GroupBy(v => v.ReferrerHost!)
-            .Select(g => new CountRow(g.Key, g.Count())).OrderByDescending(x => x.Count).Take(10).ToListAsync(ct);
-        var devices = await range.GroupBy(v => v.Device)
-            .Select(g => new CountRow(g.Key, g.Count())).OrderByDescending(x => x.Count).ToListAsync(ct);
+        // Order on an anonymous projection: EF cannot translate ordering by a property of a constructed record.
+        var topPages = (await range.GroupBy(v => v.Path)
+                .Select(g => new { g.Key, Count = g.Count() }).OrderByDescending(x => x.Count).Take(15).ToListAsync(ct))
+            .Select(x => new CountRow(x.Key, x.Count)).ToList();
+        var topReferrers = (await range.Where(v => v.ReferrerHost != null && v.ReferrerHost != ownHost)
+                .GroupBy(v => v.ReferrerHost!)
+                .Select(g => new { g.Key, Count = g.Count() }).OrderByDescending(x => x.Count).Take(10).ToListAsync(ct))
+            .Select(x => new CountRow(x.Key, x.Count)).ToList();
+        var devices = (await range.GroupBy(v => v.Device)
+                .Select(g => new { g.Key, Count = g.Count() }).OrderByDescending(x => x.Count).ToListAsync(ct))
+            .Select(x => new CountRow(x.Key, x.Count)).ToList();
         var recent = await db.PageViews.OrderByDescending(v => v.Id).Take(30)
             .Select(v => new RecentView(v.Path, v.ReferrerHost, v.Device, v.UserId != null, v.CreatedAt)).ToListAsync(ct);
 
