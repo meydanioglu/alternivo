@@ -25,7 +25,9 @@ www.{$DOMAIN} {
 	redir https://{$DOMAIN}{uri} permanent
 }
 
-# Requests to the bare server IP (or any other host name) go to the canonical HTTPS domain.
+# TEMPORARY: the bare server IP serves the site over plain HTTP (kept out of search engines).
+# To turn it off again, replace this block with:  :80 { redir https://{$DOMAIN}{uri} permanent }
 :80 {
-	redir https://{$DOMAIN}{uri} permanent
+	header X-Robots-Tag "noindex, nofollow"
+	import site
 }
