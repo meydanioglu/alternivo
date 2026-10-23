@@ -137,10 +137,11 @@ public sealed partial class ProductImporter(
             foreach (var old in app.Screenshots.Where(s => s.Url.StartsWith("/media/shots/")).ToList())
             {
                 DeleteImported(old.Url, "shots");
-                app.Screenshots.Remove(old);
+                db.ApplicationScreenshots.Remove(old);
             }
 
-            app.Screenshots.Add(new ApplicationScreenshot
+            // Added through the DbSet: the client-generated key would otherwise be treated as an existing row.
+            db.ApplicationScreenshots.Add(new ApplicationScreenshot
             {
                 ApplicationId = app.Id,
                 Url = shot,
