@@ -21,6 +21,9 @@ public sealed class SeoService(
     public const int SitemapPageSize = 10_000;
     public static readonly string[] SitemapTypes = ["software", "alternatives", "categories", "comparisons"];
 
+    /// <summary>Category pages with fewer apps are thin and served noindex (see frontend category page).</summary>
+    public const int MinAppsForCategoryIndexing = 3;
+
     public async Task<IReadOnlyList<SitemapEntryDto>> GetSitemapAsync(string type, int page, CancellationToken ct)
     {
         var skip = (Math.Max(page, 1) - 1) * SitemapPageSize;
@@ -58,9 +61,12 @@ public sealed class SeoService(
 
             case "categories":
             {
+                // Must match the category page's index rule (noindex below MinAppsForCategoryIndexing apps,
+                // subcategories included) so the sitemap never lists a noindex URL.
                 var rows = await db.Categories
-                    .Where(c => db.ApplicationCategories.Any(ac => ac.CategoryId == c.Id && visible.Any(a => a.Id == ac.ApplicationId))
-                        || c.Children.Any(ch => db.ApplicationCategories.Any(ac => ac.CategoryId == ch.Id && visible.Any(a => a.Id == ac.ApplicationId))))
+                    .Where(c => db.ApplicationCategories
+                        .Where(ac => (ac.CategoryId == c.Id || c.Children.Any(ch => ch.Id == ac.CategoryId)) && visible.Any(a => a.Id == ac.ApplicationId))
+                        .Select(ac => ac.ApplicationId).Distinct().Count() >= MinAppsForCategoryIndexing)
                     .OrderBy(c => c.Slug)
                     .Skip(skip).Take(SitemapPageSize)
                     .Select(c => new { c.Slug, c.UpdatedAt })

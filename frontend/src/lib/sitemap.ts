@@ -14,8 +14,8 @@ export function urlsetXml(entries: { path: string; lastModified?: string }[]) {
 }
 
 export function sitemapIndexXml(paths: string[]) {
-  const now = new Date().toISOString();
-  const body = paths.map((p) => `<sitemap><loc>${escapeXml(absoluteUrl(p))}</loc><lastmod>${now}</lastmod></sitemap>`).join("");
+  // No <lastmod>: we only know it per URL (inside each sitemap), and a fake "now" teaches crawlers to ignore it.
+  const body = paths.map((p) => `<sitemap><loc>${escapeXml(absoluteUrl(p))}</loc></sitemap>`).join("");
   return `<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${body}</sitemapindex>`;
 }
 

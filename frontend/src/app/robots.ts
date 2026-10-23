@@ -7,7 +7,8 @@ import { site } from "@/config/site";
  */
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/bff/"] }],
+    // Private areas are noindex anyway; disallowing them saves crawl budget.
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/bff/", "/admin", "/account", "/settings"] }],
     sitemap: `${site.url}/sitemap.xml`,
     host: site.url,
   };
