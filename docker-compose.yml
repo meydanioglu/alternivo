@@ -53,6 +53,8 @@ services:
       Smtp__Password: ${SMTP_PASSWORD:-}
       Smtp__From: ${SMTP_FROM:-no-reply@alternivo.com}
       Site__Url: ${SITE_URL:-https://alternivo.com}
+      OpenAI__ApiKey: ${OPENAI_API_KEY:-}
+      OpenAI__Model: ${OPENAI_MODEL:-gpt-5}
     volumes:
       - apikeys:/app/keys
       - media:/app/media

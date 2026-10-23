@@ -21,6 +21,9 @@ internal sealed class SoftwareApplicationConfiguration : IEntityTypeConfiguratio
         b.Property(a => a.ShortDescription).HasMaxLength(200).IsRequired();
         b.Property(a => a.Description).HasMaxLength(10_000);
         b.Property(a => a.WebsiteUrl).HasMaxLength(2048);
+        b.Property(a => a.SeoTitle).HasMaxLength(70);
+        b.Property(a => a.SeoDescription).HasMaxLength(170);
+        b.Property(a => a.ContentJson).HasColumnType("jsonb");
         b.Property(a => a.LogoUrl).HasMaxLength(2048);
         b.Property(a => a.Developer).HasMaxLength(120);
         b.Property(a => a.SearchText).HasMaxLength(4000).IsRequired();
@@ -342,6 +345,24 @@ internal sealed class ImportItemConfiguration : IEntityTypeConfiguration<ImportI
         b.HasIndex(x => x.Status);
         b.HasIndex(x => x.Url);
         b.HasIndex(x => x.CreatedAt);
+    }
+}
+
+internal sealed class ContentDraftConfiguration : IEntityTypeConfiguration<ContentDraft>
+{
+    public void Configure(EntityTypeBuilder<ContentDraft> b)
+    {
+        b.ToTable("ContentDrafts");
+        b.Property(x => x.ShortDescription).HasMaxLength(200);
+        b.Property(x => x.Description).HasMaxLength(10_000);
+        b.Property(x => x.SeoTitle).HasMaxLength(70);
+        b.Property(x => x.SeoDescription).HasMaxLength(170);
+        b.Property(x => x.SectionsJson).HasColumnType("jsonb");
+        b.Property(x => x.SourceUrl).HasMaxLength(2048);
+        b.Property(x => x.Model).HasMaxLength(60);
+        b.Property(x => x.Error).HasMaxLength(1000);
+        b.HasIndex(x => x.Status);
+        b.HasIndex(x => x.ApplicationId);
     }
 }
 

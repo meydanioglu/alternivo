@@ -17,3 +17,24 @@ public static class Paging
         return (p, s);
     }
 }
+
+/// <summary>Reads and writes the approved content sections stored as JSON on an application.</summary>
+public static class ContentJson
+{
+    private static readonly System.Text.Json.JsonSerializerOptions Options = new(System.Text.Json.JsonSerializerDefaults.Web);
+
+    public static Contracts.ContentSectionsDto? Parse(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json)) return null;
+        try
+        {
+            return System.Text.Json.JsonSerializer.Deserialize<Contracts.ContentSectionsDto>(json, Options);
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return null;
+        }
+    }
+
+    public static string Serialize(Contracts.ContentSectionsDto sections) => System.Text.Json.JsonSerializer.Serialize(sections, Options);
+}

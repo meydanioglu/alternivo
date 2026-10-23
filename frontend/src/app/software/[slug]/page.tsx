@@ -8,6 +8,7 @@ import { formatDate, pricingLabel } from "@/lib/format";
 import { loadOrNotFound } from "@/lib/resolve";
 import { faqJsonLd, pageMetadata, softwareJsonLd } from "@/lib/seo";
 import { AppFaq, buildAppFaq } from "@/components/catalog/app-faq";
+import { AppContentSections } from "@/components/catalog/app-content";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { CommunityStats, CompactApplicationRow } from "@/components/catalog/application-card";
 import { AttributeBadges, CategoryChip, LicenseBadge, PlatformBadge, PricingBadge } from "@/components/catalog/badges";
@@ -30,8 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const app = await load(slug);
   const s = app.summary;
   return pageMetadata({
-    title: `${s.name}: Features, Pricing & Alternatives`,
-    description: `${s.shortDescription} Compare ${s.name} pricing, platforms and license, and explore ${app.alternativesCount} alternatives.`.slice(0, 300),
+    title: app.seoTitle ?? `${s.name}: Features, Pricing & Alternatives`,
+    description:
+      app.seoDescription ??
+      `${s.shortDescription} Compare ${s.name} pricing, platforms and license, and explore ${app.alternativesCount} alternatives.`.slice(0, 300),
     path: `/software/${s.slug}`,
     image: app.screenshots[0]?.url ?? null,
   });
@@ -57,7 +60,12 @@ export default async function SoftwarePage({ params }: Props) {
   const s = app.summary;
   const category = app.categories[0];
   const topAlternative = app.topAlternatives[0];
-  const faq = buildAppFaq(app);
+  // Approved editorial FAQ first, then the data-driven answers (skipping questions already covered).
+  const editorialFaq = app.content?.faq ?? [];
+  const faq = [
+    ...editorialFaq,
+    ...buildAppFaq(app).filter((q) => !editorialFaq.some((e) => e.question.toLowerCase() === q.question.toLowerCase())),
+  ];
   const compareSlug = topAlternative ? [s.slug, topAlternative.slug].sort().join("-vs-") : null;
 
   const user = await getCurrentUser();
@@ -165,9 +173,11 @@ export default async function SoftwarePage({ params }: Props) {
             </section>
           )}
 
+          {app.content && <AppContentSections name={s.name} content={app.content} />}
+
           {app.features.length > 0 && (
             <section>
-              <h2 className="mb-3 text-lg font-semibold">Features</h2>
+              <h2 className="mb-3 text-lg font-semibold">{app.content ? "Feature tags" : "Features"}</h2>
               <ul className="flex flex-wrap gap-2">
                 {app.features.map((f) => (
                   <li key={f.slug} className={chipClass("default", "secondary", "md")}>

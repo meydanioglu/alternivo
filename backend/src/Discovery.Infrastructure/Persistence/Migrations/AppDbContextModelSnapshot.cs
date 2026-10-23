@@ -317,6 +317,12 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTimeOffset?>("ContentApprovedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ContentJson")
+                        .HasColumnType("jsonb");
+
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -389,6 +395,14 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("tsvector")
                         .HasComputedColumnSql("setweight(to_tsvector('simple', coalesce(\"Name\", '')), 'A') || setweight(to_tsvector('simple', coalesce(\"SearchText\", '')), 'B') || setweight(to_tsvector('simple', coalesce(\"ShortDescription\", '')), 'C')", true);
+
+                    b.Property<string>("SeoDescription")
+                        .HasMaxLength(170)
+                        .HasColumnType("character varying(170)");
+
+                    b.Property<string>("SeoTitle")
+                        .HasMaxLength(70)
+                        .HasColumnType("character varying(70)");
 
                     b.Property<string>("ShortDescription")
                         .IsRequired()
@@ -825,6 +839,85 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.HasIndex("EntityType", "EntityId");
 
                     b.ToTable("AuditLogs", (string)null);
+                });
+
+            modelBuilder.Entity("Discovery.Domain.Operations.ContentDraft", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Attempts")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(10000)
+                        .HasColumnType("character varying(10000)");
+
+                    b.Property<string>("Error")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<int>("InputTokens")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Model")
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<int>("OutputTokens")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("RequestedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ReviewedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ReviewedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SectionsJson")
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("SeoDescription")
+                        .HasMaxLength(170)
+                        .HasColumnType("character varying(170)");
+
+                    b.Property<string>("SeoTitle")
+                        .HasMaxLength(70)
+                        .HasColumnType("character varying(70)");
+
+                    b.Property<string>("ShortDescription")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("SourceChars")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SourceUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("Status");
+
+                    b.ToTable("ContentDrafts", (string)null);
                 });
 
             modelBuilder.Entity("Discovery.Domain.Operations.ImportItem", b =>

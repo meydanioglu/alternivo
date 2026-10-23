@@ -120,7 +120,10 @@ public sealed class CatalogService(
             topAlternatives,
             alternativeTo.Where(related.ContainsKey).Select(id => related[id]).ToList(),
             similarIds.Where(related.ContainsKey).Select(id => related[id]).ToList(),
-            reviews.Select(r => r.ToDto(names.GetValueOrDefault(r.UserId, "Community member"))).ToList());
+            reviews.Select(r => r.ToDto(names.GetValueOrDefault(r.UserId, "Community member"))).ToList(),
+            app.SeoTitle,
+            app.SeoDescription,
+            ContentJson.Parse(app.ContentJson));
     }
 
     public async Task<AlternativesPageDto> GetAlternativesAsync(string slug, CatalogFilter filter, CancellationToken ct)

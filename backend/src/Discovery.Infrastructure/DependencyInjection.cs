@@ -55,6 +55,10 @@ public static class DependencyInjection
             })
             .ConfigurePrimaryHttpMessageHandler(ProductImporter.CreateHandler);
         services.AddScoped<ProductImporter>();
+
+        services.AddHttpClient(Content.ContentGenerator.OpenAiClientName, c => c.Timeout = TimeSpan.FromMinutes(3));
+        services.AddScoped<Content.ContentGenerator>();
+        services.AddHostedService<Content.ContentWorker>();
         if (configuration.GetValue("Import:WorkerEnabled", true))
         {
             services.AddHostedService<ImportWorker>();

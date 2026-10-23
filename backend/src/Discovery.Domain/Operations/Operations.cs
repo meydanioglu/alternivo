@@ -73,3 +73,46 @@ public class ImportItem
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? LastSyncedAt { get; set; }
 }
+
+public enum ContentDraftStatus
+{
+    Queued = 0,
+    Generating = 1,
+    Ready = 2,
+    Approved = 3,
+    Rejected = 4,
+    Failed = 5,
+}
+
+/// <summary>
+/// AI-drafted SEO content for one application, grounded on text from the product's own website.
+/// Nothing reaches the public page until an editor approves it.
+/// </summary>
+public class ContentDraft
+{
+    public Guid Id { get; set; } = Guid.CreateVersion7();
+    public Guid ApplicationId { get; set; }
+    public ContentDraftStatus Status { get; set; } = ContentDraftStatus.Queued;
+    public string? Error { get; set; }
+    public int Attempts { get; set; }
+
+    public string? ShortDescription { get; set; }
+    public string? Description { get; set; }
+    public string? SeoTitle { get; set; }
+    public string? SeoDescription { get; set; }
+    /// <summary>Features, use cases, pros, cons and FAQ as JSON (same shape as SoftwareApplication.ContentJson).</summary>
+    public string? SectionsJson { get; set; }
+
+    /// <summary>Where the facts came from and how much of it there was.</summary>
+    public string? SourceUrl { get; set; }
+    public int SourceChars { get; set; }
+    public string? Model { get; set; }
+    public int InputTokens { get; set; }
+    public int OutputTokens { get; set; }
+
+    public Guid RequestedByUserId { get; set; }
+    public Guid? ReviewedByUserId { get; set; }
+    public DateTimeOffset? ReviewedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+}

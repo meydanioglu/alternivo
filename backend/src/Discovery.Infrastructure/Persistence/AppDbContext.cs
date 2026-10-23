@@ -37,6 +37,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<SearchQueryLog> SearchQueryLogs => Set<SearchQueryLog>();
     public DbSet<PageView> PageViews => Set<PageView>();
     public DbSet<ImportItem> ImportItems => Set<ImportItem>();
+    public DbSet<ContentDraft> ContentDrafts => Set<ContentDraft>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

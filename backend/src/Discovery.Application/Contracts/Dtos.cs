@@ -48,7 +48,10 @@ public sealed record ApplicationDetailDto(
     IReadOnlyList<ApplicationSummaryDto> TopAlternatives,
     IReadOnlyList<ApplicationSummaryDto> AlternativeTo,
     IReadOnlyList<ApplicationSummaryDto> Similar,
-    IReadOnlyList<ReviewDto> RecentReviews);
+    IReadOnlyList<ReviewDto> RecentReviews,
+    string? SeoTitle = null,
+    string? SeoDescription = null,
+    ContentSectionsDto? Content = null);
 
 public sealed record RankingSignalDto(string Name, double Value, double Weight);
 
@@ -172,3 +175,16 @@ public sealed record UserActivityDto(
     IReadOnlyList<ReviewDto> Reviews,
     IReadOnlyList<ApplicationSummaryDto> Liked,
     IReadOnlyList<ApplicationSummaryDto> Launched);
+
+public sealed record ContentFeatureDto(string Name, string Description);
+
+public sealed record ContentFaqDto(string Question, string Answer);
+
+/// <summary>Editor-approved long-form product content. Every list may be empty when the source had no facts for it.</summary>
+public sealed record ContentSectionsDto(
+    IReadOnlyList<ContentFeatureDto> Features,
+    IReadOnlyList<string> UseCases,
+    IReadOnlyList<string> Audience,
+    IReadOnlyList<string> Pros,
+    IReadOnlyList<string> Cons,
+    IReadOnlyList<ContentFaqDto> Faq);

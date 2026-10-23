@@ -14,6 +14,12 @@ public class SoftwareApplication : Entity, ISoftDeletable
     public string? Description { get; set; }
     public string? WebsiteUrl { get; set; }
     public string? LogoUrl { get; set; }
+    /// <summary>Approved SEO title/description overrides (null = generated from the summary).</summary>
+    public string? SeoTitle { get; set; }
+    public string? SeoDescription { get; set; }
+    /// <summary>Approved long-form sections (features, use cases, pros/cons, FAQ) as JSON; see ContentSections.</summary>
+    public string? ContentJson { get; set; }
+    public DateTimeOffset? ContentApprovedAt { get; set; }
     public string? Developer { get; set; }
 
     public PricingModel Pricing { get; set; }

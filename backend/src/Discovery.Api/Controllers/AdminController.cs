@@ -327,3 +327,50 @@ public sealed class AdminImportsController(ImportService imports, AdminService a
         return new { count = ids.Count };
     }
 }
+
+[ApiController]
+[Route("api/v1/admin/content")]
+[Produces("application/json")]
+[Authorize(Policy = Policies.Editorial)]
+public sealed class AdminContentController(
+    ContentService content,
+    Discovery.Infrastructure.Content.ContentGenerator generator,
+    HttpCurrentUser current) : ControllerBase
+{
+    [HttpGet("status")]
+    public object Status() => new { configured = generator.IsConfigured, model = generator.Model };
+
+    [HttpGet]
+    public Task<ContentOverview> List([FromQuery] string? status, [FromQuery] string? q, [FromQuery] int? page, CancellationToken ct) =>
+        content.ListAsync(status, q, page, ct);
+
+    [HttpGet("{id:guid}")]
+    public Task<ContentDraftDetail> Get(Guid id, CancellationToken ct) => content.GetAsync(id, ct);
+
+    [HttpPost("queue")]
+    public async Task<object> Queue(QueueContentRequest request, CancellationToken ct) =>
+        new { count = await content.QueueAsync(current.RequireUserId(), request, ct) };
+
+    [HttpPost("{id:guid}/approve")]
+    public async Task<IActionResult> Approve(Guid id, ApproveContentRequest request, CancellationToken ct)
+    {
+        await content.ApproveAsync(current.RequireUserId(), id, request, ct);
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/reject")]
+    public async Task<IActionResult> Reject(Guid id, CancellationToken ct)
+    {
+        await content.RejectAsync(current.RequireUserId(), id, ct);
+        return NoContent();
+    }
+
+    [HttpPost("{id:guid}/regenerate")]
+    public async Task<object> Regenerate(Guid id, CancellationToken ct) => new { count = await content.RequeueAsync(id, ct) };
+
+    [HttpPost("retry-failed")]
+    public async Task<object> RetryFailed(CancellationToken ct) => new { count = await content.RequeueAsync(null, ct) };
+
+    [HttpPost("cancel-queued")]
+    public async Task<object> CancelQueued(CancellationToken ct) => new { count = await content.CancelQueuedAsync(ct) };
+}

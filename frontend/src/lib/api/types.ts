@@ -84,6 +84,18 @@ export interface ApplicationDetail {
   alternativeTo: ApplicationSummary[];
   similar: ApplicationSummary[];
   recentReviews: Review[];
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  content?: ContentSections | null;
+}
+
+export interface ContentSections {
+  features: { name: string; description: string }[];
+  useCases: string[];
+  audience: string[];
+  pros: string[];
+  cons: string[];
+  faq: { question: string; answer: string }[];
 }
 
 export interface RankingSignal {
