@@ -96,6 +96,7 @@ public sealed partial class ProductImporter(
                 baseUri.GetLeftPart(UriPartial.Path),
                 null, null, null, false, false, false, 0, null, category, null, null, null, null, null, false, null), ct);
             app = await db.Applications.Include(a => a.Screenshots).FirstAsync(a => a.Id == id, ct);
+            app.NeedsContentReview = true;
         }
         else if (app.Verification == VerificationStatus.Unverified && description is not null
                  && (app.Description is null || app.ShortDescription.EndsWith("description pending review.", StringComparison.Ordinal)))

@@ -370,6 +370,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<bool>("NeedsContentReview")
+                        .HasColumnType("boolean");
+
                     b.Property<int>("Pricing")
                         .HasColumnType("integer");
 
@@ -444,6 +447,8 @@ namespace Discovery.Infrastructure.Persistence.Migrations
 
                     NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Name"), "gin");
                     NpgsqlIndexBuilderExtensions.HasOperators(b.HasIndex("Name"), new[] { "gin_trgm_ops" });
+
+                    b.HasIndex("NeedsContentReview");
 
                     b.HasIndex("PublishedAt");
 

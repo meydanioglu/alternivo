@@ -118,6 +118,7 @@ public sealed class AdminService(
         {
             app.Verification = VerificationStatus.Verified;
             app.LastVerifiedAt = now;
+            app.NeedsContentReview = false;
         }
 
         app.LicenseId = string.IsNullOrWhiteSpace(request.LicenseSlug)

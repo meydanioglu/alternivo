@@ -20,6 +20,11 @@ public class SoftwareApplication : Entity, ISoftDeletable
     /// <summary>Approved long-form sections (features, use cases, pros/cons, FAQ) as JSON; see ContentSections.</summary>
     public string? ContentJson { get; set; }
     public DateTimeOffset? ContentApprovedAt { get; set; }
+    /// <summary>
+    /// Imported listing whose text has not been reviewed yet: still public, but kept out of search indexes
+    /// (noindex + omitted from sitemaps) until an editor approves its content or verifies it.
+    /// </summary>
+    public bool NeedsContentReview { get; set; }
     public string? Developer { get; set; }
 
     public PricingModel Pricing { get; set; }

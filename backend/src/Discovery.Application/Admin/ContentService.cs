@@ -147,6 +147,7 @@ public sealed class ContentService(IAppDbContext db, ICacheService cache, AdminS
         app.SeoDescription = string.IsNullOrWhiteSpace(r.SeoDescription) ? null : r.SeoDescription.Trim();
         app.ContentJson = ContentJson.Serialize(r.Sections);
         app.ContentApprovedAt = now;
+        app.NeedsContentReview = false;
         app.Verification = VerificationStatus.Verified;
         app.LastVerifiedAt = now;
         app.UpdatedAt = now;

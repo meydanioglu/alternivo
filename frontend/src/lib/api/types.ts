@@ -87,6 +87,8 @@ export interface ApplicationDetail {
   seoTitle?: string | null;
   seoDescription?: string | null;
   content?: ContentSections | null;
+  /** False while an imported listing awaits content review: page is served noindex. */
+  indexable?: boolean;
 }
 
 export interface ContentSections {

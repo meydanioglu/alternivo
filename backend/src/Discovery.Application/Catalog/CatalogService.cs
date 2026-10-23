@@ -123,7 +123,8 @@ public sealed class CatalogService(
             reviews.Select(r => r.ToDto(names.GetValueOrDefault(r.UserId, "Community member"))).ToList(),
             app.SeoTitle,
             app.SeoDescription,
-            ContentJson.Parse(app.ContentJson));
+            ContentJson.Parse(app.ContentJson),
+            !app.NeedsContentReview);
     }
 
     public async Task<AlternativesPageDto> GetAlternativesAsync(string slug, CatalogFilter filter, CancellationToken ct)
@@ -155,7 +156,7 @@ public sealed class CatalogService(
         return new AlternativesPageDto(
             app.ToSummary(),
             ranked.Total,
-            ranked.Total >= _ranking.MinAlternativesForIndexing,
+            ranked.Total >= _ranking.MinAlternativesForIndexing && !app.NeedsContentReview,
             new PagedResult<AlternativeItemDto>(pageItems, page, pageSize, ranked.Items.Count),
             BuildFacets(ranked.All));
     }
@@ -406,7 +407,7 @@ public sealed class CatalogService(
             ordered.Select(a => new CompareApplicationDto(a.ToSummary(), a.WebsiteUrl, a.Developer, a.ReleasedOn, a.CategoryRefs(), a.FeatureRefs())).ToList(),
             matrix,
             matrix.Where(r => r.PresentIn.Count == ordered.Count).Select(r => r.Name).ToList(),
-            ordered.Count == 2 && (related || shareCategory));
+            ordered.Count == 2 && (related || shareCategory) && ordered.All(a => !a.NeedsContentReview));
     }
 
     /// <summary>Popular canonical comparison pairs derived from approved relationships between visible apps.</summary>

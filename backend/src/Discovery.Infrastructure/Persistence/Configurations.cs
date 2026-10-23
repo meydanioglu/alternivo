@@ -24,6 +24,7 @@ internal sealed class SoftwareApplicationConfiguration : IEntityTypeConfiguratio
         b.Property(a => a.SeoTitle).HasMaxLength(70);
         b.Property(a => a.SeoDescription).HasMaxLength(170);
         b.Property(a => a.ContentJson).HasColumnType("jsonb");
+        b.HasIndex(a => a.NeedsContentReview);
         b.Property(a => a.LogoUrl).HasMaxLength(2048);
         b.Property(a => a.Developer).HasMaxLength(120);
         b.Property(a => a.SearchText).HasMaxLength(4000).IsRequired();

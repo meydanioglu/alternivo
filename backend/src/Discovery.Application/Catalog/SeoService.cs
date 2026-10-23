@@ -32,7 +32,7 @@ public sealed class SeoService(
         switch (type)
         {
             case "software":
-                return (await visible
+                return (await visible.Where(a => !a.NeedsContentReview)
                         .OrderBy(a => a.Slug)
                         .Skip(skip).Take(SitemapPageSize)
                         .Select(a => new { a.Slug, a.UpdatedAt })
@@ -46,7 +46,7 @@ public sealed class SeoService(
                 var rows = await (
                         from r in db.AlternativeRelationships
                         where r.Status == ModerationStatus.Approved
-                        join s in visible on r.SourceApplicationId equals s.Id
+                        join s in visible.Where(x => !x.NeedsContentReview) on r.SourceApplicationId equals s.Id
                         join a in visible on r.AlternativeApplicationId equals a.Id
                         group r by new { s.Slug, s.UpdatedAt } into g
                         where g.Count() >= min
@@ -84,8 +84,8 @@ public sealed class SeoService(
                 var rows = await (
                         from r in db.AlternativeRelationships
                         where r.Status == ModerationStatus.Approved
-                        join s in visible on r.SourceApplicationId equals s.Id
-                        join a in visible on r.AlternativeApplicationId equals a.Id
+                        join s in visible.Where(x => !x.NeedsContentReview) on r.SourceApplicationId equals s.Id
+                        join a in visible.Where(x => !x.NeedsContentReview) on r.AlternativeApplicationId equals a.Id
                         select new { S = s.Slug, A = a.Slug, SU = s.UpdatedAt, AU = a.UpdatedAt })
                     .ToListAsync(ct);
                 return rows

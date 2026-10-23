@@ -37,6 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       `${s.shortDescription} Compare ${s.name} pricing, platforms and license, and explore ${app.alternativesCount} alternatives.`.slice(0, 300),
     path: `/software/${s.slug}`,
     image: app.screenshots[0]?.url ?? null,
+    noindex: app.indexable === false,
   });
 }
 

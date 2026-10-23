@@ -51,7 +51,8 @@ public sealed record ApplicationDetailDto(
     IReadOnlyList<ReviewDto> RecentReviews,
     string? SeoTitle = null,
     string? SeoDescription = null,
-    ContentSectionsDto? Content = null);
+    ContentSectionsDto? Content = null,
+    bool Indexable = true);
 
 public sealed record RankingSignalDto(string Name, double Value, double Weight);
 
