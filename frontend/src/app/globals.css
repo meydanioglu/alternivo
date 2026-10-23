@@ -69,3 +69,8 @@ body {
     font-size: 16px !important;
   }
 }
+
+/* Grid items default to min-width:auto, so one long unbreakable line (truncate, URLs) widens the page on phones. */
+.grid > * {
+  min-width: 0;
+}

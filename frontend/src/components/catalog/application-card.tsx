@@ -55,7 +55,7 @@ export function ApplicationCard({ app }: { app: ApplicationSummary }) {
 
 export function CompactApplicationRow({ app, rank }: { app: ApplicationSummary; rank?: number }) {
   return (
-    <li className="relative flex items-center gap-3 rounded-md px-2 py-2.5 hover:bg-surface-secondary">
+    <li className="relative flex min-w-0 items-center gap-3 rounded-md px-2 py-2.5 hover:bg-surface-secondary">
       {rank !== undefined && <span className="w-5 text-right text-sm tabular-nums text-muted">{rank}</span>}
       <ApplicationLogo name={app.name} logoUrl={app.logoUrl} size="sm" />
       <div className="min-w-0 flex-1">

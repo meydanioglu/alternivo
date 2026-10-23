@@ -249,7 +249,7 @@ export default async function HomePage() {
         {home.newlyReleased.length > 0 && (
           <section className="py-8">
             <SectionHeader title="Release history" description="Listed apps with a known first public release date, newest first." />
-            <ul className="grid gap-2 rounded-lg border border-border bg-surface p-2 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 gap-2 rounded-lg border border-border bg-surface p-2 sm:grid-cols-2">
               {home.newlyReleased.map((app) => (
                 <CompactApplicationRow key={app.id} app={app} />
               ))}
