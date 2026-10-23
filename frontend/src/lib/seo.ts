@@ -10,11 +10,14 @@ interface PageMetaInput {
   canonical?: string;
   noindex?: boolean;
   type?: "website" | "article";
+  /** Site-relative or absolute image for social cards; defaults to the brand card. */
+  image?: string | null;
 }
 
 /** Builds complete metadata: unique title, description, canonical, Open Graph, Twitter, robots. */
-export function pageMetadata({ title, description, path, canonical, noindex, type = "website" }: PageMetaInput): Metadata {
+export function pageMetadata({ title, description, path, canonical, noindex, type = "website", image }: PageMetaInput): Metadata {
   const canonicalUrl = absoluteUrl(canonical ?? path);
+  const imageUrl = image ? (image.startsWith("http") ? image : absoluteUrl(image)) : absoluteUrl("/opengraph-image.png");
   return {
     title,
     description,
@@ -27,8 +30,9 @@ export function pageMetadata({ title, description, path, canonical, noindex, typ
       siteName: site.name,
       type,
       locale: "en_US",
+      images: [{ url: imageUrl }],
     },
-    twitter: { card: "summary_large_image", title, description },
+    twitter: { card: "summary_large_image", title, description, images: [imageUrl] },
   };
 }
 
@@ -86,6 +90,8 @@ export function softwareJsonLd(app: ApplicationDetail) {
     applicationCategory: CATEGORY_TO_SCHEMA[s.primaryCategory?.slug ?? ""] ?? "UtilitiesApplication",
     ...(os.length > 0 && { operatingSystem: os.join(", ") }),
     ...(app.websiteUrl && { sameAs: [app.websiteUrl] }),
+    ...((app.screenshots[0]?.url ?? s.logoUrl) && { image: absoluteUrl((app.screenshots[0]?.url ?? s.logoUrl)!) }),
+    ...(s.logoUrl?.startsWith("/") && { thumbnailUrl: absoluteUrl(s.logoUrl) }),
     ...(app.developer && { author: { "@type": "Organization", name: app.developer } }),
     ...(s.license?.isOpenSource && { license: s.license.name }),
   };
@@ -105,6 +111,18 @@ export function softwareJsonLd(app: ApplicationDetail) {
   }
 
   return data;
+}
+
+export function faqJsonLd(items: { question: string; answer: string }[]) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((q) => ({
+      "@type": "Question",
+      name: q.question,
+      acceptedAnswer: { "@type": "Answer", text: q.answer },
+    })),
+  };
 }
 
 export function itemListJsonLd(name: string, apps: ApplicationSummary[], offset = 0) {

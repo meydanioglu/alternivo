@@ -18,7 +18,7 @@ export function ApplicationLogo({
   const box = cx("shrink-0 rounded-lg border border-border", SIZES[size]);
   if (logoUrl) {
     // eslint-disable-next-line @next/next/no-img-element -- logo host is configurable; dimensions fixed to prevent CLS
-    return <img src={logoUrl} alt="" className={cx(box, "bg-surface object-contain p-1")} loading="lazy" decoding="async" />;
+    return <img src={logoUrl} alt={`${name} logo`} className={cx(box, "bg-surface object-contain p-1")} loading="lazy" decoding="async" />;
   }
 
   const hue = [...name].reduce((h, c) => (h * 31 + c.charCodeAt(0)) % 360, 7);

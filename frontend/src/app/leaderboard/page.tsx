@@ -7,7 +7,8 @@ import { RankedRow } from "@/components/launches/launch-list";
 import { cx } from "@/components/ui/styles";
 import { api } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
-import { pageMetadata } from "@/lib/seo";
+import { itemListJsonLd, pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +48,7 @@ export default async function LeaderboardPage({ searchParams }: Props) {
 
   return (
     <Container className="max-w-4xl py-8">
+      {data.items.length > 0 && <JsonLd data={itemListJsonLd("Most upvoted software", data.items.map((i) => i.application))} />}
       <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
         <Trophy className="size-7 text-amber-400" aria-hidden="true" /> Leaderboard
       </h1>

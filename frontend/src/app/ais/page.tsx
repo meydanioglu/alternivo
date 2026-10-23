@@ -13,7 +13,8 @@ import type { Category } from "@/lib/api/types";
 import { getCurrentUser } from "@/lib/auth/session";
 import { flattenCategories } from "@/lib/categories";
 import { formatNumber } from "@/lib/format";
-import { pageMetadata } from "@/lib/seo";
+import { itemListJsonLd, pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export const dynamic = "force-dynamic";
 
@@ -81,6 +82,7 @@ export default async function AisPage() {
 
   return (
     <>
+      {featured && featured.items.length > 0 && <JsonLd data={itemListJsonLd("Featured AI tools", featured.items)} />}
       <section id="now" className="scroll-mt-24 border-b border-border bg-surface">
         <Container className="py-12 text-center sm:py-16">
           <h1 className="text-balance text-3xl font-bold tracking-tight sm:text-5xl">

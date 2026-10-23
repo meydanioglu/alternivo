@@ -9,7 +9,8 @@ import { Countdown } from "@/components/launches/launch-parts";
 import { buttonClass } from "@/components/ui/styles";
 import { api, isNotFound } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
-import { pageMetadata } from "@/lib/seo";
+import { itemListJsonLd, pageMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/json-ld";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +47,7 @@ export default async function LaunchesPage({ searchParams }: Props) {
 
   return (
     <Container className="py-8">
+      {data.items.length > 0 && <JsonLd data={itemListJsonLd("This week's launches", data.items.map((i) => i.application))} />}
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] [&>*]:min-w-0">
         <div className="min-w-0">
           <header className="mb-6 flex flex-wrap items-end justify-between gap-4">

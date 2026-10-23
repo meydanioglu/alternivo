@@ -6,7 +6,8 @@ import { api } from "@/lib/api/client";
 import type { ApplicationSummary } from "@/lib/api/types";
 import { formatDate, pricingLabel } from "@/lib/format";
 import { loadOrNotFound } from "@/lib/resolve";
-import { pageMetadata, softwareJsonLd } from "@/lib/seo";
+import { faqJsonLd, pageMetadata, softwareJsonLd } from "@/lib/seo";
+import { AppFaq, buildAppFaq } from "@/components/catalog/app-faq";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { CommunityStats, CompactApplicationRow } from "@/components/catalog/application-card";
 import { AttributeBadges, CategoryChip, LicenseBadge, PlatformBadge, PricingBadge } from "@/components/catalog/badges";
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${s.name}: Features, Pricing & Alternatives`,
     description: `${s.shortDescription} Compare ${s.name} pricing, platforms and license, and explore ${app.alternativesCount} alternatives.`.slice(0, 300),
     path: `/software/${s.slug}`,
+    image: app.screenshots[0]?.url ?? null,
   });
 }
 
@@ -55,6 +57,7 @@ export default async function SoftwarePage({ params }: Props) {
   const s = app.summary;
   const category = app.categories[0];
   const topAlternative = app.topAlternatives[0];
+  const faq = buildAppFaq(app);
   const compareSlug = topAlternative ? [s.slug, topAlternative.slug].sort().join("-vs-") : null;
 
   const user = await getCurrentUser();
@@ -68,6 +71,7 @@ export default async function SoftwarePage({ params }: Props) {
   return (
     <Container className="py-6">
       <JsonLd data={softwareJsonLd(app)} />
+      {faq.length > 0 && <JsonLd data={faqJsonLd(faq)} />}
       <BreadcrumbNavigation
         items={[
           { name: "Home", path: "/" },
@@ -203,6 +207,8 @@ export default async function SoftwarePage({ params }: Props) {
               <p className="text-sm text-muted">No alternatives have been mapped for {s.name} yet.</p>
             )}
           </section>
+
+          <AppFaq name={s.name} items={faq} />
 
           <section id="reviews" className="scroll-mt-24">
             <div className="mb-3 flex items-center justify-between gap-3">
