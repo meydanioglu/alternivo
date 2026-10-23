@@ -4,6 +4,8 @@ import { api } from "@/lib/api/client";
 import { pageMetadata } from "@/lib/seo";
 import { BreadcrumbNavigation, Container } from "@/components/layout/page-parts";
 import { CategoryIcon } from "@/components/ui/icons";
+import { CategoryDirectory } from "@/components/catalog/category-directory";
+import { flattenCategories } from "@/lib/categories";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +22,15 @@ export default async function CategoriesPage() {
   return (
     <Container className="py-6">
       <BreadcrumbNavigation items={[{ name: "Home", path: "/" }, { name: "Categories", path: "/categories" }]} />
-      <h1 className="mb-6 mt-4 text-2xl font-bold tracking-tight sm:text-3xl">Software categories</h1>
+      <h1 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">Software categories</h1>
+      <p className="mb-6 mt-1 text-muted">{flattenCategories(tree).length} categories, from AI agents to password managers.</p>
+
+      <section className="mb-10">
+        <h2 className="mb-3 text-lg font-semibold">All categories</h2>
+        <CategoryDirectory categories={flattenCategories(tree)} />
+      </section>
+
+      <h2 className="mb-3 text-lg font-semibold">Popular groups</h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {visible.map((category) => (
           <section key={category.slug} className="rounded-lg border border-border bg-surface p-4">
@@ -36,6 +46,7 @@ export default async function CategoriesPage() {
               <ul className="mt-3 flex flex-col gap-1 text-sm">
                 {category.children
                   .filter((c) => c.applicationCount > 0)
+                  .slice(0, 8)
                   .map((child) => (
                     <li key={child.slug} className="flex justify-between">
                       <Link href={`/category/${child.slug}`} className="hover:text-accent hover:underline">

@@ -2,7 +2,10 @@ import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/styles";
+import { CategoriesMenu } from "@/components/catalog/category-directory";
+import { api } from "@/lib/api/client";
 import { getCurrentUser } from "@/lib/auth/session";
+import { flattenCategories } from "@/lib/categories";
 import { site } from "@/config/site";
 import { SearchCommand } from "@/components/search/search-command";
 import { Container } from "./page-parts";
@@ -20,25 +23,30 @@ export function Logo() {
 }
 
 export async function MainHeader() {
-  const user = await getCurrentUser();
+  const [user, tree] = await Promise.all([getCurrentUser(), api.categories().catch(() => [])]);
+  const categories = flattenCategories(tree);
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur supports-[backdrop-filter]:bg-background/75">
       <Container className="flex h-16 items-center gap-3">
         <MobileNav signedIn={!!user} />
         <Logo />
         <nav aria-label="Main" className="ml-2 hidden items-center gap-0.5 lg:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-surface-secondary hover:text-foreground"
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map((link) =>
+            link.href === "/categories" ? (
+              <CategoriesMenu key={link.href} categories={categories} />
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-surface-secondary hover:text-foreground"
+              >
+                {link.label}
+              </Link>
+            ),
+          )}
         </nav>
         <div className="ml-auto flex min-w-0 items-center gap-2">
-          <div className="hidden w-56 sm:block xl:w-72">
+          <div className="hidden w-56 sm:block lg:hidden xl:block xl:w-64">
             <SearchCommand shortcut placeholder="Search apps…" />
           </div>
           <Link href="/submit" className={buttonClass("ghost", "sm", "hidden whitespace-nowrap md:inline-flex")}>

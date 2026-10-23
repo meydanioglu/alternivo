@@ -28,6 +28,17 @@ import {
   Sparkles,
   Terminal,
   Workflow,
+  Bot,
+  GraduationCap,
+  HeartPulse,
+  Languages,
+  Music,
+  PenLine,
+  Plane,
+  Search,
+  Video,
+  Wallet,
+  Gamepad2,
   type LucideIcon,
 } from "lucide-react";
 
@@ -61,6 +72,17 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   mail: Mail,
   "layout-template": LayoutTemplate,
   "messages-square": MessagesSquare,
+  "bot": Bot,
+  "gamepad-2": Gamepad2,
+  "graduation-cap": GraduationCap,
+  "heart-pulse": HeartPulse,
+  "languages": Languages,
+  "music": Music,
+  "pen-line": PenLine,
+  "plane": Plane,
+  "search": Search,
+  "video": Video,
+  "wallet": Wallet,
 };
 
 export function CategoryIcon({ name, className }: { name: string | null; className?: string }) {

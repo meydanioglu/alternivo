@@ -1,4 +1,5 @@
 export const NAV_LINKS = [
+  { href: "/ais", label: "AIs" },
   { href: "/software", label: "All software" },
   { href: "/categories", label: "Categories" },
   { href: "/launches", label: "Launches" },

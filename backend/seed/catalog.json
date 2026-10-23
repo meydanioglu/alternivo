@@ -420,6 +420,1646 @@
       "featured": true,
       "icon": "messages-square",
       "sortOrder": 27
+    },
+    {
+      "slug": "background-remover",
+      "name": "Background Remover",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 28
+    },
+    {
+      "slug": "animation",
+      "name": "Animation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 29
+    },
+    {
+      "slug": "app-builders",
+      "name": "App Builders",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 30
+    },
+    {
+      "slug": "e-commerce",
+      "name": "E-Commerce",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 31
+    },
+    {
+      "slug": "business-tools",
+      "name": "Business Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 32
+    },
+    {
+      "slug": "climate",
+      "name": "Climate",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 33
+    },
+    {
+      "slug": "code-assistant",
+      "name": "Code Assistant",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "code-xml",
+      "sortOrder": 34
+    },
+    {
+      "slug": "copywriting",
+      "name": "Copywriting",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "pen-line",
+      "sortOrder": 35
+    },
+    {
+      "slug": "devtools",
+      "name": "DevTools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "code-xml",
+      "sortOrder": 36
+    },
+    {
+      "slug": "document-ai",
+      "name": "Document AI",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 37
+    },
+    {
+      "slug": "infographics",
+      "name": "Infographics",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 38
+    },
+    {
+      "slug": "email-assistants",
+      "name": "Email Assistants",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 39
+    },
+    {
+      "slug": "farming",
+      "name": "Farming",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 40
+    },
+    {
+      "slug": "fashion",
+      "name": "Fashion",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 41
+    },
+    {
+      "slug": "finance",
+      "name": "Finance",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "wallet",
+      "sortOrder": 42
+    },
+    {
+      "slug": "government",
+      "name": "Government",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 43
+    },
+    {
+      "slug": "hr",
+      "name": "HR",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 44
+    },
+    {
+      "slug": "home-design",
+      "name": "Home Design",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 45
+    },
+    {
+      "slug": "image-generation",
+      "name": "Image Generation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "image",
+      "sortOrder": 46
+    },
+    {
+      "slug": "job-tools",
+      "name": "Job Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 47
+    },
+    {
+      "slug": "language-learning",
+      "name": "Language Learning",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "graduation-cap",
+      "sortOrder": 48
+    },
+    {
+      "slug": "knowledge-management",
+      "name": "Knowledge Management",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 49
+    },
+    {
+      "slug": "learning-tools",
+      "name": "Learning Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "graduation-cap",
+      "sortOrder": 50
+    },
+    {
+      "slug": "lead-generation",
+      "name": "Lead Generation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 51
+    },
+    {
+      "slug": "meme-generator",
+      "name": "Meme Generator",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 52
+    },
+    {
+      "slug": "logo-generator",
+      "name": "Logo Generator",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 53
+    },
+    {
+      "slug": "music-generation",
+      "name": "Music Generation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "music",
+      "sortOrder": 54
+    },
+    {
+      "slug": "podcast",
+      "name": "Podcast",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 55
+    },
+    {
+      "slug": "no-code",
+      "name": "No-Code",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 56
+    },
+    {
+      "slug": "resume-tools",
+      "name": "Resume Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 57
+    },
+    {
+      "slug": "presentation",
+      "name": "Presentation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 58
+    },
+    {
+      "slug": "real-estate",
+      "name": "Real Estate",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 59
+    },
+    {
+      "slug": "talking-avatar-generator",
+      "name": "Talking Avatar Generator",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 60
+    },
+    {
+      "slug": "sales-tools",
+      "name": "Sales Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 61
+    },
+    {
+      "slug": "supply-chain",
+      "name": "Supply Chain",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 62
+    },
+    {
+      "slug": "text-to-speech",
+      "name": "Text to Speech",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 63
+    },
+    {
+      "slug": "transcription",
+      "name": "Transcription",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 64
+    },
+    {
+      "slug": "drug-discovery",
+      "name": "Drug Discovery",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 65
+    },
+    {
+      "slug": "ad-generator",
+      "name": "Ad Generator",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 66
+    },
+    {
+      "slug": "ai-companion",
+      "name": "AI Companion",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 67
+    },
+    {
+      "slug": "video-subtitling",
+      "name": "Video Subtitling",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 68
+    },
+    {
+      "slug": "video-generator",
+      "name": "Video Generator",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "video",
+      "sortOrder": 69
+    },
+    {
+      "slug": "diagramming",
+      "name": "Diagramming",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 70
+    },
+    {
+      "slug": "workflow-automation",
+      "name": "Workflow Automation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 71
+    },
+    {
+      "slug": "chatbots",
+      "name": "Chatbots",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "message-square-text",
+      "sortOrder": 72
+    },
+    {
+      "slug": "academia",
+      "name": "Academia",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "graduation-cap",
+      "sortOrder": 73
+    },
+    {
+      "slug": "video-editor",
+      "name": "Video Editor",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "video",
+      "sortOrder": 74
+    },
+    {
+      "slug": "audio",
+      "name": "Audio",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "music",
+      "sortOrder": 75
+    },
+    {
+      "slug": "customer-support",
+      "name": "Customer Support",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 76
+    },
+    {
+      "slug": "data",
+      "name": "Data",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "database",
+      "sortOrder": 77
+    },
+    {
+      "slug": "food",
+      "name": "Food",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 78
+    },
+    {
+      "slug": "gaming",
+      "name": "Gaming",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "gamepad-2",
+      "sortOrder": 79
+    },
+    {
+      "slug": "healthcare",
+      "name": "Healthcare",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "heart-pulse",
+      "sortOrder": 80
+    },
+    {
+      "slug": "legal-assistants",
+      "name": "Legal Assistants",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 81
+    },
+    {
+      "slug": "local-search-engines",
+      "name": "Local Search Engines",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 82
+    },
+    {
+      "slug": "personal-assistants",
+      "name": "Personal Assistants",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 83
+    },
+    {
+      "slug": "research-tools",
+      "name": "Research Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 84
+    },
+    {
+      "slug": "seo",
+      "name": "SEO",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "search",
+      "sortOrder": 85
+    },
+    {
+      "slug": "search-engines",
+      "name": "Search Engines",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "search",
+      "sortOrder": 86
+    },
+    {
+      "slug": "spreadsheets",
+      "name": "Spreadsheets",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 87
+    },
+    {
+      "slug": "video",
+      "name": "Video",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "video",
+      "sortOrder": 88
+    },
+    {
+      "slug": "weather",
+      "name": "Weather",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 89
+    },
+    {
+      "slug": "models",
+      "name": "Models",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 90
+    },
+    {
+      "slug": "ai-directories",
+      "name": "AI Directories",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 91
+    },
+    {
+      "slug": "cybersecurity",
+      "name": "Cybersecurity",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "shield",
+      "sortOrder": 92
+    },
+    {
+      "slug": "mental-health",
+      "name": "Mental Health",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 93
+    },
+    {
+      "slug": "fitness",
+      "name": "Fitness",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 94
+    },
+    {
+      "slug": "data-labeling",
+      "name": "Data Labeling",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 95
+    },
+    {
+      "slug": "prompt-tools",
+      "name": "Prompt Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 96
+    },
+    {
+      "slug": "travel",
+      "name": "Travel",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "plane",
+      "sortOrder": 97
+    },
+    {
+      "slug": "contract-management",
+      "name": "Contract Management",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 98
+    },
+    {
+      "slug": "compliance",
+      "name": "Compliance",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 99
+    },
+    {
+      "slug": "computer-vision",
+      "name": "Computer Vision",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 100
+    },
+    {
+      "slug": "ar-vr",
+      "name": "AR/VR",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 101
+    },
+    {
+      "slug": "accessibility",
+      "name": "Accessibility",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 102
+    },
+    {
+      "slug": "construction",
+      "name": "Construction",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 103
+    },
+    {
+      "slug": "manufacturing",
+      "name": "Manufacturing",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 104
+    },
+    {
+      "slug": "energy",
+      "name": "Energy",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 105
+    },
+    {
+      "slug": "video-enhancer",
+      "name": "Video Enhancer",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 106
+    },
+    {
+      "slug": "insurance",
+      "name": "Insurance",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 107
+    },
+    {
+      "slug": "events",
+      "name": "Events",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 108
+    },
+    {
+      "slug": "sports-analytics",
+      "name": "Sports Analytics",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 109
+    },
+    {
+      "slug": "content-moderation",
+      "name": "Content Moderation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 110
+    },
+    {
+      "slug": "chatbot-builders",
+      "name": "Chatbot Builders",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 111
+    },
+    {
+      "slug": "localization",
+      "name": "Localization",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 112
+    },
+    {
+      "slug": "medical-imaging",
+      "name": "Medical Imaging",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 113
+    },
+    {
+      "slug": "recruiting",
+      "name": "Recruiting",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 114
+    },
+    {
+      "slug": "telemedicine",
+      "name": "Telemedicine",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 115
+    },
+    {
+      "slug": "fleet-management",
+      "name": "Fleet Management",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 116
+    },
+    {
+      "slug": "privacy",
+      "name": "Privacy",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 117
+    },
+    {
+      "slug": "robotics",
+      "name": "Robotics",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 118
+    },
+    {
+      "slug": "web3",
+      "name": "Web3",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 119
+    },
+    {
+      "slug": "biotech",
+      "name": "Biotech",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 120
+    },
+    {
+      "slug": "geospatial",
+      "name": "Geospatial",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 121
+    },
+    {
+      "slug": "architecture",
+      "name": "Architecture",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 122
+    },
+    {
+      "slug": "nutrition",
+      "name": "Nutrition",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 123
+    },
+    {
+      "slug": "pets",
+      "name": "Pets",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 124
+    },
+    {
+      "slug": "fintech",
+      "name": "FinTech",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 125
+    },
+    {
+      "slug": "cleantech",
+      "name": "CleanTech",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 126
+    },
+    {
+      "slug": "reading",
+      "name": "Reading",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 127
+    },
+    {
+      "slug": "storytelling",
+      "name": "Storytelling",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 128
+    },
+    {
+      "slug": "dubbing",
+      "name": "Dubbing",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 129
+    },
+    {
+      "slug": "identity",
+      "name": "Identity",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 130
+    },
+    {
+      "slug": "wellness",
+      "name": "Wellness",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 131
+    },
+    {
+      "slug": "dating",
+      "name": "Dating",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 132
+    },
+    {
+      "slug": "nonprofit",
+      "name": "Nonprofit",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 133
+    },
+    {
+      "slug": "api-tools",
+      "name": "API Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 134
+    },
+    {
+      "slug": "database-tools",
+      "name": "Database Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "database",
+      "sortOrder": 135
+    },
+    {
+      "slug": "cloud-management",
+      "name": "Cloud Management",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 136
+    },
+    {
+      "slug": "iot",
+      "name": "IoT",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 137
+    },
+    {
+      "slug": "3d-printing",
+      "name": "3D Printing",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 138
+    },
+    {
+      "slug": "space-tech",
+      "name": "Space Tech",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 139
+    },
+    {
+      "slug": "sentiment-analysis",
+      "name": "Sentiment Analysis",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 140
+    },
+    {
+      "slug": "documentation",
+      "name": "Documentation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 141
+    },
+    {
+      "slug": "software-testing",
+      "name": "Software Testing",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 142
+    },
+    {
+      "slug": "character-design",
+      "name": "Character Design",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 143
+    },
+    {
+      "slug": "ai-newsletters",
+      "name": "AI Newsletters",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 144
+    },
+    {
+      "slug": "others",
+      "name": "Others",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 145
+    },
+    {
+      "slug": "ai-detection",
+      "name": "AI Detection",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 146
+    },
+    {
+      "slug": "mind-mapping",
+      "name": "Mind Mapping",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 147
+    },
+    {
+      "slug": "ai-agents",
+      "name": "AI Agents",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "bot",
+      "sortOrder": 148
+    },
+    {
+      "slug": "translator",
+      "name": "Translator",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "languages",
+      "sortOrder": 149
+    },
+    {
+      "slug": "meeting-assistants",
+      "name": "Meeting Assistants",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 150
+    },
+    {
+      "slug": "tax-accounting",
+      "name": "Tax & Accounting",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 151
+    },
+    {
+      "slug": "3d",
+      "name": "3D",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 152
+    },
+    {
+      "slug": "calendar-scheduling",
+      "name": "Calendar Scheduling",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 153
+    },
+    {
+      "slug": "image-editing",
+      "name": "Image Editing",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 154
+    },
+    {
+      "slug": "market-research",
+      "name": "Market Research",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 155
+    },
+    {
+      "slug": "note-taking-apps",
+      "name": "Note-Taking Apps",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 156
+    },
+    {
+      "slug": "social-media-tools",
+      "name": "Social Media Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 157
+    },
+    {
+      "slug": "voice-cloning",
+      "name": "Voice Cloning",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 158
+    },
+    {
+      "slug": "writing-assistants",
+      "name": "Writing Assistants",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "pen-line",
+      "sortOrder": 159
+    },
+    {
+      "slug": "synthetic-data",
+      "name": "Synthetic Data",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 160
+    },
+    {
+      "slug": "patent-tools",
+      "name": "Patent Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 161
+    },
+    {
+      "slug": "parenting",
+      "name": "Parenting",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 162
+    },
+    {
+      "slug": "debugging",
+      "name": "Debugging",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 163
+    },
+    {
+      "slug": "observability",
+      "name": "Observability",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 164
+    },
+    {
+      "slug": "customer-success",
+      "name": "Customer Success",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 165
+    },
+    {
+      "slug": "mlops",
+      "name": "MLOps",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 166
+    },
+    {
+      "slug": "model-hosting-inference",
+      "name": "Model Hosting & Inference",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 167
+    },
+    {
+      "slug": "ocr-data-extraction",
+      "name": "OCR & Data Extraction",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 168
+    },
+    {
+      "slug": "sales-enablement",
+      "name": "Sales Enablement",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 169
+    },
+    {
+      "slug": "social-listening",
+      "name": "Social Listening",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 170
+    },
+    {
+      "slug": "ui-ux-design",
+      "name": "UI/UX Design",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 171
+    },
+    {
+      "slug": "vector-databases",
+      "name": "Vector Databases",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 172
+    },
+    {
+      "slug": "voice-agents",
+      "name": "Voice Agents",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 173
+    },
+    {
+      "slug": "llm-evaluation",
+      "name": "LLM Evaluation",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 174
+    },
+    {
+      "slug": "rag-retrieval",
+      "name": "RAG & Retrieval",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 175
+    },
+    {
+      "slug": "ai-gateways",
+      "name": "AI Gateways & Routers",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 176
+    },
+    {
+      "slug": "code-review",
+      "name": "Code Review",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 177
+    },
+    {
+      "slug": "ai-safety",
+      "name": "AI Safety & Guardrails",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 178
+    },
+    {
+      "slug": "vibe-coding",
+      "name": "Vibe Coding",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 179
+    },
+    {
+      "slug": "ai-browsers",
+      "name": "AI Browsers",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 180
+    },
+    {
+      "slug": "ai-memory",
+      "name": "AI Memory",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 181
+    },
+    {
+      "slug": "mcp-agent-tools",
+      "name": "MCP & Agent Tools",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 182
+    },
+    {
+      "slug": "search-apis-for-ai",
+      "name": "Search APIs for AI",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 183
+    },
+    {
+      "slug": "web-scraping",
+      "name": "Web Scraping",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 184
+    },
+    {
+      "slug": "text-to-sql",
+      "name": "Text to SQL",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 185
+    },
+    {
+      "slug": "ai-wearables",
+      "name": "AI Wearables",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 186
+    },
+    {
+      "slug": "local-llms",
+      "name": "Local LLMs",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 187
+    },
+    {
+      "slug": "agent-frameworks",
+      "name": "Agent Frameworks",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 188
+    },
+    {
+      "slug": "fine-tuning",
+      "name": "Fine-Tuning",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 189
+    },
+    {
+      "slug": "ai-governance",
+      "name": "AI Governance",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 190
+    },
+    {
+      "slug": "ai-labs",
+      "name": "AI Labs",
+      "description": null,
+      "seoIntro": null,
+      "parent": "ai-tools",
+      "featured": false,
+      "icon": "sparkles",
+      "sortOrder": 191
     }
   ],
   "features": [
