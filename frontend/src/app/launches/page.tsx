@@ -46,7 +46,7 @@ export default async function LaunchesPage({ searchParams }: Props) {
 
   return (
     <Container className="py-8">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem]">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_18rem] [&>*]:min-w-0">
         <div className="min-w-0">
           <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>

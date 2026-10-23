@@ -6,7 +6,7 @@
 @custom-variant dark (&:where(.dark, .dark *, [data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
-  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 /*
@@ -16,9 +16,10 @@
  * on white both meet WCAG AA for normal text.
  */
 :root {
-  --accent: oklch(0.457 0.215 277);
+  /* Brand primary is #8F9BFB; light mode uses a deeper shade so white text on it stays AA. */
+  --accent: #4f5be0;
   --accent-foreground: oklch(0.99 0 0);
-  --focus: oklch(0.457 0.215 277);
+  --focus: #4f5be0;
   --radius: 0.375rem;
 }
 
@@ -28,17 +29,19 @@
 
 .dark,
 [data-theme="dark"] {
-  --accent: oklch(0.72 0.14 277);
-  --accent-foreground: oklch(0.18 0.03 277);
-  --focus: oklch(0.72 0.14 277);
+  --accent: #8f9bfb;
+  --accent-foreground: #0b0b1a;
+  --focus: #8f9bfb;
 }
 
 html {
   -webkit-text-size-adjust: 100%;
+  overflow-x: clip;
   text-rendering: optimizeLegibility;
 }
 
 body {
+  overflow-x: clip;
   background-color: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
@@ -55,5 +58,14 @@ body {
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* iOS Safari zooms into form fields under 16px, which leaves the page shifted sideways. */
+@media (max-width: 639px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
   }
 }

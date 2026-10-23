@@ -109,7 +109,7 @@ export default async function HomePage() {
           </section>
         )}
 
-        <div className="grid gap-8 py-8 lg:grid-cols-2">
+        <div className="grid gap-8 py-8 lg:grid-cols-2 [&>*]:min-w-0">
           <section>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
               <div>
@@ -215,7 +215,7 @@ export default async function HomePage() {
           apps={home.communityFavorites}
         />
 
-        <div className="grid gap-8 py-8 lg:grid-cols-2">
+        <div className="grid gap-8 py-8 lg:grid-cols-2 [&>*]:min-w-0">
           {home.recentlyAdded.length > 0 && (
             <section>
               <SectionHeader title="Recently added" href="/new-apps" />

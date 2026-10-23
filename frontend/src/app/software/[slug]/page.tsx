@@ -117,7 +117,7 @@ export default async function SoftwarePage({ params }: Props) {
         </div>
       </header>
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] [&>*]:min-w-0">
         <div className="flex min-w-0 flex-col gap-8">
           {app.description && (
             <section>

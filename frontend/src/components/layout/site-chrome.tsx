@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/styles";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -12,11 +13,7 @@ import { ThemeSwitch } from "./theme-switch";
 export function Logo() {
   return (
     <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label={`${site.name} home`}>
-      <svg viewBox="0 0 32 32" className="size-7" aria-hidden="true">
-        <rect width="32" height="32" rx="8" className="fill-accent" />
-        <path d="M9 11.5h9.5a3.5 3.5 0 0 1 0 7H13.5a3.5 3.5 0 0 0 0 7H23" fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" />
-        <circle cx="23" cy="11.5" r="2.2" className="fill-teal-300" />
-      </svg>
+      <Image src="/brand/logo-mark.png" alt="" width={154} height={131} priority className="h-7 w-auto" />
       <span className="text-lg">{site.name}</span>
     </Link>
   );

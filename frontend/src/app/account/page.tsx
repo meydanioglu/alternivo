@@ -74,7 +74,7 @@ export default async function AccountPage({ searchParams }: Props) {
         </p>
       )}
 
-      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] [&>*]:min-w-0">
         <div className="flex min-w-0 flex-col gap-10">
           <section>
             <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
