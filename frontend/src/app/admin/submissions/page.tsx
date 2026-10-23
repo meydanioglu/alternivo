@@ -1,65 +1,135 @@
-import type { Metadata } from "next";
+import { CircleAlert, ExternalLink, Search } from "lucide-react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { ModerationRow, type SubmissionRow } from "@/components/account/moderation-row";
-import { EmptyState } from "@/components/layout/page-parts";
-import { cx } from "@/components/ui/styles";
-import { getCurrentUser, isStaff, userApi } from "@/lib/auth/session";
+import { AdminHeader, StatCard, Table, Tabs, dateTime } from "@/components/admin/admin-parts";
+import { Pagination } from "@/components/layout/page-parts";
+import { buttonClass, chipClass } from "@/components/ui/styles";
+import { userApi } from "@/lib/auth/session";
 
-export const metadata: Metadata = { title: "Moderation", robots: { index: false } };
+interface Item {
+  submission: {
+    id: string;
+    name: string;
+    websiteUrl: string;
+    description: string;
+    categorySlug: string | null;
+    status: "Pending" | "Approved" | "Rejected" | "NeedsChanges";
+    possibleDuplicateApplicationId: string | null;
+    createdAt: string;
+  };
+  submitter: { email: string; displayName: string | null; handle: string | null } | null;
+}
 
-const TABS = [
-  { value: "pending", label: "Bekleyen" },
-  { value: "needschanges", label: "Değişiklik istendi" },
-  { value: "approved", label: "Onaylanan" },
-  { value: "rejected", label: "Reddedilen" },
-];
+interface Review {
+  counts: Record<string, number>;
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  items: Item[];
+}
 
-type Props = { searchParams: Promise<{ status?: string }> };
+const STATUS = {
+  Pending: { label: "Onay bekliyor", color: "warning" },
+  NeedsChanges: { label: "Değişiklik istendi", color: "default" },
+  Approved: { label: "Onaylandı", color: "success" },
+  Rejected: { label: "Reddedildi", color: "danger" },
+} as const;
 
-export default async function AdminPage({ searchParams }: Props) {
-  const user = await getCurrentUser();
-  if (!user) redirect("/login?next=/admin/submissions");
-  if (!isStaff(user)) notFound();
+const DONE: Record<string, string> = {
+  approve: "Ürün onaylandı ve yayına alındı. Yapay zekâ içerik taslağı İçerik sayfasında onayınızı bekleyecek.",
+  "needs-changes": "Gönderene değişiklik istendiği bildirildi; hesabındaki gönderim listesinde notunuzu görecek.",
+  reject: "Gönderim reddedildi.",
+};
 
-  const { status = "pending" } = await searchParams;
-  const result = await userApi<{ items: SubmissionRow[]; totalCount: number }>(
-    `/api/v1/admin/submissions?status=${encodeURIComponent(status)}`,
-    { persist: false },
-  ).catch(() => ({ items: [] as SubmissionRow[], totalCount: 0 }));
+type Props = { searchParams: Promise<{ status?: string; q?: string; page?: string; done?: string }> };
+
+export default async function AdminSubmissionsPage({ searchParams }: Props) {
+  const { status = "pending", q = "", page = "1", done } = await searchParams;
+  const qs = new URLSearchParams({ page, status });
+  if (q) qs.set("q", q);
+  const data = await userApi<Review>(`/api/v1/admin/submissions/review?${qs}`, { persist: false });
+  const c = data.counts;
+  const totalPages = Math.max(1, Math.ceil(data.totalCount / data.pageSize));
+  const href = (p: number, s = status) => `/admin/submissions?${new URLSearchParams({ status: s, ...(q ? { q } : {}), ...(p > 1 ? { page: String(p) } : {}) })}`;
+
+  const tabs = [
+    { value: "pending", label: `Onay bekleyen (${c.pending ?? 0})` },
+    { value: "needschanges", label: `Değişiklik istendi (${c.needschanges ?? 0})` },
+    { value: "approved", label: `Onaylanan (${c.approved ?? 0})` },
+    { value: "rejected", label: `Reddedilen (${c.rejected ?? 0})` },
+    { value: "", label: "Tümü" },
+  ];
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight">Ürün gönderimleri</h1>
-      <p className="mt-1 text-sm text-muted">Onaylanan ürün hemen yayına girer ve önerilen alternatiflere bağlanır.</p>
-
-      <nav aria-label="Status" className="mt-6 flex flex-wrap gap-1 border-b border-border">
-        {TABS.map((t) => (
-          <Link
-            key={t.value}
-            href={`/admin/submissions?status=${t.value}`}
-            aria-current={status === t.value ? "page" : undefined}
-            className={cx(
-              "-mb-px border-b-2 px-3 py-2 text-sm font-medium",
-              status === t.value ? "border-accent text-accent" : "border-transparent text-muted hover:text-foreground",
-            )}
-          >
-            {t.label}
-          </Link>
-        ))}
-      </nav>
-
-      {result.items.length === 0 ? (
-        <div className="mt-6">
-          <EmptyState title="Nothing here">No submissions with this status.</EmptyState>
-        </div>
-      ) : (
-        <ul className="mt-6 flex flex-col gap-4">
-          {result.items.map((row) => (
-            <ModerationRow key={row.id} row={row} />
-          ))}
-        </ul>
+    <>
+      <AdminHeader
+        title="Ürün gönderimleri"
+        description="Üyelerin gönderdiği ürünler. Açılışa özel gönderim ücretsiz; hiçbir ürün sizin onayınız olmadan yayına girmez."
+      />
+      {done && DONE[done] && (
+        <p role="status" className="mb-4 rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
+          {DONE[done]}
+        </p>
       )}
-    </div>
+
+      <div className="mb-6 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <StatCard label="Onay bekleyen" value={c.pending ?? 0} href="/admin/submissions?status=pending" />
+        <StatCard label="Değişiklik istendi" value={c.needschanges ?? 0} href="/admin/submissions?status=needschanges" />
+        <StatCard label="Onaylanan" value={c.approved ?? 0} href="/admin/submissions?status=approved" />
+        <StatCard label="Reddedilen" value={c.rejected ?? 0} href="/admin/submissions?status=rejected" />
+      </div>
+
+      <form action="/admin/submissions" className="mb-4 flex gap-2">
+        <input type="hidden" name="status" value={status} />
+        <div className="relative flex-1">
+          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" aria-hidden="true" />
+          <input name="q" defaultValue={q} placeholder="Ürün adı veya web sitesi ile ara…" className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm outline-none focus:border-accent" />
+        </div>
+        <button className={buttonClass("outline", "md")}>Ara</button>
+      </form>
+
+      <Tabs items={tabs.map((t) => ({ ...t, href: href(1, t.value) }))} current={status} />
+      <Table head={["Ürün", "Gönderen", "Durum", "Tarih", ""]} empty={data.items.length === 0}>
+        {data.items.map(({ submission: s, submitter }) => {
+          const st = STATUS[s.status] ?? { label: s.status, color: "default" as const };
+          return (
+            <tr key={s.id}>
+              <td className="px-4 py-3">
+                <Link href={`/admin/submissions/${s.id}`} className="font-semibold hover:underline">
+                  {s.name}
+                </Link>
+                <a href={s.websiteUrl} target="_blank" rel="noopener nofollow" className="flex items-center gap-1 truncate text-xs text-muted hover:text-foreground">
+                  {s.websiteUrl.replace(/^https?:\/\//, "")} <ExternalLink className="size-3" aria-hidden="true" />
+                </a>
+                {s.possibleDuplicateApplicationId && (
+                  <span className="mt-1 inline-flex items-center gap-1 text-xs text-warning">
+                    <CircleAlert className="size-3.5" aria-hidden="true" /> Katalogda benzeri olabilir
+                  </span>
+                )}
+              </td>
+              <td className="px-4 py-3 text-sm">
+                {submitter ? (
+                  <>
+                    <p>{submitter.displayName ?? "—"}</p>
+                    <p className="text-xs text-muted">{submitter.email}</p>
+                  </>
+                ) : (
+                  <span className="text-muted">—</span>
+                )}
+              </td>
+              <td className="px-4 py-3">
+                <span className={chipClass(st.color, "soft", "sm")}>{st.label}</span>
+              </td>
+              <td className="whitespace-nowrap px-4 py-3 text-xs text-muted">{dateTime(s.createdAt)}</td>
+              <td className="px-4 py-3 text-right">
+                <Link href={`/admin/submissions/${s.id}`} className={buttonClass(s.status === "Pending" ? "primary" : "outline", "sm")}>
+                  {s.status === "Pending" ? "İncele" : "Aç"}
+                </Link>
+              </td>
+            </tr>
+          );
+        })}
+      </Table>
+      <Pagination page={data.page} totalPages={totalPages} hrefFor={(p) => href(p)} />
+    </>
   );
 }

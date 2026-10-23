@@ -52,9 +52,14 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
         software and find alternatives. Write in clear, natural, specific English for people evaluating the product.
 
         Rules:
-        - Use ONLY facts found in SOURCE or CATALOGUE. Never invent features, prices, numbers, customers, awards,
-          integrations, release dates or comparisons. If the source does not support a field, return an empty list
-          or the shortest honest text; never pad.
+        - Base the content on SOURCE and CATALOGUE. You may add widely known, stable facts about what a well-known
+          product is and does, but never invent prices, plan names, numbers, customers, awards, integrations,
+          release dates or comparisons that SOURCE does not state. If nothing supports a field, return an empty
+          list rather than padding.
+        - Never write about the source itself: no "the website does not mention", "details are not provided",
+          "according to the site". Simply leave unknown things out.
+        - Do not repeat the same point across description, features, use cases, audience, pros and FAQ; each
+          section must add something new.
         - No marketing hype ("revolutionary", "best-in-class", "seamless", "cutting-edge", "game-changer").
           Describe what it does and for whom, concretely.
         - Do not copy sentences from SOURCE; rephrase in your own words.
@@ -171,38 +176,83 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
     private static List<string> Clean(IEnumerable<string> items) =>
         items.Select(i => i.Trim()).Where(i => i.Length > 0).Distinct().ToList();
 
-    /// <summary>Readable text of the product's home page (and nothing else), robots.txt permitting.</summary>
+    /// <summary>
+    /// Readable text from the product's own site, robots.txt permitting: the page itself, then the site's llms.txt
+    /// and its pricing/features/about pages when they exist. Same host only, capped in total.
+    /// </summary>
     private async Task<(string? Url, string Text)> FetchSourceTextAsync(string url, CancellationToken ct)
     {
         if (!UrlSafety.IsSafePublicWebUrl(url)) return (null, "");
         var http = httpFactory.CreateClient(ProductImporter.HttpClientName);
+        Uri site;
         try
         {
-            var site = new Uri(url);
-            using (var robots = await http.GetAsync(new Uri(site, "/robots.txt"), ct))
+            site = new Uri(url);
+            using var robots = await http.GetAsync(new Uri(site, "/robots.txt"), ct);
+            if (robots.IsSuccessStatusCode && !ProductImporter.RobotsAllowsRoot(await robots.Content.ReadAsStringAsync(ct)))
             {
-                if (robots.IsSuccessStatusCode && !ProductImporter.RobotsAllowsRoot(await robots.Content.ReadAsStringAsync(ct)))
-                {
-                    return (url, "");
-                }
+                return (url, "");
             }
-
-            using var response = await http.GetAsync(site, HttpCompletionOption.ResponseHeadersRead, ct);
-            if (!response.IsSuccessStatusCode) return (url, "");
-            var html = await response.Content.ReadAsStringAsync(ct);
-            if (html.Length > 2_000_000) html = html[..2_000_000];
-
-            var meta = MetaDescription().Match(html) is { Success: true } m ? WebUtility.HtmlDecode(m.Groups[1].Value) + "\n" : "";
-            var text = NonContent().Replace(html, " ");
-            text = Tags().Replace(text, "\n");
-            text = WebUtility.HtmlDecode(text);
-            text = string.Join("\n", text.Split('\n').Select(l => Spaces().Replace(l, " ").Trim()).Where(l => l.Length > 2).Distinct());
-            text = meta + text;
-            return (response.RequestMessage?.RequestUri?.ToString() ?? url, text.Length > MaxSourceChars ? text[..MaxSourceChars] : text);
         }
         catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or UriFormatException)
         {
             return (url, "");
+        }
+
+        var parts = new List<string>();
+        var finalUrl = url;
+        var main = await FetchPageTextAsync(http, site, ct);
+        if (main is { } m)
+        {
+            finalUrl = m.FinalUrl;
+            parts.Add(m.Text);
+        }
+
+        foreach (var path in new[] { "/llms.txt", "/pricing", "/features", "/about" })
+        {
+            if (parts.Sum(p => p.Length) >= MaxSourceChars) break;
+            var page = await FetchPageTextAsync(http, new Uri(site, path), ct);
+            // Ignore redirects to another host and pages that are just the home page again.
+            if (page is { } p && new Uri(p.FinalUrl).Host == site.Host && p.Text.Length > 200 && !parts.Any(x => x.StartsWith(p.Text[..Math.Min(200, p.Text.Length)])))
+            {
+                parts.Add($"[{path}]\n{p.Text}");
+            }
+        }
+
+        var text = string.Join("\n\n", parts);
+        return (finalUrl, text.Length > MaxSourceChars ? text[..MaxSourceChars] : text);
+    }
+
+    private static async Task<(string FinalUrl, string Text)?> FetchPageTextAsync(HttpClient http, Uri uri, CancellationToken ct)
+    {
+        try
+        {
+            using var response = await http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, ct);
+            if (!response.IsSuccessStatusCode) return null;
+            var finalUrl = response.RequestMessage?.RequestUri?.ToString() ?? uri.ToString();
+            var raw = await response.Content.ReadAsStringAsync(ct);
+            if (raw.Length > 2_000_000) raw = raw[..2_000_000];
+            var isHtml = response.Content.Headers.ContentType?.MediaType?.Contains("html") ?? raw.TrimStart().StartsWith('<');
+            if (!isHtml) return (finalUrl, raw.Trim());
+
+            var head = new StringBuilder();
+            if (MetaDescription().Match(raw) is { Success: true } meta) head.AppendLine(WebUtility.HtmlDecode(meta.Groups[1].Value));
+            foreach (Match ld in JsonLd().Matches(raw))
+            {
+                // Structured data often carries the description, offers and features of JS-rendered sites.
+                var json = ld.Groups[1].Value.Trim();
+                if (json.Length is > 20 and < 6000) head.AppendLine(json);
+            }
+
+            var text = NonContent().Replace(raw, " ");
+            text = Tags().Replace(text, "\n");
+            text = WebUtility.HtmlDecode(text);
+            text = string.Join("\n", text.Split('\n').Select(l => Spaces().Replace(l, " ").Trim()).Where(l => l.Length > 2).Distinct());
+            return (finalUrl, (head + text).Trim());
+        }
+        catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or UriFormatException)
+        {
+            return null;
         }
     }
 
@@ -256,6 +306,9 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
 
     [GeneratedRegex(@"<meta[^>]+name=[""']description[""'][^>]+content=[""']([^""']{10,500})[""']", RegexOptions.IgnoreCase)]
     private static partial Regex MetaDescription();
+
+    [GeneratedRegex(@"<script[^>]+application/ld\+json[^>]*>([\s\S]*?)</script>", RegexOptions.IgnoreCase)]
+    private static partial Regex JsonLd();
 
     [GeneratedRegex(@"<(script|style|noscript|svg|nav|footer|header|iframe|template)\b[\s\S]*?</\1>|<!--[\s\S]*?-->", RegexOptions.IgnoreCase)]
     private static partial Regex NonContent();

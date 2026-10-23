@@ -62,11 +62,64 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
     public Task<PagedResult<AdminSubmissionRow>> Submissions([FromQuery] string? status, [FromQuery] int? page, CancellationToken ct) =>
         admin.ListSubmissionsAsync(status ?? "pending", page, ct);
 
+    /// <summary>Review queue: rows plus who submitted them (name, e-mail) and per-status counts.</summary>
+    [HttpGet("submissions/review")]
+    [Authorize(Policy = Policies.Moderation)]
+    public async Task<object> SubmissionReview(
+        [FromQuery] string? status, [FromQuery] string? q, [FromQuery] int? page,
+        [FromServices] UserManager<AppUser> users, CancellationToken ct)
+    {
+        var result = await admin.ListSubmissionsAsync(string.IsNullOrEmpty(status) ? null : status, page, ct, q);
+        var ids = result.Items.Select(i => i.SubmittedByUserId).Distinct().ToList();
+        var people = await users.Users.Where(u => ids.Contains(u.Id))
+            .Select(u => new { u.Id, u.Email, u.DisplayName, u.Handle }).ToDictionaryAsync(u => u.Id, ct);
+        return new
+        {
+            counts = await admin.SubmissionCountsAsync(ct),
+            result.Page,
+            result.PageSize,
+            result.TotalCount,
+            items = result.Items.Select(i => new
+            {
+                submission = i,
+                submitter = people.TryGetValue(i.SubmittedByUserId, out var p) ? new { p.Email, p.DisplayName, p.Handle } : null,
+            }),
+        };
+    }
+
+    [HttpGet("submissions/{id:guid}")]
+    [Authorize(Policy = Policies.Moderation)]
+    public async Task<object> Submission(Guid id, [FromServices] UserManager<AppUser> users, CancellationToken ct)
+    {
+        var row = await admin.GetSubmissionAsync(id, ct);
+        var u = await users.FindByIdAsync(row.SubmittedByUserId.ToString());
+        return new
+        {
+            submission = row,
+            submitter = u is null ? null : new { u.Email, u.DisplayName, u.Handle, u.CreatedAt },
+            duplicateSlug = row.PossibleDuplicateApplicationId is { } dup ? (await admin.GetApplicationSlugAsync(dup, ct)) : null,
+        };
+    }
+
+    [HttpPut("submissions/{id:guid}")]
+    [Authorize(Policy = Policies.Moderation)]
+    public async Task<IActionResult> UpdateSubmission(Guid id, CreateSubmissionRequest request, CancellationToken ct)
+    {
+        await admin.UpdateSubmissionAsync(current.RequireUserId(), id, request, ct);
+        return NoContent();
+    }
+
     [HttpPost("submissions/{id:guid}/decision")]
     [Authorize(Policy = Policies.Moderation)]
     public async Task<IActionResult> DecideSubmission(Guid id, ModerationDecisionRequest request, CancellationToken ct)
     {
         var appId = await admin.DecideSubmissionAsync(current.RequireUserId(), id, request.Decision, request.Note, ct);
+        if (appId is { } created)
+        {
+            await HttpContext.RequestServices.GetRequiredService<ContentService>()
+                .QueueAsync(current.RequireUserId(), new QueueContentRequest("selected", [created]), ct);
+        }
+
         return Ok(new { applicationId = appId });
     }
 

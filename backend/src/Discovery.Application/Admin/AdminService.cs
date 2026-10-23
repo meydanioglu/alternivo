@@ -3,6 +3,7 @@ using Discovery.Application.Abstractions;
 using Discovery.Application.Catalog;
 using Discovery.Application.Common;
 using Discovery.Application.Community;
+using Discovery.Application.Contracts;
 using Discovery.Domain;
 using Discovery.Domain.Catalog;
 using Discovery.Domain.Community;
@@ -206,13 +207,19 @@ public sealed class AdminService(
 
     // ---------- Submissions ----------
 
-    public async Task<PagedResult<AdminSubmissionRow>> ListSubmissionsAsync(string? status, int? page, CancellationToken ct)
+    public async Task<PagedResult<AdminSubmissionRow>> ListSubmissionsAsync(string? status, int? page, CancellationToken ct, string? q = null)
     {
         var (p, size) = Paging.Normalize(page, 50);
         var query = db.Submissions.AsQueryable();
         if (Enum.TryParse<SubmissionStatus>(status, true, out var s))
         {
             query = query.Where(x => x.Status == s);
+        }
+
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            var term = $"%{q.Trim()}%";
+            query = query.Where(x => EF.Functions.ILike(x.Name, term) || EF.Functions.ILike(x.WebsiteUrl, term));
         }
 
         var total = await query.CountAsync(ct);
@@ -279,6 +286,53 @@ public sealed class AdminService(
         Audit(actorId, $"submission.{decision}", "Submission", submission.Id, new { note });
         await db.SaveChangesAsync(ct);
         return submission.CreatedApplicationId;
+    }
+
+    public Task<string?> GetApplicationSlugAsync(Guid id, CancellationToken ct) =>
+        db.Applications.Where(a => a.Id == id).Select(a => (string?)a.Slug).FirstOrDefaultAsync(ct);
+
+    public async Task<AdminSubmissionRow> GetSubmissionAsync(Guid id, CancellationToken ct)
+    {
+        var x = await db.Submissions.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id, ct) ?? throw new NotFoundException("Submission", id.ToString());
+        return new AdminSubmissionRow(x.Id, x.Name, x.WebsiteUrl, x.Description, x.CategorySlug,
+            PricingNames.ToNames(x.Pricing), x.LicenseSlug, x.PlatformSlugs, x.Tags, x.SuggestedAlternativeSlugs,
+            x.Status.ToString(), x.ModeratorNote, x.PossibleDuplicateApplicationId, x.SubmittedByUserId, x.CreatedAt);
+    }
+
+    public async Task<IReadOnlyDictionary<string, int>> SubmissionCountsAsync(CancellationToken ct)
+    {
+        var counts = await db.Submissions.GroupBy(s => s.Status).Select(g => new { g.Key, Count = g.Count() }).ToListAsync(ct);
+        return Enum.GetValues<SubmissionStatus>()
+            .ToDictionary(s => s.ToString().ToLowerInvariant(), s => counts.FirstOrDefault(c => c.Key == s)?.Count ?? 0);
+    }
+
+    /// <summary>Lets a moderator correct a submission before deciding on it. Approved submissions are read-only.</summary>
+    public async Task UpdateSubmissionAsync(Guid actorId, Guid id, CreateSubmissionRequest r, CancellationToken ct)
+    {
+        var submission = await db.Submissions.FirstOrDefaultAsync(s => s.Id == id, ct) ?? throw new NotFoundException("Submission", id.ToString());
+        if (submission.Status == SubmissionStatus.Approved)
+            throw new ConflictException("This submission is already approved; edit the application instead.");
+        if (string.IsNullOrWhiteSpace(r.Name) || r.Name.Length > 100)
+            throw new BadRequestException("Name is required (max 100 characters).");
+        if (!UrlSafety.IsSafePublicWebUrl(r.WebsiteUrl))
+            throw new BadRequestException("Enter a public http(s) website address.");
+        if (string.IsNullOrWhiteSpace(r.Description) || r.Description.Length > 3000)
+            throw new BadRequestException("Description is required (max 3000 characters).");
+        if (r.CategorySlug is { Length: > 0 } cat && !await db.Categories.AnyAsync(c => c.Slug == cat, ct))
+            throw new BadRequestException($"Unknown category '{cat}'.");
+
+        submission.Name = r.Name.Trim();
+        submission.WebsiteUrl = r.WebsiteUrl.Trim();
+        submission.Description = r.Description.Trim();
+        submission.CategorySlug = string.IsNullOrWhiteSpace(r.CategorySlug) ? null : r.CategorySlug;
+        submission.Pricing = PricingNames.Combine(r.Pricing);
+        submission.LicenseSlug = string.IsNullOrWhiteSpace(r.LicenseSlug) ? null : r.LicenseSlug;
+        submission.PlatformSlugs = (r.Platforms ?? []).Where(Slugs.IsValid).Distinct().ToList();
+        submission.Tags = (r.Tags ?? []).Select(t => t.Trim()).Where(t => t.Length is > 0 and <= 40).Distinct().Take(15).ToList();
+        submission.SuggestedAlternativeSlugs = (r.SuggestedAlternatives ?? []).Select(x => x.Trim().ToLowerInvariant()).Where(Slugs.IsValid).Distinct().Take(10).ToList();
+        submission.UpdatedAt = clock.GetUtcNow();
+        Audit(actorId, "submission.edit", "Submission", submission.Id, null);
+        await db.SaveChangesAsync(ct);
     }
 
     private void AddApprovedRelationship(Guid sourceId, Guid alternativeId, Guid actorId, DateTimeOffset now) =>

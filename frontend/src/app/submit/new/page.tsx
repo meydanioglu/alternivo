@@ -18,7 +18,10 @@ export default async function NewSubmissionPage() {
   return (
     <Container className="max-w-3xl py-8">
       <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Submit a product</h1>
-      <p className="mb-8 mt-2 text-muted">
+      <p className="mt-3 inline-flex rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
+        Free during launch · reviewed and approved by our team before it goes live
+      </p>
+      <p className="mb-8 mt-3 text-muted">
         Tell us about the product. The more detail you add, the faster it can be reviewed and the better it ranks as an
         alternative.
       </p>

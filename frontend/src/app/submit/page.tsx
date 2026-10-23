@@ -27,7 +27,8 @@ const STEPS = [
 ];
 
 const FAQ = [
-  ["Is it free?", "Yes. Submitting and being listed is free."],
+  ["Is it free?", "Yes — submitting is free during our launch period. You only need a free account."],
+  ["Will my product go live immediately?", "No. Every submission is reviewed and approved by our team first, usually within a few days. You can follow its status on your account page."],
   ["How long does review take?", "Usually a few days. You can follow the status on your account page."],
   ["What gets accepted?", "Real, working software with a public website. We do not list spam, clones or unfinished landing pages."],
   ["Can I suggest my product as an alternative to others?", "Yes — add them in the submission form, or use “Suggest an alternative” on any app page."],
@@ -45,7 +46,7 @@ export default function SubmitLandingPage() {
       <section className="border-b border-border bg-surface">
         <Container className="py-14 text-center sm:py-20">
           <p className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent">
-            <Sparkles className="size-3.5" aria-hidden="true" /> Free to submit
+            <Sparkles className="size-3.5" aria-hidden="true" /> Free during launch
           </p>
           <h1 className="mx-auto mt-5 max-w-3xl text-balance text-3xl font-bold tracking-tight sm:text-5xl">
             Get your product in front of people looking to switch
@@ -55,7 +56,7 @@ export default function SubmitLandingPage() {
             want it here.
           </p>
           <div className="mt-8 flex justify-center">{cta}</div>
-          <p className="mt-3 text-xs text-muted">No credit card. Every listing is reviewed by a person.</p>
+          <p className="mt-3 text-xs text-muted">Free for a limited time while we launch. A free account is required, and every listing is reviewed and approved by our team.</p>
         </Container>
       </section>
 
