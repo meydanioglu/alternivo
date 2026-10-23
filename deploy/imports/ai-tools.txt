@@ -1,0 +1,604 @@
+# Known AI tools — official websites. Format: Name | URL | category-slug
+# Paste into Admin → İçe aktarma, or reuse for re-imports. Compiled from general knowledge of the products.
+
+# Chatbots & assistants
+ChatGPT | https://chatgpt.com | chatbots
+Claude | https://claude.ai | chatbots
+Gemini | https://gemini.google.com | chatbots
+Microsoft Copilot | https://copilot.microsoft.com | chatbots
+Perplexity | https://www.perplexity.ai | search-engines
+Grok | https://grok.com | chatbots
+Mistral Le Chat | https://chat.mistral.ai | chatbots
+DeepSeek | https://www.deepseek.com | chatbots
+Meta AI | https://www.meta.ai | chatbots
+Pi | https://pi.ai | ai-companion
+Poe | https://poe.com | chatbots
+HuggingChat | https://huggingface.co/chat | chatbots
+Character.AI | https://character.ai | ai-companion
+Replika | https://replika.com | ai-companion
+Kimi | https://www.kimi.com | chatbots
+Qwen Chat | https://chat.qwen.ai | chatbots
+You.com | https://you.com | search-engines
+Phind | https://www.phind.com | search-engines
+Kagi | https://kagi.com | search-engines
+Andi | https://andisearch.com | search-engines
+Brave Leo | https://brave.com/leo | ai-browsers
+Felo | https://felo.ai | search-engines
+Genspark | https://www.genspark.ai | ai-agents
+Manus | https://manus.im | ai-agents
+Liner | https://getliner.com | research-tools
+Consensus | https://consensus.app | research-tools
+Elicit | https://elicit.com | research-tools
+Scite | https://scite.ai | research-tools
+SciSpace | https://scispace.com | research-tools
+Semantic Scholar | https://www.semanticscholar.org | research-tools
+Undermind | https://www.undermind.ai | research-tools
+NotebookLM | https://notebooklm.google | research-tools
+Humata | https://www.humata.ai | document-ai
+ChatPDF | https://www.chatpdf.com | document-ai
+AskYourPDF | https://askyourpdf.com | document-ai
+PDF.ai | https://pdf.ai | document-ai
+
+# AI browsers
+Comet | https://www.perplexity.ai/comet | ai-browsers
+Dia | https://www.diabrowser.com | ai-browsers
+Opera Neon | https://www.operaneon.com | ai-browsers
+Sider | https://sider.ai | ai-browsers
+Monica | https://monica.im | personal-assistants
+MaxAI | https://www.maxai.co | ai-browsers
+HARPA AI | https://harpa.ai | ai-browsers
+Merlin | https://www.getmerlin.in | ai-browsers
+
+# Coding
+GitHub Copilot | https://github.com/features/copilot | code-assistant
+Cursor | https://cursor.com | code-assistant
+Windsurf | https://windsurf.com | code-assistant
+Claude Code | https://www.anthropic.com/claude-code | code-assistant
+OpenAI Codex | https://openai.com/codex | code-assistant
+Tabnine | https://www.tabnine.com | code-assistant
+Codeium | https://codeium.com | code-assistant
+Amazon Q Developer | https://aws.amazon.com/q/developer | code-assistant
+Gemini Code Assist | https://codeassist.google | code-assistant
+JetBrains AI Assistant | https://www.jetbrains.com/ai | code-assistant
+Sourcegraph Cody | https://sourcegraph.com/cody | code-assistant
+Continue | https://www.continue.dev | code-assistant
+Cline | https://cline.bot | code-assistant
+Roo Code | https://roocode.com | code-assistant
+Aider | https://aider.chat | code-assistant
+Zed | https://zed.dev | code-assistant
+Augment Code | https://www.augmentcode.com | code-assistant
+Qodo | https://www.qodo.ai | code-review
+CodeRabbit | https://www.coderabbit.ai | code-review
+Greptile | https://www.greptile.com | code-review
+Graphite | https://graphite.dev | code-review
+Sweep | https://sweep.dev | code-assistant
+Devin | https://devin.ai | ai-agents
+Factory | https://www.factory.ai | ai-agents
+Warp | https://www.warp.dev | devtools
+Pieces | https://pieces.app | devtools
+Mintlify | https://www.mintlify.com | documentation
+Swimm | https://swimm.io | documentation
+Bolt.new | https://bolt.new | vibe-coding
+Lovable | https://lovable.dev | vibe-coding
+v0 | https://v0.dev | vibe-coding
+Replit | https://replit.com | vibe-coding
+Firebase Studio | https://firebase.studio | vibe-coding
+Same | https://same.new | vibe-coding
+Tempo | https://www.tempo.new | vibe-coding
+Create.xyz | https://www.create.xyz | vibe-coding
+Rork | https://rork.com | app-builders
+Softgen | https://softgen.ai | vibe-coding
+Emergent | https://emergent.sh | vibe-coding
+Codia | https://codia.ai | ui-ux-design
+Locofy | https://www.locofy.ai | ui-ux-design
+Builder.io | https://www.builder.io | ui-ux-design
+Anima | https://www.animaapp.com | ui-ux-design
+Uizard | https://uizard.io | ui-ux-design
+Galileo AI | https://www.usegalileo.ai | ui-ux-design
+Visily | https://www.visily.ai | ui-ux-design
+Relume | https://www.relume.io | website-builders
+Framer | https://www.framer.com | website-builders
+Durable | https://durable.co | website-builders
+10Web | https://10web.io | website-builders
+Wix | https://www.wix.com | website-builders
+Hostinger Website Builder | https://www.hostinger.com/website-builder | website-builders
+Webflow | https://webflow.com | website-builders
+Bubble | https://bubble.io | no-code
+Glide | https://www.glideapps.com | no-code
+Softr | https://www.softr.io | no-code
+FlutterFlow | https://www.flutterflow.io | app-builders
+Adalo | https://www.adalo.com | app-builders
+Retool | https://retool.com | app-builders
+Appsmith | https://www.appsmith.com | app-builders
+Airtable | https://www.airtable.com | no-code
+
+# Agents & automation
+Zapier | https://zapier.com | workflow-automation
+Make | https://www.make.com | workflow-automation
+n8n | https://n8n.io | workflow-automation
+Activepieces | https://www.activepieces.com | workflow-automation
+Pipedream | https://pipedream.com | workflow-automation
+Gumloop | https://www.gumloop.com | workflow-automation
+Lindy | https://www.lindy.ai | ai-agents
+Relevance AI | https://relevanceai.com | ai-agents
+Bardeen | https://www.bardeen.ai | workflow-automation
+Browse AI | https://www.browse.ai | web-scraping
+Bright Data | https://brightdata.com | web-scraping
+Apify | https://apify.com | web-scraping
+Firecrawl | https://www.firecrawl.dev | web-scraping
+ScrapingBee | https://www.scrapingbee.com | web-scraping
+Browserbase | https://www.browserbase.com | ai-agents
+Browser Use | https://browser-use.com | ai-agents
+MultiOn | https://www.multion.ai | ai-agents
+AgentGPT | https://agentgpt.reworkd.ai | ai-agents
+Dify | https://dify.ai | agent-frameworks
+Flowise | https://flowiseai.com | agent-frameworks
+Langflow | https://www.langflow.org | agent-frameworks
+LangChain | https://www.langchain.com | agent-frameworks
+LlamaIndex | https://www.llamaindex.ai | rag-retrieval
+CrewAI | https://www.crewai.com | agent-frameworks
+AutoGen | https://microsoft.github.io/autogen | agent-frameworks
+Haystack | https://haystack.deepset.ai | rag-retrieval
+Vellum | https://www.vellum.ai | agent-frameworks
+Stack AI | https://www.stack-ai.com | agent-frameworks
+Voiceflow | https://www.voiceflow.com | chatbot-builders
+Botpress | https://botpress.com | chatbot-builders
+Chatbase | https://www.chatbase.co | chatbot-builders
+CustomGPT | https://customgpt.ai | chatbot-builders
+Tidio | https://www.tidio.com | customer-support
+Intercom Fin | https://fin.ai | customer-support
+Zendesk AI | https://www.zendesk.com/service/ai | customer-support
+Ada | https://www.ada.cx | customer-support
+Forethought | https://forethought.ai | customer-support
+Decagon | https://decagon.ai | customer-support
+Sierra | https://sierra.ai | customer-support
+Smithery | https://smithery.ai | mcp-agent-tools
+Composio | https://composio.dev | mcp-agent-tools
+Mem0 | https://mem0.ai | ai-memory
+Letta | https://www.letta.com | ai-memory
+Zep | https://www.getzep.com | ai-memory
+Tavily | https://www.tavily.com | search-apis-for-ai
+Exa | https://exa.ai | search-apis-for-ai
+SerpApi | https://serpapi.com | search-apis-for-ai
+Jina AI | https://jina.ai | search-apis-for-ai
+
+# Models, hosting & LLMOps
+OpenAI Platform | https://platform.openai.com | models
+Anthropic | https://www.anthropic.com | ai-labs
+Google DeepMind | https://deepmind.google | ai-labs
+Mistral AI | https://mistral.ai | ai-labs
+Cohere | https://cohere.com | models
+AI21 Labs | https://www.ai21.com | models
+xAI | https://x.ai | ai-labs
+Hugging Face | https://huggingface.co | models
+Together AI | https://www.together.ai | model-hosting-inference
+Groq | https://groq.com | model-hosting-inference
+Fireworks AI | https://fireworks.ai | model-hosting-inference
+Replicate | https://replicate.com | model-hosting-inference
+Modal | https://modal.com | model-hosting-inference
+Baseten | https://www.baseten.co | model-hosting-inference
+Cerebras | https://www.cerebras.ai | model-hosting-inference
+DeepInfra | https://deepinfra.com | model-hosting-inference
+Fal | https://fal.ai | model-hosting-inference
+RunPod | https://www.runpod.io | model-hosting-inference
+Lambda | https://lambda.ai | model-hosting-inference
+OpenRouter | https://openrouter.ai | ai-gateways
+Portkey | https://portkey.ai | ai-gateways
+LiteLLM | https://www.litellm.ai | ai-gateways
+Helicone | https://www.helicone.ai | observability
+Langfuse | https://langfuse.com | observability
+LangSmith | https://www.langchain.com/langsmith | observability
+Arize AI | https://arize.com | observability
+Weights & Biases | https://wandb.ai | mlops
+Comet ML | https://www.comet.com | mlops
+Braintrust | https://www.braintrust.dev | llm-evaluation
+Promptfoo | https://www.promptfoo.dev | llm-evaluation
+Humanloop | https://humanloop.com | llm-evaluation
+Patronus AI | https://www.patronus.ai | llm-evaluation
+Lakera | https://www.lakera.ai | ai-safety
+Guardrails AI | https://www.guardrailsai.com | ai-safety
+Credo AI | https://www.credo.ai | ai-governance
+Ollama | https://ollama.com | local-llms
+LM Studio | https://lmstudio.ai | local-llms
+Jan | https://jan.ai | local-llms
+GPT4All | https://www.nomic.ai/gpt4all | local-llms
+Msty | https://msty.ai | local-llms
+Open WebUI | https://openwebui.com | local-llms
+AnythingLLM | https://anythingllm.com | local-llms
+Pinecone | https://www.pinecone.io | vector-databases
+Weaviate | https://weaviate.io | vector-databases
+Qdrant | https://qdrant.tech | vector-databases
+Chroma | https://www.trychroma.com | vector-databases
+Milvus | https://milvus.io | vector-databases
+Zilliz | https://zilliz.com | vector-databases
+LanceDB | https://lancedb.com | vector-databases
+Unstructured | https://unstructured.io | ocr-data-extraction
+Reducto | https://reducto.ai | ocr-data-extraction
+Nanonets | https://nanonets.com | ocr-data-extraction
+Rossum | https://rossum.ai | ocr-data-extraction
+Mindee | https://www.mindee.com | ocr-data-extraction
+Predibase | https://predibase.com | fine-tuning
+OpenPipe | https://openpipe.ai | fine-tuning
+Unsloth | https://unsloth.ai | fine-tuning
+Scale AI | https://scale.com | data-labeling
+Labelbox | https://labelbox.com | data-labeling
+Snorkel AI | https://snorkel.ai | data-labeling
+Gretel | https://gretel.ai | synthetic-data
+Mostly AI | https://mostly.ai | synthetic-data
+PromptLayer | https://www.promptlayer.com | prompt-tools
+PromptPerfect | https://promptperfect.jina.ai | prompt-tools
+
+# Writing & content
+Jasper | https://www.jasper.ai | copywriting
+Copy.ai | https://www.copy.ai | copywriting
+Writesonic | https://writesonic.com | copywriting
+Rytr | https://rytr.me | copywriting
+Anyword | https://www.anyword.com | copywriting
+Grammarly | https://www.grammarly.com | writing-assistants
+QuillBot | https://quillbot.com | writing-assistants
+Wordtune | https://www.wordtune.com | writing-assistants
+ProWritingAid | https://prowritingaid.com | writing-assistants
+LanguageTool | https://languagetool.org | writing-assistants
+Hemingway Editor | https://hemingwayapp.com | writing-assistants
+Sudowrite | https://www.sudowrite.com | storytelling
+NovelAI | https://novelai.net | storytelling
+Novelcrafter | https://www.novelcrafter.com | storytelling
+Lex | https://lex.page | writing-assistants
+HyperWrite | https://www.hyperwriteai.com | writing-assistants
+Writer | https://writer.com | writing-assistants
+Hypotenuse AI | https://www.hypotenuse.ai | copywriting
+Frase | https://www.frase.io | seo
+Surfer | https://surferseo.com | seo
+Clearscope | https://www.clearscope.io | seo
+MarketMuse | https://www.marketmuse.com | seo
+NeuronWriter | https://neuronwriter.com | seo
+Semrush | https://www.semrush.com | seo
+Ahrefs | https://ahrefs.com | seo
+Koala AI | https://koala.sh | seo
+Originality.ai | https://originality.ai | ai-detection
+GPTZero | https://gptzero.me | ai-detection
+Copyleaks | https://copyleaks.com | ai-detection
+Turnitin | https://www.turnitin.com | ai-detection
+Undetectable AI | https://undetectable.ai | ai-detection
+DeepL | https://www.deepl.com | translator
+Google Translate | https://translate.google.com | translator
+Smartcat | https://www.smartcat.com | localization
+Lokalise | https://lokalise.com | localization
+Phrase | https://phrase.com | localization
+
+# Productivity & knowledge
+Notion AI | https://www.notion.com/product/ai | productivity
+Mem | https://get.mem.ai | note-taking-apps
+Reflect | https://reflect.app | note-taking-apps
+Obsidian | https://obsidian.md | note-taking-apps
+Evernote | https://evernote.com | note-taking-apps
+Craft | https://www.craft.do | note-taking-apps
+Tana | https://tana.inc | knowledge-management
+Capacities | https://capacities.io | knowledge-management
+Heptabase | https://heptabase.com | knowledge-management
+Glean | https://www.glean.com | knowledge-management
+Guru | https://www.getguru.com | knowledge-management
+Coda | https://coda.io | productivity
+ClickUp | https://clickup.com | project-management
+Asana | https://asana.com | project-management
+Monday.com | https://monday.com | project-management
+Linear | https://linear.app | project-management
+Taskade | https://www.taskade.com | project-management
+Motion | https://www.usemotion.com | calendar-scheduling
+Reclaim | https://reclaim.ai | calendar-scheduling
+Clockwise | https://www.getclockwise.com | calendar-scheduling
+Calendly | https://calendly.com | calendar-scheduling
+Superhuman | https://superhuman.com | email-assistants
+Shortwave | https://www.shortwave.com | email-assistants
+SaneBox | https://www.sanebox.com | email-assistants
+Lavender | https://www.lavender.ai | email-assistants
+Raycast | https://www.raycast.com | productivity
+Granola | https://www.granola.ai | meeting-assistants
+Otter.ai | https://otter.ai | meeting-assistants
+Fireflies.ai | https://fireflies.ai | meeting-assistants
+Fathom | https://fathom.video | meeting-assistants
+tl;dv | https://tldv.io | meeting-assistants
+Read AI | https://www.read.ai | meeting-assistants
+Avoma | https://www.avoma.com | meeting-assistants
+Krisp | https://krisp.ai | meeting-assistants
+Gong | https://www.gong.io | sales-enablement
+Whimsical | https://whimsical.com | diagramming
+Miro | https://miro.com | diagramming
+Eraser | https://www.eraser.io | diagramming
+Napkin AI | https://www.napkin.ai | infographics
+Lucidchart | https://www.lucidchart.com | diagramming
+Mapify | https://mapify.so | mind-mapping
+Xmind | https://xmind.com | mind-mapping
+MindMeister | https://www.mindmeister.com | mind-mapping
+Microsoft 365 Copilot | https://www.microsoft.com/microsoft-365/copilot | productivity
+Julius AI | https://julius.ai | data
+Rows | https://rows.com | spreadsheets
+Equals | https://equals.com | spreadsheets
+Formula Bot | https://www.formulabot.com | spreadsheets
+Hex | https://hex.tech | data
+Akkio | https://www.akkio.com | data
+Tableau | https://www.tableau.com | data
+Polymer | https://www.polymersearch.com | data
+AI2SQL | https://www.ai2sql.io | text-to-sql
+Text2SQL.ai | https://www.text2sql.ai | text-to-sql
+Vanna AI | https://vanna.ai | text-to-sql
+
+# Presentations & documents
+Gamma | https://gamma.app | presentation
+Beautiful.ai | https://www.beautiful.ai | presentation
+Tome | https://tome.app | presentation
+Pitch | https://pitch.com | presentation
+Plus AI | https://plusdocs.com | presentation
+Decktopus | https://www.decktopus.com | presentation
+SlidesAI | https://www.slidesai.io | presentation
+Prezi | https://prezi.com | presentation
+Kickresume | https://www.kickresume.com | resume-tools
+Teal | https://www.tealhq.com | resume-tools
+Rezi | https://www.rezi.ai | resume-tools
+Resume Worded | https://resumeworded.com | resume-tools
+Final Round AI | https://www.finalroundai.com | job-tools
+LinkedIn | https://www.linkedin.com | job-tools
+
+# Image generation & editing
+Midjourney | https://www.midjourney.com | image-generation
+DALL·E | https://openai.com/dall-e-3 | image-generation
+Adobe Firefly | https://firefly.adobe.com | image-generation
+Leonardo.Ai | https://leonardo.ai | image-generation
+Ideogram | https://ideogram.ai | image-generation
+Stability AI | https://stability.ai | image-generation
+Black Forest Labs | https://bfl.ai | image-generation
+Recraft | https://www.recraft.ai | image-generation
+Krea | https://www.krea.ai | image-generation
+Playground | https://playground.com | image-generation
+NightCafe | https://creator.nightcafe.studio | image-generation
+Freepik AI | https://www.freepik.com/ai | image-generation
+Lexica | https://lexica.art | image-generation
+Civitai | https://civitai.com | image-generation
+Tensor.Art | https://tensor.art | image-generation
+SeaArt | https://www.seaart.ai | image-generation
+Mage | https://www.mage.space | image-generation
+DreamStudio | https://dreamstudio.ai | image-generation
+Getimg.ai | https://getimg.ai | image-generation
+Imagine Art | https://www.imagine.art | image-generation
+Photoroom | https://www.photoroom.com | background-remover
+remove.bg | https://www.remove.bg | background-remover
+Clipdrop | https://clipdrop.co | image-editing
+Picsart | https://picsart.com | image-editing
+Canva | https://www.canva.com | graphic-design
+Adobe Express | https://www.adobe.com/express | graphic-design
+Microsoft Designer | https://designer.microsoft.com | graphic-design
+Kittl | https://www.kittl.com | graphic-design
+Looka | https://looka.com | logo-generator
+Brandmark | https://brandmark.io | logo-generator
+Designs.ai | https://designs.ai | logo-generator
+Topaz Labs | https://www.topazlabs.com | image-editing
+Magnific | https://magnific.ai | image-editing
+Let's Enhance | https://letsenhance.io | image-editing
+Upscayl | https://upscayl.org | image-editing
+Pixlr | https://pixlr.com | image-editing
+Luminar Neo | https://skylum.com/luminar | image-editing
+Fotor | https://www.fotor.com | image-editing
+Cleanup.pictures | https://cleanup.pictures | image-editing
+Claid | https://claid.ai | image-editing
+Pebblely | https://pebblely.com | image-editing
+Flair AI | https://flair.ai | ad-generator
+AdCreative.ai | https://www.adcreative.ai | ad-generator
+Predis.ai | https://predis.ai | social-media-tools
+Interior AI | https://interiorai.com | home-design
+RoomGPT | https://www.roomgpt.io | home-design
+Spline | https://spline.design | 3d
+Meshy | https://www.meshy.ai | 3d
+Tripo | https://www.tripo3d.ai | 3d
+Luma AI | https://lumalabs.ai | video-generator
+Kaedim | https://www.kaedim3d.com | 3d
+Scenario | https://www.scenario.com | gaming
+Inworld AI | https://inworld.ai | gaming
+Artbreeder | https://www.artbreeder.com | character-design
+
+# Video
+Runway | https://runwayml.com | video-generator
+Pika | https://pika.art | video-generator
+Sora | https://sora.com | video-generator
+Google Veo | https://deepmind.google/models/veo | video-generator
+Kling AI | https://klingai.com | video-generator
+Hailuo AI | https://hailuoai.video | video-generator
+Vidu | https://www.vidu.com | video-generator
+PixVerse | https://pixverse.ai | video-generator
+Haiper | https://haiper.ai | video-generator
+Genmo | https://www.genmo.ai | video-generator
+Higgsfield | https://higgsfield.ai | video-generator
+LTX Studio | https://ltx.studio | video-generator
+Synthesia | https://www.synthesia.io | talking-avatar-generator
+HeyGen | https://www.heygen.com | talking-avatar-generator
+D-ID | https://www.d-id.com | talking-avatar-generator
+Colossyan | https://www.colossyan.com | talking-avatar-generator
+Hour One | https://hourone.ai | talking-avatar-generator
+Captions | https://www.captions.ai | video-editor
+Descript | https://www.descript.com | video-editor
+CapCut | https://www.capcut.com | video-editor
+Veed | https://www.veed.io | video-editor
+Kapwing | https://www.kapwing.com | video-editor
+InVideo | https://invideo.io | video-editor
+Pictory | https://pictory.ai | video-editor
+Fliki | https://fliki.ai | video-editor
+Lumen5 | https://lumen5.com | video-editor
+Opus Clip | https://www.opus.pro | video-editor
+Vizard | https://vizard.ai | video-editor
+Submagic | https://www.submagic.co | video-subtitling
+Wisecut | https://www.wisecut.ai | video-editor
+Gling | https://www.gling.ai | video-editor
+Topaz Video AI | https://www.topazlabs.com/topaz-video-ai | video-enhancer
+Wonder Studio | https://wonderdynamics.com | animation
+Viggle | https://viggle.ai | animation
+Animaker | https://www.animaker.com | animation
+Rask AI | https://www.rask.ai | dubbing
+ElevenLabs Dubbing | https://elevenlabs.io/dubbing | dubbing
+Papercup | https://www.papercup.com | dubbing
+Tavus | https://www.tavus.io | talking-avatar-generator
+Hedra | https://www.hedra.com | talking-avatar-generator
+
+# Audio, voice & music
+ElevenLabs | https://elevenlabs.io | text-to-speech
+Murf AI | https://murf.ai | text-to-speech
+Play.ht | https://play.ht | text-to-speech
+WellSaid Labs | https://wellsaidlabs.com | text-to-speech
+Speechify | https://speechify.com | text-to-speech
+Resemble AI | https://www.resemble.ai | voice-cloning
+Cartesia | https://cartesia.ai | text-to-speech
+LOVO | https://lovo.ai | text-to-speech
+Respeecher | https://www.respeecher.com | voice-cloning
+Voice.ai | https://voice.ai | voice-cloning
+Kits AI | https://www.kits.ai | voice-cloning
+Suno | https://suno.com | music-generation
+Udio | https://www.udio.com | music-generation
+AIVA | https://www.aiva.ai | music-generation
+Soundraw | https://soundraw.io | music-generation
+Mubert | https://mubert.com | music-generation
+Boomy | https://boomy.com | music-generation
+Beatoven.ai | https://www.beatoven.ai | music-generation
+Stable Audio | https://stableaudio.com | music-generation
+LALAL.AI | https://www.lalal.ai | audio
+Moises | https://moises.ai | audio
+Adobe Podcast | https://podcast.adobe.com | podcast
+Cleanvoice | https://cleanvoice.ai | podcast
+Podcastle | https://podcastle.ai | podcast
+Riverside | https://riverside.fm | podcast
+Auphonic | https://auphonic.com | audio
+Whisper | https://openai.com/index/whisper | transcription
+AssemblyAI | https://www.assemblyai.com | transcription
+Deepgram | https://deepgram.com | transcription
+Rev | https://www.rev.com | transcription
+Sonix | https://sonix.ai | transcription
+Happy Scribe | https://www.happyscribe.com | transcription
+Trint | https://trint.com | transcription
+MacWhisper | https://goodsnooze.gumroad.com/l/macwhisper | transcription
+Wispr Flow | https://wisprflow.ai | transcription
+Vapi | https://vapi.ai | voice-agents
+Retell AI | https://www.retellai.com | voice-agents
+Bland AI | https://www.bland.ai | voice-agents
+Synthflow | https://synthflow.ai | voice-agents
+Hume AI | https://www.hume.ai | voice-agents
+Speak | https://www.speak.com | language-learning
+Duolingo | https://www.duolingo.com | language-learning
+Praktika | https://praktika.ai | language-learning
+Talkpal | https://talkpal.ai | language-learning
+Elsa Speak | https://elsaspeak.com | language-learning
+
+# Marketing, sales & social
+HubSpot | https://www.hubspot.com | crm
+Salesforce Einstein | https://www.salesforce.com/artificial-intelligence | crm
+Attio | https://attio.com | crm
+Folk | https://www.folk.app | crm
+Clay | https://www.clay.com | lead-generation
+Apollo.io | https://www.apollo.io | lead-generation
+Instantly | https://instantly.ai | lead-generation
+Smartlead | https://www.smartlead.ai | lead-generation
+Lemlist | https://www.lemlist.com | lead-generation
+Seamless.AI | https://seamless.ai | lead-generation
+Regie.ai | https://www.regie.ai | sales-tools
+Outreach | https://www.outreach.io | sales-tools
+11x | https://www.11x.ai | sales-tools
+Artisan | https://www.artisan.co | sales-tools
+Clari | https://www.clari.com | sales-enablement
+Highspot | https://www.highspot.com | sales-enablement
+Buffer | https://buffer.com | social-media-tools
+Hootsuite | https://www.hootsuite.com | social-media-tools
+Ocoya | https://www.ocoya.com | social-media-tools
+FeedHive | https://www.feedhive.com | social-media-tools
+Taplio | https://taplio.com | social-media-tools
+Typefully | https://typefully.com | social-media-tools
+Brand24 | https://brand24.com | social-listening
+Brandwatch | https://www.brandwatch.com | social-listening
+Mention | https://mention.com | social-listening
+Klaviyo | https://www.klaviyo.com | email-marketing
+Mailchimp | https://mailchimp.com | email-marketing
+Beehiiv | https://www.beehiiv.com | email-marketing
+Brevo | https://www.brevo.com | email-marketing
+Pencil | https://www.trypencil.com | ad-generator
+Madgicx | https://madgicx.com | ad-generator
+Albert | https://albert.ai | marketing
+Mutiny | https://www.mutinyhq.com | marketing
+Crayon | https://www.crayon.co | market-research
+Similarweb | https://www.similarweb.com | market-research
+Exploding Topics | https://explodingtopics.com | market-research
+Shopify Magic | https://www.shopify.com/magic | e-commerce
+Jasper for E-commerce | https://www.jasper.ai/e-commerce | e-commerce
+
+# Business, legal, finance, HR
+Harvey | https://www.harvey.ai | legal-assistants
+Spellbook | https://www.spellbook.legal | legal-assistants
+Casetext | https://casetext.com | legal-assistants
+DoNotPay | https://donotpay.com | legal-assistants
+Ironclad | https://ironcladapp.com | contract-management
+Juro | https://juro.com | contract-management
+Luminance | https://www.luminance.com | contract-management
+Vanta | https://www.vanta.com | compliance
+Drata | https://drata.com | compliance
+Ramp | https://ramp.com | finance
+Brex | https://www.brex.com | finance
+Vic.ai | https://www.vic.ai | tax-accounting
+Booke AI | https://booke.ai | tax-accounting
+Digits | https://digits.com | tax-accounting
+AlphaSense | https://www.alpha-sense.com | finance
+Fiscal.ai | https://fiscal.ai | finance
+Cleo | https://web.meetcleo.com | finance
+HireVue | https://www.hirevue.com | recruiting
+Paradox | https://www.paradox.ai | recruiting
+Eightfold AI | https://eightfold.ai | recruiting
+Textio | https://textio.com | hr
+Lattice | https://lattice.com | hr
+Leena AI | https://leena.ai | hr
+
+# Health, education, lifestyle
+Abridge | https://www.abridge.com | healthcare
+Nabla | https://www.nabla.com | healthcare
+Glass Health | https://glass.health | healthcare
+OpenEvidence | https://www.openevidence.com | healthcare
+Ada Health | https://ada.com | healthcare
+Woebot | https://woebothealth.com | mental-health
+Wysa | https://www.wysa.com | mental-health
+Headspace | https://www.headspace.com | wellness
+Fitbod | https://fitbod.me | fitness
+Khanmigo | https://www.khanmigo.ai | learning-tools
+Quizlet | https://quizlet.com | learning-tools
+Socratic | https://socratic.org | learning-tools
+Brainly | https://brainly.com | learning-tools
+Photomath | https://photomath.com | learning-tools
+Gauth | https://www.gauthmath.com | learning-tools
+Mathway | https://www.mathway.com | learning-tools
+Coursera Coach | https://www.coursera.org | learning-tools
+Synthesis Tutor | https://www.synthesis.com/tutor | learning-tools
+MagicSchool | https://www.magicschool.ai | academia
+Brisk Teaching | https://www.briskteaching.com | academia
+Eduaide | https://www.eduaide.ai | academia
+Turnitin Clarity | https://www.turnitin.com/products/clarity | academia
+Wanderlog | https://wanderlog.com | travel
+Layla | https://layla.ai | travel
+Mindtrip | https://mindtrip.ai | travel
+Rosebud | https://www.rosebud.app | wellness
+Mindsera | https://www.mindsera.com | wellness
+Rizz | https://rizz.app | dating
+
+# Security & IT
+Darktrace | https://www.darktrace.com | cybersecurity
+CrowdStrike Charlotte AI | https://www.crowdstrike.com/platform/charlotte-ai | cybersecurity
+Microsoft Security Copilot | https://www.microsoft.com/security/business/ai-machine-learning/microsoft-security-copilot | cybersecurity
+Snyk | https://snyk.io | cybersecurity
+Socket | https://socket.dev | cybersecurity
+Protect AI | https://protectai.com | ai-safety
+1Password | https://1password.com | privacy
+Proton | https://proton.me | privacy
+Datadog | https://www.datadoghq.com | observability
+Sentry | https://sentry.io | debugging
+Postman | https://www.postman.com | api-tools
+Supabase | https://supabase.com | database-tools
+Neon | https://neon.com | database-tools
+PlanetScale | https://planetscale.com | database-tools
+Vercel | https://vercel.com | cloud-management
+Netlify | https://www.netlify.com | cloud-management
+Cloudflare Workers AI | https://developers.cloudflare.com/workers-ai | model-hosting-inference
+Mabl | https://www.mabl.com | software-testing
+Testim | https://www.testim.io | software-testing
+QA Wolf | https://www.qawolf.com | software-testing
+Momentic | https://momentic.ai | software-testing
+Applitools | https://applitools.com | software-testing

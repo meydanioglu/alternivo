@@ -50,6 +50,22 @@ public static class UrlSafety
         return host.Contains('.');
     }
 
+    /// <summary>
+    /// Host (without "www.") plus path, lowercased and without a trailing slash: identifies a product page,
+    /// so several products on one domain (e.g. anthropic.com/claude-code) stay distinct.
+    /// </summary>
+    public static string? ProductKey(string? value)
+    {
+        if (!Uri.TryCreate(value, UriKind.Absolute, out var uri))
+        {
+            return null;
+        }
+
+        var host = uri.IdnHost.ToLowerInvariant();
+        if (host.StartsWith("www.", StringComparison.Ordinal)) host = host[4..];
+        return host + uri.AbsolutePath.TrimEnd('/').ToLowerInvariant();
+    }
+
     /// <summary>Lowercased host without a leading "www.", used for duplicate detection.</summary>
     public static string? NormalizedHost(string? value)
     {

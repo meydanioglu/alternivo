@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<CommunityService>();
         services.AddScoped<AdminService>();
         services.AddScoped<PanelService>();
+        services.AddScoped<ImportService>();
         return services;
     }
 }

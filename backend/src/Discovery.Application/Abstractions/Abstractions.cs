@@ -31,6 +31,7 @@ public interface IAppDbContext
     DbSet<AuditLog> AuditLogs { get; }
     DbSet<SearchQueryLog> SearchQueryLogs { get; }
     DbSet<PageView> PageViews { get; }
+    DbSet<ImportItem> ImportItems { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

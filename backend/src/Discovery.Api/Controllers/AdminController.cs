@@ -280,3 +280,50 @@ public sealed class AdminMembersController(UserManager<AppUser> users, HttpCurre
         return NoContent();
     }
 }
+
+[ApiController]
+[Route("api/v1/admin/imports")]
+[Produces("application/json")]
+[Authorize(Policy = Policies.Editorial)]
+public sealed class AdminImportsController(ImportService imports, AdminService admin, HttpCurrentUser current) : ControllerBase
+{
+    [HttpGet]
+    public Task<ImportOverview> List([FromQuery] string? status, [FromQuery] int? page, CancellationToken ct) =>
+        imports.ListAsync(status, page, ct);
+
+    [HttpPost]
+    public Task<QueueImportResult> Queue(QueueImportRequest request, CancellationToken ct) =>
+        imports.QueueAsync(current.RequireUserId(), request, ct);
+
+    /// <summary>scope: failed (retry failures) | all (re-sync every finished import from its website).</summary>
+    [HttpPost("requeue")]
+    public async Task<object> Requeue([FromQuery] string? scope, CancellationToken ct) =>
+        new { count = await imports.RequeueAsync(scope == "all" ? "all" : "failed", ct) };
+
+    [HttpPost("{id:guid}/requeue")]
+    public async Task<IActionResult> RequeueOne(Guid id, CancellationToken ct)
+    {
+        await imports.RequeueOneAsync(id, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+    {
+        await imports.DeleteAsync(id, ct);
+        return NoContent();
+    }
+
+    /// <summary>Publishes every draft created by a finished import.</summary>
+    [HttpPost("publish-drafts")]
+    public async Task<object> PublishDrafts(CancellationToken ct)
+    {
+        var ids = await imports.DraftIdsAsync(ct);
+        foreach (var id in ids)
+        {
+            await admin.SetApplicationStatusAsync(current.RequireUserId(), id, "publish", ct);
+        }
+
+        return new { count = ids.Count };
+    }
+}

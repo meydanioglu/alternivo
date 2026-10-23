@@ -1,6 +1,7 @@
 using Discovery.Application.Abstractions;
 using Discovery.Infrastructure.Caching;
 using Discovery.Infrastructure.Identity;
+using Discovery.Infrastructure.Importing;
 using Discovery.Infrastructure.Persistence;
 using Discovery.Infrastructure.Search;
 using Discovery.Infrastructure.Seeding;
@@ -45,6 +46,19 @@ public static class DependencyInjection
         services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));
         services.AddTransient<IEmailSender<AppUser>, EmailSender>();
         services.AddScoped<CatalogSeeder>();
+
+        services.AddHttpClient(ProductImporter.HttpClientName, c =>
+            {
+                c.Timeout = TimeSpan.FromSeconds(20);
+                c.DefaultRequestHeaders.UserAgent.ParseAdd(ProductImporter.UserAgent);
+                c.DefaultRequestHeaders.AcceptLanguage.ParseAdd("en");
+            })
+            .ConfigurePrimaryHttpMessageHandler(ProductImporter.CreateHandler);
+        services.AddScoped<ProductImporter>();
+        if (configuration.GetValue("Import:WorkerEnabled", true))
+        {
+            services.AddHostedService<ImportWorker>();
+        }
         return services;
     }
 }

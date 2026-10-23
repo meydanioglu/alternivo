@@ -152,6 +152,7 @@ app.UseStaticFiles(new StaticFileOptions
     {
         ctx.Context.Response.Headers.CacheControl = "public, max-age=31536000, immutable";
         ctx.Context.Response.Headers.XContentTypeOptions = "nosniff";
+        ctx.Context.Response.Headers.ContentSecurityPolicy = "default-src 'none'; img-src 'self' data:; style-src 'unsafe-inline'; sandbox";
     },
 });
 

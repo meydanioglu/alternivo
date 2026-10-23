@@ -330,6 +330,21 @@ internal sealed class PageViewConfiguration : IEntityTypeConfiguration<PageView>
     }
 }
 
+internal sealed class ImportItemConfiguration : IEntityTypeConfiguration<ImportItem>
+{
+    public void Configure(EntityTypeBuilder<ImportItem> b)
+    {
+        b.ToTable("ImportItems");
+        b.Property(x => x.Url).HasMaxLength(2048).IsRequired();
+        b.Property(x => x.Name).HasMaxLength(100);
+        b.Property(x => x.CategorySlug).HasMaxLength(120);
+        b.Property(x => x.Error).HasMaxLength(1000);
+        b.HasIndex(x => x.Status);
+        b.HasIndex(x => x.Url);
+        b.HasIndex(x => x.CreatedAt);
+    }
+}
+
 internal sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 {
     public void Configure(EntityTypeBuilder<AppUser> b)

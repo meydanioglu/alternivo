@@ -36,6 +36,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<SearchQueryLog> SearchQueryLogs => Set<SearchQueryLog>();
     public DbSet<PageView> PageViews => Set<PageView>();
+    public DbSet<ImportItem> ImportItems => Set<ImportItem>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

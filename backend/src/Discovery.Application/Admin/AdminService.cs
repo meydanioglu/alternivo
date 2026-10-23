@@ -406,7 +406,7 @@ public sealed class AdminService(
             throw new BadRequestException("Description is too long.");
         if (r.WebsiteUrl is not null && !UrlSafety.IsSafePublicWebUrl(r.WebsiteUrl))
             throw new BadRequestException("Website must be a public http(s) URL.");
-        if (!string.IsNullOrWhiteSpace(r.LogoUrl) && !UrlSafety.IsSafePublicWebUrl(r.LogoUrl))
+        if (!string.IsNullOrWhiteSpace(r.LogoUrl) && !r.LogoUrl.StartsWith("/media/", StringComparison.Ordinal) && !UrlSafety.IsSafePublicWebUrl(r.LogoUrl))
             throw new BadRequestException("Logo must be a public http(s) image URL.");
         if (r.EditorialScore is < 0 or > 100)
             throw new BadRequestException("Editorial score must be between 0 and 100.");
