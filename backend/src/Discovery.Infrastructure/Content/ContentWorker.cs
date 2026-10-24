@@ -13,6 +13,7 @@ public sealed class ContentWorker(IServiceScopeFactory scopes, ILogger<ContentWo
 {
     private const int Parallelism = 3;
     private const int MaxAttempts = 3;
+    private DateTimeOffset _pausedUntil = DateTimeOffset.MinValue;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -28,6 +29,12 @@ public sealed class ContentWorker(IServiceScopeFactory scopes, ILogger<ContentWo
         {
             try
             {
+                if (DateTimeOffset.UtcNow < _pausedUntil)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+                    continue;
+                }
+
                 var batch = await ClaimAsync(stoppingToken);
                 if (batch.Count == 0)
                 {
@@ -81,6 +88,17 @@ public sealed class ContentWorker(IServiceScopeFactory scopes, ILogger<ContentWo
             await generator.GenerateAsync(draft, timeout.Token);
             draft.Status = ContentDraftStatus.Ready;
             draft.Error = draft.SourceChars == 0 ? "No website text available (blocked or empty); content is general — check carefully." : null;
+        }
+        catch (QuotaExceededException ex) when (!ct.IsCancellationRequested)
+        {
+            // Back to the queue without spending an attempt; the loop pauses until credits are added.
+            logger.LogWarning("OpenAI quota exhausted, pausing content generation: {Message}", ex.Message);
+            db.ChangeTracker.Clear();
+            draft = await db.ContentDrafts.FirstAsync(d => d.Id == id, ct);
+            draft.Status = ContentDraftStatus.Queued;
+            draft.Attempts = Math.Max(0, draft.Attempts - 1);
+            draft.Error = $"Waiting for OpenAI credits: {ex.Message}";
+            _pausedUntil = DateTimeOffset.UtcNow.AddMinutes(10);
         }
         catch (Exception ex) when (!ct.IsCancellationRequested)
         {

@@ -136,7 +136,13 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
         var json = await response.Content.ReadAsStringAsync(ct);
         if (!response.IsSuccessStatusCode)
         {
-            var message = JsonNode.Parse(json)?["error"]?["message"]?.GetValue<string>() ?? json;
+            var error = JsonNode.Parse(json)?["error"];
+            var message = error?["message"]?.GetValue<string>() ?? json;
+            if (error?["code"]?.GetValue<string>() is "insufficient_quota" || message.Contains("credits", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new QuotaExceededException(Truncate(message, 300));
+            }
+
             throw response.StatusCode is HttpStatusCode.TooManyRequests or >= HttpStatusCode.InternalServerError
                 ? new HttpRequestException($"OpenAI {(int)response.StatusCode}: {Truncate(message, 300)}")
                 : new ImportException($"OpenAI {(int)response.StatusCode}: {Truncate(message, 300)}");
@@ -189,7 +195,7 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
         {
             site = new Uri(url);
             using var robots = await http.GetAsync(new Uri(site, "/robots.txt"), ct);
-            if (robots.IsSuccessStatusCode && !ProductImporter.RobotsAllowsRoot(await robots.Content.ReadAsStringAsync(ct)))
+            if (robots.IsSuccessStatusCode && !ProductImporter.RobotsAllowsRoot(Encoding.UTF8.GetString(await robots.Content.ReadAsByteArrayAsync(ct))))
             {
                 return (url, "");
             }
@@ -230,7 +236,7 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
             using var response = await http.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, ct);
             if (!response.IsSuccessStatusCode) return null;
             var finalUrl = response.RequestMessage?.RequestUri?.ToString() ?? uri.ToString();
-            var raw = await response.Content.ReadAsStringAsync(ct);
+            var raw = Encoding.UTF8.GetString(await response.Content.ReadAsByteArrayAsync(ct));
             if (raw.Length > 2_000_000) raw = raw[..2_000_000];
             var isHtml = response.Content.Headers.ContentType?.MediaType?.Contains("html") ?? raw.TrimStart().StartsWith('<');
             if (!isHtml) return (finalUrl, raw.Trim());
@@ -319,3 +325,6 @@ public sealed partial class ContentGenerator(AppDbContext db, IHttpClientFactory
     [GeneratedRegex(@"[ \t\r\f\v ]+")]
     private static partial Regex Spaces();
 }
+
+/// <summary>The OpenAI account has no credits or quota left: generation should pause, not fail drafts.</summary>
+public sealed class QuotaExceededException(string message) : Exception(message);
