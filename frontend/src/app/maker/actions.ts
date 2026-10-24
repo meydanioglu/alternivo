@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { FormState } from "@/app/actions";
+import { startCheckout } from "@/lib/auth/checkout";
 import { AuthApiError, userApi } from "@/lib/auth/session";
 
 const errorText = (error: unknown, fallback: string) => (error instanceof AuthApiError ? error.message : fallback);
@@ -20,13 +21,13 @@ export async function assignEntitlementAction(_: FormState, form: FormData): Pro
   return { ok: "Purchase applied." };
 }
 
-/** Server-validated checkout: the API checks ownership/eligibility and returns the Freemius URL. */
+/** Server-validated checkout: the API checks ownership/eligibility and price, then we open the PayTR payment page. */
 export async function checkoutAction(_: FormState, form: FormData): Promise<FormState> {
   const plan = String(form.get("plan") ?? "");
   const targetId = String(form.get("targetId") ?? "") || null;
   let url: string;
   try {
-    ({ url } = await userApi<{ url: string }>("/api/v1/maker/checkout", { method: "POST", body: { plan, targetId } }));
+    url = await startCheckout(plan, targetId);
   } catch (error) {
     return { error: errorText(error, "Checkout is not available right now.") };
   }
@@ -45,7 +46,7 @@ export async function createCampaignAction(_: FormState, form: FormData): Promis
       method: "POST",
       body: { applicationId, planKey: plan, targetSlug: plan === "homepageSpotlight" ? null : target, startsAt: startsAt ? `${startsAt}T00:00:00Z` : null },
     });
-    ({ url } = await userApi<{ url: string }>("/api/v1/maker/checkout", { method: "POST", body: { plan, targetId: id } }));
+    url = await startCheckout(plan, id);
   } catch (error) {
     revalidatePath("/maker");
     return { error: errorText(error, "Could not reserve this placement.") };

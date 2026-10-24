@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { startCheckout } from "@/lib/auth/checkout";
 import { AuthApiError, authPost, clearTokens, login, userApi } from "@/lib/auth/session";
 
 export interface FormState {
@@ -140,7 +141,7 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
   // The submission is saved as a standard (free) one; it becomes Fast Review only when the payment webhook confirms it.
   let checkout: string | null = null;
   try {
-    checkout = (await userApi<{ url: string }>("/api/v1/maker/checkout", { method: "POST", body: { plan: "fastReview", targetId: submissionId } })).url;
+    checkout = await startCheckout("fastReview", submissionId);
   } catch {
     checkout = null;
   }

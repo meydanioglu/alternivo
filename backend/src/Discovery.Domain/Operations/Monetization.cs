@@ -19,7 +19,7 @@ public enum CampaignStatus
     Canceled = 4,
 }
 
-/// <summary>One sellable product. Prices are shown on the site; the amount charged is the Freemius plan's price.</summary>
+/// <summary>One sellable product. Default prices (USD cents); admins can set the charged price and currency for PayTR.</summary>
 public sealed record PlanDefinition(
     string Key,
     EntitlementKind Kind,
@@ -69,20 +69,37 @@ public static class PricingCatalog
             .ThenBy(created).ThenBy(id);
 }
 
+public enum PaymentOrderStatus
+{
+    Pending = 0,
+    Paid = 1,
+    Failed = 2,
+}
+
 /// <summary>
-/// What a member was about to buy and for what. Freemius' hosted checkout does not carry our ids through to the
-/// webhook, so the webhook matches the new license to the member's latest open intent of the same kind.
+/// One PayTR checkout. The order id (merchant_oid) is sent to PayTR; the signed payment notification for that id is
+/// the only thing that marks it paid. Amount and target are fixed server-side when the order is created.
 /// </summary>
-public class CheckoutIntent
+public class PaymentOrder
 {
     public Guid Id { get; set; } = Guid.CreateVersion7();
+    /// <summary>merchant_oid: alphanumeric, unique.</summary>
+    public required string MerchantOid { get; set; }
     public Guid UserId { get; set; }
+    public required string PlanKey { get; set; }
     public EntitlementKind Kind { get; set; }
     /// <summary>Submission (Fast Review), application (Featured / Growth) or campaign (placements).</summary>
     public Guid? TargetId { get; set; }
+    /// <summary>Minor units (kuruş / cents), as sent to PayTR.</summary>
+    public int AmountMinor { get; set; }
+    public required string Currency { get; set; }
+    public bool TestMode { get; set; }
+    public PaymentOrderStatus Status { get; set; } = PaymentOrderStatus.Pending;
+    public int? PaidAmountMinor { get; set; }
+    public string? PaymentType { get; set; }
+    public string? FailedReason { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
-    public DateTimeOffset? ConsumedAt { get; set; }
-    public Guid? EntitlementId { get; set; }
+    public DateTimeOffset? CompletedAt { get; set; }
 }
 
 public class SponsorshipCampaign

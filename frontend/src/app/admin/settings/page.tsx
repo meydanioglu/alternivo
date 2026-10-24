@@ -34,7 +34,7 @@ export default async function AdminSettingsPage() {
           <h2 className="mb-1 flex items-center gap-2 font-semibold">
             <CreditCard className="size-5 text-accent" aria-hidden="true" /> Ödeme ve giriş entegrasyonları
           </h2>
-          <p className="mb-5 text-sm text-muted">Freemius ödemeleri (Maker paketleri) ve Google ile giriş. Gizli anahtarlar şifreli saklanır.</p>
+          <p className="mb-5 text-sm text-muted">PayTR ödemeleri (Maker paketleri) ve Google ile giriş. Gizli anahtarlar şifreli saklanır.</p>
           <IntegrationsForm view={integrations} siteUrl={site.url} />
         </section>
       )}

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using Discovery.Application.Common;
 using Discovery.Domain.Operations;
@@ -7,45 +8,52 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Discovery.Infrastructure.Billing;
 
-/// <summary>Plans maps PricingCatalog plan keys (fastReview, featured, growth, …) to Freemius plan ids.</summary>
-public sealed record FreemiusConfig(string ProductId, string PublicKey, string SecretKey, IReadOnlyDictionary<string, string> Plans)
+/// <summary>PayTR store credentials plus the price charged for each plan, in the store's currency (minor units).</summary>
+public sealed record PayTrConfig(string MerchantId, string MerchantKey, string MerchantSalt, bool TestMode, string Currency, IReadOnlyDictionary<string, int> Prices)
 {
-    public string? PlanKeyFor(string? fsPlanId) => fsPlanId is null ? null : Plans.FirstOrDefault(p => p.Value == fsPlanId).Key;
+    public int? PriceOf(string planKey) => Prices.TryGetValue(planKey, out var p) && p > 0 ? p : null;
 }
 
 public sealed record GoogleConfig(string ClientId, string ClientSecret);
 
 /// <summary>Admin view: secrets are never returned, only whether they are set.</summary>
 public sealed record IntegrationSettingsView(
-    string? FreemiusProductId,
-    string? FreemiusPublicKey,
-    bool FreemiusSecretSet,
-    IReadOnlyDictionary<string, string> Plans,
+    string? PayTrMerchantId,
+    bool PayTrKeySet,
+    bool PayTrSaltSet,
+    bool PayTrTestMode,
+    string PayTrCurrency,
+    IReadOnlyDictionary<string, int> Prices,
     string? GoogleClientId,
     bool GoogleSecretSet);
 
 public sealed record SaveIntegrationSettingsRequest(
-    string? FreemiusProductId,
-    string? FreemiusPublicKey,
-    string? FreemiusSecretKey,
-    IReadOnlyDictionary<string, string?>? Plans,
+    string? PayTrMerchantId,
+    string? PayTrMerchantKey,
+    string? PayTrMerchantSalt,
+    bool? PayTrTestMode,
+    string? PayTrCurrency,
+    /// <summary>Plan key → price in minor units; 0 or missing disables the plan.</summary>
+    IReadOnlyDictionary<string, int?>? Prices,
     string? GoogleClientId,
     string? GoogleClientSecret);
 
 /// <summary>
-/// Payment (Freemius) and Google sign-in settings stored in AppSettings. Secret values are encrypted with
+/// Payment (PayTR) and Google sign-in settings stored in AppSettings. Secret values are encrypted with
 /// ASP.NET Data Protection and are write-only from the API's point of view.
 /// </summary>
 public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider protection)
 {
     private readonly IDataProtector _protector = protection.CreateProtector("Discovery.Settings.v1");
 
-    private static readonly string[] Secrets = ["freemius.secretKey", "google.clientSecret"];
+    private static readonly string[] Secrets = ["paytr.merchantKey", "paytr.merchantSalt", "google.clientSecret"];
+    private static readonly string[] Currencies = ["TL", "USD", "EUR", "GBP"];
+    private const string PricePrefix = "paytr.price.";
 
     private async Task<Dictionary<string, string>> LoadAsync(CancellationToken ct)
     {
         var rows = await db.AppSettings.AsNoTracking()
-            .Where(s => s.Key.StartsWith("freemius.") || s.Key.StartsWith("google."))
+            .Where(s => s.Key.StartsWith("paytr.") || s.Key.StartsWith("google."))
             .ToListAsync(ct);
         var result = new Dictionary<string, string>();
         foreach (var row in rows)
@@ -69,15 +77,21 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         return result;
     }
 
-    public async Task<FreemiusConfig?> FreemiusAsync(CancellationToken ct)
+    private static Dictionary<string, int> PricesOf(Dictionary<string, string> s) =>
+        PricingCatalog.Plans
+            .Select(p => (p.Key, Value: s.TryGetValue(PricePrefix + p.Key, out var v) && int.TryParse(v, CultureInfo.InvariantCulture, out var n) ? n : 0))
+            .Where(x => x.Value > 0)
+            .ToDictionary(x => x.Key, x => x.Value);
+
+    public async Task<PayTrConfig?> PayTrAsync(CancellationToken ct)
     {
         var s = await LoadAsync(ct);
-        if (!s.TryGetValue("freemius.productId", out var product) || !s.TryGetValue("freemius.publicKey", out var pub) || !s.TryGetValue("freemius.secretKey", out var secret))
+        if (!s.TryGetValue("paytr.merchantId", out var id) || !s.TryGetValue("paytr.merchantKey", out var key) || !s.TryGetValue("paytr.merchantSalt", out var salt))
         {
             return null;
         }
 
-        return new FreemiusConfig(product, pub, secret, PlansOf(s));
+        return new PayTrConfig(id, key, salt, s.GetValueOrDefault("paytr.testMode") == "1", s.GetValueOrDefault("paytr.currency") ?? "TL", PricesOf(s));
     }
 
     public async Task<GoogleConfig?> GoogleAsync(CancellationToken ct)
@@ -90,43 +104,34 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
     {
         var s = await LoadAsync(ct);
         return new IntegrationSettingsView(
-            s.GetValueOrDefault("freemius.productId"), s.GetValueOrDefault("freemius.publicKey"), s.ContainsKey("freemius.secretKey"),
-            PlansOf(s),
+            s.GetValueOrDefault("paytr.merchantId"), s.ContainsKey("paytr.merchantKey"), s.ContainsKey("paytr.merchantSalt"),
+            s.GetValueOrDefault("paytr.testMode") == "1", s.GetValueOrDefault("paytr.currency") ?? "TL", PricesOf(s),
             s.GetValueOrDefault("google.clientId"), s.ContainsKey("google.clientSecret"));
     }
 
     /// <summary>null leaves a value unchanged; "" removes it.</summary>
     public async Task SaveAsync(Guid userId, SaveIntegrationSettingsRequest r, CancellationToken ct)
     {
-        await SetAsync("freemius.productId", r.FreemiusProductId, false, userId, IsId, ct);
-        await SetAsync("freemius.publicKey", r.FreemiusPublicKey, false, userId, IsKey, ct);
-        await SetAsync("freemius.secretKey", r.FreemiusSecretKey, true, userId, IsKey, ct);
-        foreach (var (key, value) in r.Plans ?? new Dictionary<string, string?>())
+        await SetAsync("paytr.merchantId", r.PayTrMerchantId, false, userId, v => v.Length <= 20 && v.All(char.IsDigit), ct);
+        await SetAsync("paytr.merchantKey", r.PayTrMerchantKey, true, userId, IsKey, ct);
+        await SetAsync("paytr.merchantSalt", r.PayTrMerchantSalt, true, userId, IsKey, ct);
+        if (r.PayTrTestMode is { } test) await SetAsync("paytr.testMode", test ? "1" : "0", false, userId, _ => true, ct);
+        await SetAsync("paytr.currency", r.PayTrCurrency, false, userId, v => Currencies.Contains(v), ct);
+        foreach (var (key, value) in r.Prices ?? new Dictionary<string, int?>())
         {
             if (PricingCatalog.ByKey(key) is null) throw new BadRequestException($"Unknown plan '{key}'.");
-            await SetAsync(PlanPrefix + key, value, false, userId, IsId, ct);
+            if (value is null) continue;
+            if (value is < 0 or > 10_000_000) throw new BadRequestException($"Invalid price for {key}.");
+            await SetAsync(PricePrefix + key, value == 0 ? "" : value.Value.ToString(CultureInfo.InvariantCulture), false, userId, _ => true, ct);
         }
+
         await SetAsync("google.clientId", r.GoogleClientId, false, userId, v => v.EndsWith(".apps.googleusercontent.com") && v.Length < 200, ct);
         await SetAsync("google.clientSecret", r.GoogleClientSecret, true, userId, IsKey, ct);
+
+        // Old payment-provider settings are no longer used.
+        db.AppSettings.RemoveRange(db.AppSettings.Where(x => x.Key.StartsWith("freemius.")));
         await db.SaveChangesAsync(ct);
     }
-
-    private const string PlanPrefix = "freemius.plan.";
-
-    private static Dictionary<string, string> PlansOf(Dictionary<string, string> s)
-    {
-        var plans = new Dictionary<string, string>();
-        foreach (var plan in PricingCatalog.Plans)
-        {
-            if (s.TryGetValue(PlanPrefix + plan.Key, out var id)) plans[plan.Key] = id;
-        }
-
-        // Earlier setting name for Fast Review.
-        if (!plans.ContainsKey("fastReview") && s.TryGetValue(PlanPrefix + "fastTrack", out var legacy)) plans["fastReview"] = legacy;
-        return plans;
-    }
-
-    private static bool IsId(string v) => v.Length <= 20 && v.All(char.IsDigit);
 
     private static bool IsKey(string v) => v.Length is >= 8 and <= 200 && !v.Any(char.IsWhiteSpace);
 

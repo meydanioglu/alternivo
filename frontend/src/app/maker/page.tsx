@@ -44,6 +44,7 @@ interface MakerDashboard {
     createdAt: string;
     planName: string | null;
     priceCents: number | null;
+    currency: string | null;
     recurring: boolean;
   }[];
   campaigns: {
@@ -123,7 +124,7 @@ export default async function MakerPage({ searchParams }: Props) {
   const can = (plan: string) => billing.enabled && billing.plans.includes(plan);
   const priceOf = (plan: string) => {
     const p = prices.plans.find((x) => x.key === plan);
-    return p ? `${formatPrice(p.priceCents)}${p.recurring ? "/mo" : ""}` : "";
+    return p ? `${formatPrice(p.priceCents, prices.currency)}${p.recurring ? " / 30 days" : ""}` : "";
   };
   const products = data.products.map((p) => ({ id: p.application.id, name: p.application.name }));
 
@@ -148,7 +149,7 @@ export default async function MakerPage({ searchParams }: Props) {
       )}
       {params.purchase && (
         <Notice tone="success">
-          Payment received by Freemius. It is confirmed here as soon as Freemius notifies us (usually within a minute) — refresh to see it.
+          Payment received. It is applied as soon as PayTR confirms it (usually within seconds) — refresh if you don't see it yet.
         </Notice>
       )}
       {params.canceled && <Notice tone="warning">Checkout was canceled. You have not been charged.</Notice>}
@@ -212,14 +213,18 @@ export default async function MakerPage({ searchParams }: Props) {
                       </div>
                       {growth ? <SponsoredLabel>Growth</SponsoredLabel> : featured && <SponsoredLabel>Featured</SponsoredLabel>}
                     </div>
-                    {!featured && (
+                    <div className="flex flex-col items-start gap-1 sm:items-end">
                       <div className="flex flex-wrap gap-2">
-                        {can("featured") && <CheckoutButton plan="featured" targetId={p.application.id} label={`Featured ${priceOf("featured")}`} />}
-                        {can("growth") && <CheckoutButton plan="growth" targetId={p.application.id} label={`Growth ${priceOf("growth")}`} variant="primary" />}
+                        {can("featured") && !growth && (
+                          <CheckoutButton plan="featured" targetId={p.application.id} label={`${featured ? "Extend Featured" : "Featured"} ${priceOf("featured")}`} />
+                        )}
+                        {can("growth") && (
+                          <CheckoutButton plan="growth" targetId={p.application.id} label={`${growth ? "Extend Growth" : "Growth"} ${priceOf("growth")}`} variant="primary" />
+                        )}
                         {!can("featured") && !can("growth") && <span className="text-xs text-muted">Promotion available soon</span>}
                       </div>
-                    )}
-                    {featured && <span className="text-xs text-muted">Active until {date((growth ? p.growthUntil : p.featuredUntil)!)} · manage in Billing</span>}
+                      {featured && <span className="text-xs text-muted">Active until {date((growth ? p.growthUntil : p.featuredUntil)!)} · no automatic renewal</span>}
+                    </div>
                   </li>
                 );
               })}
@@ -248,7 +253,7 @@ export default async function MakerPage({ searchParams }: Props) {
                 categories={flatten(categories).sort((a, b) => a.name.localeCompare(b.name))}
                 plans={prices.plans.filter((p) => p.inventoryLimit !== null && can(p.key)).map((p) => ({
                   key: p.key,
-                  label: `${p.name} — ${formatPrice(p.priceCents)} / ${p.durationDays} days`,
+                  label: `${p.name} — ${formatPrice(p.priceCents, prices.currency)} / ${p.durationDays} days`,
                 }))}
               />
             )}
@@ -264,7 +269,7 @@ export default async function MakerPage({ searchParams }: Props) {
                     <div className="min-w-0 flex-1">
                       <p className="font-medium">{c.planName} · {c.applicationName}</p>
                       <p className="text-xs text-muted">
-                        {c.targetName && `${c.targetName} · `}{date(c.startsAt)} – {date(c.endsAt)} · {formatPrice(c.priceCents)}
+                        {c.targetName && `${c.targetName} · `}{date(c.startsAt)} – {date(c.endsAt)}
                       </p>
                       {c.moderatorNote && <p className="mt-1 text-xs text-muted">Note: {c.moderatorNote}</p>}
                     </div>
@@ -336,11 +341,10 @@ export default async function MakerPage({ searchParams }: Props) {
                 : "Free"}
             </p>
             <p className="mt-2 text-muted">
-              Payments, invoices, receipts, plan changes and cancellations are handled by Freemius, our merchant of record.
+              Card payments are processed by PayTR. Featured and Growth are prepaid 30-day periods: they never renew automatically —
+              buy another period from My products to extend. For invoices or refunds, see the{" "}
+              <Link href="/help" className="text-accent underline">Help center</Link>.
             </p>
-            <a href="https://users.freemius.com/" target="_blank" rel="noopener noreferrer" className={buttonClass("outline", "sm", "mt-3")}>
-              Open the Freemius customer portal <ExternalLink className="size-3.5" aria-hidden="true" />
-            </a>
           </section>
           <section>
             <h2 className="mb-3 font-semibold">Payment history</h2>
@@ -357,7 +361,7 @@ export default async function MakerPage({ searchParams }: Props) {
                     <li key={e.id} className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-3 text-sm">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium">{e.planName ?? "Unknown plan"}</span>
-                        {e.priceCents !== null && <span className="text-muted">{formatPrice(e.priceCents)}{e.recurring && "/mo"}</span>}
+                        {e.priceCents !== null && <span className="text-muted">{formatPrice(e.priceCents, e.currency ?? "USD")}{e.recurring && " · 30 days"}</span>}
                         <span className={cx("text-xs", e.active ? "text-success" : "text-muted")}>
                           {e.active ? (e.recurring ? "Active subscription" : "Paid") : e.canceled ? "Canceled / refunded" : "Expired"}
                         </span>

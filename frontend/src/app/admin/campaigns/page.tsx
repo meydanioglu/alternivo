@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { AdminHeader, Table, Tabs, dateTime } from "@/components/admin/admin-parts";
 import { CampaignDecision } from "@/components/admin/campaign-decision";
-import { formatPrice } from "@/lib/auth/integrations";
 import { userApi } from "@/lib/auth/session";
 
 interface Row {
@@ -36,7 +35,7 @@ export default async function AdminCampaignsPage({ searchParams }: Props) {
   const rows = await userApi<Row[]>(`/api/v1/admin/campaigns?state=${encodeURIComponent(state)}`, { persist: false });
   return (
     <>
-      <AdminHeader title="Sponsorluklar" description="Ödenmiş kampanyalar yayına girmeden önce onayınızı bekler. Reddedilenlerin iadesini Freemius panelinden yapın." />
+      <AdminHeader title="Sponsorluklar" description="Ödenmiş kampanyalar yayına girmeden önce onayınızı bekler. Reddedilenlerin iadesini PayTR mağaza panelinden yapın, sonra Ödemeler sayfasında “iade edildi” olarak işaretleyin." />
       <Tabs
         items={[
           { value: "pending", label: "Onay bekleyen", href: "/admin/campaigns?state=pending" },
@@ -51,7 +50,7 @@ export default async function AdminCampaignsPage({ searchParams }: Props) {
             <td className="px-4 py-3 text-sm">
               <p className="font-semibold">{r.planName}</p>
               <Link href={`/software/${r.applicationSlug}`} target="_blank" className="text-accent hover:underline">{r.applicationName}</Link>
-              <p className="text-xs text-muted">{formatPrice(r.priceCents)}{r.paidAt && ` · ödendi ${dateTime(r.paidAt)}`}</p>
+              <p className="text-xs text-muted">{r.paidAt ? `Ödendi ${dateTime(r.paidAt)}` : "Ödenmedi"}</p>
             </td>
             <td className="px-4 py-3 text-sm">{r.targetName ?? "—"}</td>
             <td className="whitespace-nowrap px-4 py-3 text-xs text-muted">

@@ -41,13 +41,22 @@ export async function testAiAction(): Promise<{ ok: boolean; message: string }> 
 export async function saveIntegrationsAction(_: FormState, form: FormData): Promise<FormState> {
   const value = (name: string) => String(form.get(name) ?? "").trim();
   // Plain fields are saved as typed (empty clears them); empty secret fields keep the stored secret.
+  const keys = ["fastReview", "featured", "growth", "homepageSpotlight", "categorySponsorship", "competitorSponsorship", "alternativeCard"];
+  const prices: Record<string, number> = {};
+  for (const k of keys) {
+    const raw = value(`price_${k}`).replace(",", ".");
+    // Empty disables the plan (0); otherwise convert the typed amount to minor units.
+    const amount = raw === "" ? 0 : Number(raw);
+    if (!Number.isFinite(amount) || amount < 0) return { error: `Geçersiz fiyat: ${k}` };
+    prices[k] = Math.round(amount * 100);
+  }
   const body = {
-    freemiusProductId: value("freemiusProductId"),
-    freemiusPublicKey: value("freemiusPublicKey"),
-    freemiusSecretKey: value("freemiusSecretKey") || null,
-    plans: Object.fromEntries(
-      ["fastReview", "featured", "growth", "homepageSpotlight", "categorySponsorship", "competitorSponsorship", "alternativeCard"].map((k) => [k, value(`plan_${k}`)]),
-    ),
+    payTrMerchantId: value("payTrMerchantId"),
+    payTrMerchantKey: value("payTrMerchantKey") || null,
+    payTrMerchantSalt: value("payTrMerchantSalt") || null,
+    payTrTestMode: form.get("payTrTestMode") === "on",
+    payTrCurrency: value("payTrCurrency") || "TL",
+    prices,
     googleClientId: value("googleClientId"),
     googleClientSecret: value("googleClientSecret") || null,
   };

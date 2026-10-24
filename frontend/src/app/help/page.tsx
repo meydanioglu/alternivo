@@ -37,10 +37,10 @@ const TOPICS: { title: string; items: { q: string; a: string }[] }[] = [
   {
     title: "Paid placements",
     items: [
-      { q: "What can I buy?", a: "Fast Review ($5 one-time), Featured ($9/month), Growth ($19/month) and fixed-length sponsorship campaigns. See the pricing page. All are optional." },
+      { q: "What can I buy?", a: "Fast Review (one-time), Featured and Growth (prepaid 30-day periods) and fixed-length sponsorship campaigns. Current prices are on the pricing page. All are optional." },
       { q: "Are paid placements labelled?", a: "Always. They show “Fast Review”, “Featured”, “Spotlight” or “Sponsored”, and never affect votes, ratings or reviews." },
-      { q: "How is a purchase linked to my product?", a: "Start every purchase from your Maker dashboard while signed in; checkout uses your account e-mail and the purchase is applied automatically once Freemius confirms the payment." },
-      { q: "Invoices, cancellation and refunds?", a: "Payments are handled by Freemius, our merchant of record. Use the Freemius customer portal (users.freemius.com) for invoices and to cancel a subscription." },
+      { q: "How is a purchase linked to my product?", a: "Start every purchase from your Maker dashboard (or the submit form) while signed in. Each payment is created for one specific submission, product or campaign and is applied automatically once PayTR confirms it." },
+      { q: "Invoices, cancellation and refunds?", a: "Card payments are processed securely by PayTR. Featured and Growth are prepaid 30-day periods that do not renew automatically, so there is nothing to cancel. For refunds or invoices, contact us through the Help center." },
       { q: "I want to claim a listing someone else added.", a: "Claiming is not self-serve yet. Report the listing from its page and mention that you are the owner; we will verify and transfer it." },
     ],
   },

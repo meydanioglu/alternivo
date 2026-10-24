@@ -47,18 +47,17 @@ export default function TermsPage() {
         <ul>
           <li>Submitting a product is free. Optional paid services are listed on our <Link href="/pricing">pricing page</Link>.</li>
           <li>
-            Payments are processed by Freemius, Inc., which acts as reseller and merchant of record. Freemius&apos; own terms apply to the
-            payment, taxes, invoices and refunds.
+            Card payments are processed by PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş. Prices are shown before payment, in the currency
+            charged.
           </li>
           <li>
-            <strong>Fast Review</strong> ($5, one-time, per submission) means your submission is reviewed within 24 hours after the payment is
+            <strong>Fast Review</strong> (one-time, per submission) means your submission is reviewed within 24 hours after the payment is
             confirmed. It does not guarantee approval, publication, ranking or traffic. If we do not review it within 24 hours, you can ask for a
             full refund.
           </li>
           <li>
-            <strong>Featured</strong> and <strong>Growth</strong> are monthly subscriptions that renew until cancelled. Cancelling stops the next
-            renewal; the placement ends when the paid month ends. Founding-vendor prices stay the same while the subscription stays active
-            without interruption.
+            <strong>Featured</strong> and <strong>Growth</strong> are prepaid 30-day periods. They do not renew automatically; buying another
+            period extends the current one. Founding-vendor prices stay the same while periods are renewed without interruption.
           </li>
           <li>
             <strong>Sponsorship campaigns</strong> run for a fixed period, are reviewed before they go live and are subject to limited inventory.

@@ -31,7 +31,7 @@ export async function SubmissionModeration({ s }: { s: Moderation }) {
         <p className="text-xs font-medium uppercase tracking-wider text-muted">İnceleme</p>
         <p className="mt-1 font-medium">{s.isPriority ? "Fast Review (ücretli)" : "Standart (ücretsiz)"}</p>
         {s.isPriority && s.priorityPaidAt && (
-          <p className="text-success">Ödeme Freemius webhook ile doğrulandı: {dateTime(s.priorityPaidAt)}</p>
+          <p className="text-success">Ödeme PayTR bildirimi ile doğrulandı: {dateTime(s.priorityPaidAt)}</p>
         )}
         {s.reviewDeadline && (
           <p className={s.overdue ? "font-semibold text-danger" : "text-muted"}>

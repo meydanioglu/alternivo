@@ -140,21 +140,20 @@ public enum EntitlementKind
 }
 
 /// <summary>
-/// A Freemius license mapped to one of our members, kept in sync by the license.* webhooks.
-/// The member applies it to one of their products (Featured, Launch boost) or submissions (Fast track).
+/// What a member has paid for: created when a PayTR payment notification confirms an order. Featured / Growth are
+/// prepaid 30-day periods (buying again extends them); one-time purchases have no expiration.
 /// </summary>
 public class BillingEntitlement
 {
     public Guid Id { get; set; } = Guid.CreateVersion7();
     public Guid UserId { get; set; }
-    public required string FsLicenseId { get; set; }
-    public string? FsPlanId { get; set; }
-    public string? FsPricingId { get; set; }
-    public string? FsUserId { get; set; }
+    /// <summary>The PaymentOrder that paid for it (unique: one entitlement per paid order).</summary>
+    public Guid OrderId { get; set; }
     public EntitlementKind Kind { get; set; }
     public DateTimeOffset? Expiration { get; set; }
+    /// <summary>Set by an admin after a refund.</summary>
     public bool IsCanceled { get; set; }
-    /// <summary>Product or submission the member applied this purchase to.</summary>
+    /// <summary>Product, submission or campaign the purchase applies to.</summary>
     public Guid? TargetId { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;

@@ -35,7 +35,7 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
   );
 }
 
-function ReviewSpeed({ fastReviewAvailable }: { fastReviewAvailable: boolean }) {
+function ReviewSpeed({ fastReviewAvailable, fastReviewPrice }: { fastReviewAvailable: boolean; fastReviewPrice: string }) {
   const option = "flex cursor-pointer flex-col gap-1 rounded-xl border border-border bg-surface p-4 has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent/30";
   return (
     <fieldset className="flex flex-col gap-3">
@@ -54,7 +54,7 @@ function ReviewSpeed({ fastReviewAvailable }: { fastReviewAvailable: boolean }) 
           <label className={option}>
             <span className="flex items-center gap-2 font-semibold">
               <input type="radio" name="reviewSpeed" value="fast" className="accent-[var(--accent)]" />
-              Fast Review <span className="ml-auto text-sm font-medium text-accent">$5 one-time</span>
+              Fast Review <span className="ml-auto text-sm font-medium text-accent">{fastReviewPrice} one-time</span>
             </span>
             <span className="text-sm text-muted">
               Skip the standard queue and get your submission reviewed within 24 hours of payment. Approval is not guaranteed.
@@ -65,15 +65,16 @@ function ReviewSpeed({ fastReviewAvailable }: { fastReviewAvailable: boolean }) 
       {fastReviewAvailable && (
         <p className="text-xs text-muted">
           Fast Review is a one-time fee for priority evaluation, not guaranteed publication. You can also upgrade later from your Maker
-          dashboard. Paid with Freemius; if we miss the 24-hour window you can ask for a full refund.
+          dashboard. Paid by card via PayTR; if we miss the 24-hour window you can ask for a full refund.
         </p>
       )}
     </fieldset>
   );
 }
 
-export function SubmitForm({ categories, platforms, fastReviewAvailable = false }: {
+export function SubmitForm({ categories, platforms, fastReviewAvailable = false, fastReviewPrice = "" }: {
   fastReviewAvailable?: boolean;
+  fastReviewPrice?: string;
   categories: { slug: string; name: string }[];
   platforms: { value: string; label: string }[];
 }) {
@@ -143,7 +144,7 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false 
       </Step>
 
       <Step n={4} title="How quickly would you like your product reviewed?">
-        <ReviewSpeed fastReviewAvailable={fastReviewAvailable} />
+        <ReviewSpeed fastReviewAvailable={fastReviewAvailable} fastReviewPrice={fastReviewPrice} />
       </Step>
 
       <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">

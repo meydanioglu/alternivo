@@ -10,7 +10,7 @@ import { faqJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Pricing for makers",
-  description: `List your software on ${site.name} for free. Optional Fast Review ($5 one-time) and Featured or Growth promotion from $9/month.`,
+  description: `List your software on ${site.name} for free. Optional one-time Fast Review and prepaid Featured or Growth promotion.`,
   alternates: { canonical: "/pricing" },
 };
 
@@ -19,10 +19,10 @@ export const revalidate = 300;
 const FAQ = [
   { question: "Is submitting a product free?", answer: "Yes. Submitting is free and always will be. Every product is reviewed against the same editorial guidelines." },
   { question: "How long does standard review take?", answer: "Up to 15 days from submission. Most submissions are reviewed sooner." },
-  { question: "What do I get with Fast Review?", answer: "Your submission moves to the priority queue and is reviewed within 24 hours of a confirmed payment. It is a one-time $5 fee per submission, not a subscription." },
+  { question: "What do I get with Fast Review?", answer: "Your submission moves to the priority queue and is reviewed within 24 hours of a confirmed payment. It is a one-time fee per submission, not a subscription." },
   { question: "Does Fast Review guarantee approval?", answer: "No. Fast Review only changes how quickly we review. The same approval standards apply, and approval is never guaranteed. If we miss the 24-hour window you can ask for a full refund." },
   { question: "Can I upgrade an existing submission?", answer: "Yes. While a submission is waiting for review you can buy Fast Review for it from your Maker dashboard. The 24 hours start when the payment is confirmed." },
-  { question: "Can I cancel Featured or Growth?", answer: "Yes, at any time from the Freemius customer portal. Your placement stays active until the end of the paid month and does not renew." },
+  { question: "Can I cancel Featured or Growth?", answer: "There is nothing to cancel: Featured and Growth are prepaid 30-day periods that never renew automatically. Buy another period to extend." },
   { question: "Are clicks or customers guaranteed?", answer: "No. We show your product to people browsing relevant pages and report impressions and clicks, but we cannot promise traffic, rankings, sign-ups or sales." },
   { question: "How are sponsored products displayed?", answer: "In separate, clearly labelled areas (“Sponsored”, “Featured”, “Spotlight”). Paid placements never change organic rankings, votes, ratings or reviews, and sponsored links use rel=\"sponsored\"." },
 ];
@@ -47,14 +47,14 @@ const TIERS = [
   {
     key: "featured",
     name: "Featured",
-    period: "per month",
+    period: "per 30 days",
     cta: { label: "Choose Featured", href: "/maker?tab=products" },
     features: ["Featured badge (labelled as sponsored)", "Rotation in sponsored spots on relevant category pages", "Featured strip on the homepage", "Impressions and outbound-click analytics", "Vendor dashboard"],
   },
   {
     key: "growth",
     name: "Growth",
-    period: "per month",
+    period: "per 30 days",
     highlight: true,
     cta: { label: "Choose Growth", href: "/maker?tab=products" },
     features: ["Everything in Featured", "Sponsored alternative on competitors’ alternatives pages in your category", "Daily performance analytics", "Run multiple campaigns", "Priority access to placements"],
@@ -87,7 +87,7 @@ export default async function PricingPage() {
             >
               <h2 className="font-semibold">{t.name}</h2>
               <p className="mt-3 flex items-baseline gap-1">
-                <span className="text-3xl font-bold">{t.price ?? (plan ? formatPrice(plan.priceCents) : "—")}</span>
+                <span className="text-3xl font-bold">{t.price ?? (plan ? formatPrice(plan.priceCents, data.currency) : "—")}</span>
                 <span className="text-sm text-muted">{t.period}</span>
               </p>
               {t.note && <p className="mt-1 text-xs font-medium text-accent">{t.note}</p>}
@@ -107,7 +107,7 @@ export default async function PricingPage() {
       </div>
 
       <p className="mx-auto mt-6 max-w-3xl text-center text-sm text-muted">
-        Fast Review is a one-time review fee. Featured and Growth are monthly promotion subscriptions you can cancel any time.
+        Fast Review is a one-time review fee. Featured and Growth are prepaid 30-day promotion periods that never renew automatically.
         {foundingLeft > 0 && (
           <>
             {" "}Founding vendors: the first {data.foundingLimit} paying Featured or Growth vendors keep today’s price for as long as their
@@ -137,14 +137,14 @@ export default async function PricingPage() {
                 {placements.map((p) => (
                   <tr key={p.key} className="border-t border-border">
                     <td className="px-4 py-2 font-medium">{p.name}</td>
-                    <td className="px-4 py-2">{formatPrice(p.priceCents)}</td>
+                    <td className="px-4 py-2">{formatPrice(p.priceCents, data.currency)}</td>
                     <td className="px-4 py-2">{p.durationDays} days</td>
                     <td className="px-4 py-2">{p.key === "homepageSpotlight" ? `${p.inventoryLimit} site-wide` : `${p.inventoryLimit} per page`}</td>
                   </tr>
                 ))}
                 <tr className="border-t border-border">
                   <td className="px-4 py-2 font-medium">Custom promotion</td>
-                  <td className="px-4 py-2">From $29</td>
+                  <td className="px-4 py-2">Custom quote</td>
                   <td className="px-4 py-2" colSpan={2}>
                     Quoted manually — see the <Link href="/help" className="text-accent underline">Help center</Link> to get in touch.
                   </td>
@@ -167,7 +167,7 @@ export default async function PricingPage() {
           ))}
         </div>
         <p className="mt-6 text-xs text-muted">
-          Payments are processed by Freemius, our reseller and merchant of record. Prices exclude any applicable taxes. See our{" "}
+          Card payments are processed securely by PayTR. See our{" "}
           <Link href="/terms#paid-services" className="underline">terms</Link>.
         </p>
       </section>

@@ -6,10 +6,12 @@ import { saveIntegrationsAction } from "@/app/admin/settings/actions";
 import { Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
 
 export interface IntegrationSettingsView {
-  freemiusProductId: string | null;
-  freemiusPublicKey: string | null;
-  freemiusSecretSet: boolean;
-  plans: Record<string, string>;
+  payTrMerchantId: string | null;
+  payTrKeySet: boolean;
+  payTrSaltSet: boolean;
+  payTrTestMode: boolean;
+  payTrCurrency: string;
+  prices: Record<string, number>;
   googleClientId: string | null;
   googleSecretSet: boolean;
 }
@@ -18,43 +20,65 @@ const secretHint = (set: boolean) =>
   set ? "Tanımlı. Şifreli saklanır, gösterilmez; boş bırakırsanız korunur." : "Tanımlı değil. Şifrelenerek saklanır.";
 
 export const PLAN_FIELDS = [
-  ["fastReview", "Fast Review ($5, tek seferlik)"],
-  ["featured", "Featured ($9/ay)"],
-  ["growth", "Growth ($19/ay)"],
-  ["homepageSpotlight", "Homepage Spotlight ($5, 7 gün)"],
-  ["categorySponsorship", "Category Sponsorship ($7, 7 gün)"],
-  ["competitorSponsorship", "Competitor Page ($9, 7 gün)"],
-  ["alternativeCard", "Sponsored Alternative Card ($15, 30 gün)"],
+  ["fastReview", "Fast Review (tek seferlik)", 5],
+  ["featured", "Featured (30 gün)", 9],
+  ["growth", "Growth (30 gün)", 19],
+  ["homepageSpotlight", "Homepage Spotlight (7 gün)", 5],
+  ["categorySponsorship", "Category Sponsorship (7 gün)", 7],
+  ["competitorSponsorship", "Competitor Page (7 gün)", 9],
+  ["alternativeCard", "Sponsored Alternative Card (30 gün)", 15],
 ] as const;
+
+const select = "h-10 w-full rounded-md border border-border bg-background px-3 text-sm";
 
 export function IntegrationsForm({ view, siteUrl }: { view: IntegrationSettingsView; siteUrl: string }) {
   const [state, action] = useActionState(saveIntegrationsAction, {} as FormState);
   return (
     <form action={action} className="flex flex-col gap-4">
       <FormMessage state={state} />
-      <h3 className="font-semibold">Freemius (ödemeler)</h3>
+      <h3 className="font-semibold">PayTR (ödemeler)</h3>
       <p className="-mt-2 text-sm text-muted">
-        Freemius → Product → Settings → Keys. Webhook adresi: <span className="font-mono">{siteUrl}/bff/billing/freemius</span>
+        PayTR Mağaza Paneli → Bilgi sayfasındaki API bilgileri. Mağaza Paneli → Destek &amp; Kurulum → Ayarlar → Bildirim URL:{" "}
+        <span className="font-mono">{siteUrl}/bff/billing/paytr</span>
       </p>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Product ID" name="freemiusProductId" optional>
-          <TextInput name="freemiusProductId" defaultValue={view.freemiusProductId ?? ""} spellCheck={false} />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Field label="Mağaza no (merchant_id)" name="payTrMerchantId" optional>
+          <TextInput name="payTrMerchantId" defaultValue={view.payTrMerchantId ?? ""} spellCheck={false} inputMode="numeric" />
         </Field>
-        <Field label="Public key" name="freemiusPublicKey" optional>
-          <TextInput name="freemiusPublicKey" defaultValue={view.freemiusPublicKey ?? ""} spellCheck={false} placeholder="pk_..." />
+        <Field label="merchant_key" name="payTrMerchantKey" optional hint={secretHint(view.payTrKeySet)}>
+          <TextInput name="payTrMerchantKey" type="password" autoComplete="off" spellCheck={false} />
+        </Field>
+        <Field label="merchant_salt" name="payTrMerchantSalt" optional hint={secretHint(view.payTrSaltSet)}>
+          <TextInput name="payTrMerchantSalt" type="password" autoComplete="off" spellCheck={false} />
         </Field>
       </div>
-      <Field label="Secret key" name="freemiusSecretKey" optional hint={secretHint(view.freemiusSecretSet)}>
-        <TextInput name="freemiusSecretKey" type="password" autoComplete="off" spellCheck={false} placeholder="sk_..." />
-      </Field>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Para birimi" name="payTrCurrency" hint="Döviz ile tahsilat için PayTR hesabınızda döviz desteği açık olmalı.">
+          <select id="payTrCurrency" name="payTrCurrency" defaultValue={view.payTrCurrency} className={select}>
+            <option value="TL">TL</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </Field>
+        <label className="flex items-center gap-2 self-end pb-2 text-sm">
+          <input type="checkbox" name="payTrTestMode" defaultChecked={view.payTrTestMode} />
+          Test modu (gerçek para çekilmez; PayTR test kartlarıyla deneyin)
+        </label>
+      </div>
       <p className="text-sm text-muted">
-        Plan ID&apos;leri: Freemius → Plans. Fiyatı Freemius&apos;taki planla aynı tutun (tek seferlik planlar &quot;lifetime&quot;, aylıklar &quot;monthly&quot;).
-        Boş bırakılan planın satın alma butonu gösterilmez.
+        Fiyatlar seçili para biriminde, <strong>kuruş/sent</strong> olarak değil normal tutar olarak girin (ör. 199 veya 4.99). Boş bırakılan
+        plan satışa kapalıdır. Sitede gösterilen fiyat da buradan gelir.
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
-        {PLAN_FIELDS.map(([key, label]) => (
-          <Field key={key} label={label} name={`plan_${key}`} optional>
-            <TextInput name={`plan_${key}`} defaultValue={view.plans?.[key] ?? ""} spellCheck={false} inputMode="numeric" />
+        {PLAN_FIELDS.map(([key, label, usd]) => (
+          <Field key={key} label={label} name={`price_${key}`} optional hint={`Önerilen: ${usd} USD`}>
+            <TextInput
+              name={`price_${key}`}
+              defaultValue={view.prices?.[key] ? String(view.prices[key] / 100) : ""}
+              inputMode="decimal"
+              spellCheck={false}
+            />
           </Field>
         ))}
       </div>

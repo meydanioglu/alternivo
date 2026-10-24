@@ -213,12 +213,18 @@ internal sealed class AlternativeVoteConfiguration : IEntityTypeConfiguration<Al
     }
 }
 
-internal sealed class CheckoutIntentConfiguration : IEntityTypeConfiguration<CheckoutIntent>
+internal sealed class PaymentOrderConfiguration : IEntityTypeConfiguration<PaymentOrder>
 {
-    public void Configure(EntityTypeBuilder<CheckoutIntent> b)
+    public void Configure(EntityTypeBuilder<PaymentOrder> b)
     {
-        b.ToTable("CheckoutIntents");
-        b.HasIndex(x => new { x.UserId, x.Kind, x.CreatedAt });
+        b.ToTable("PaymentOrders");
+        b.Property(x => x.MerchantOid).HasMaxLength(64).IsRequired();
+        b.HasIndex(x => x.MerchantOid).IsUnique();
+        b.Property(x => x.PlanKey).HasMaxLength(40).IsRequired();
+        b.Property(x => x.Currency).HasMaxLength(4).IsRequired();
+        b.Property(x => x.PaymentType).HasMaxLength(20);
+        b.Property(x => x.FailedReason).HasMaxLength(500);
+        b.HasIndex(x => new { x.UserId, x.CreatedAt });
     }
 }
 
@@ -424,11 +430,7 @@ internal sealed class BillingEntitlementConfiguration : IEntityTypeConfiguration
     public void Configure(EntityTypeBuilder<BillingEntitlement> b)
     {
         b.ToTable("BillingEntitlements");
-        b.Property(x => x.FsLicenseId).HasMaxLength(40).IsRequired();
-        b.HasIndex(x => x.FsLicenseId).IsUnique();
-        b.Property(x => x.FsPlanId).HasMaxLength(40);
-        b.Property(x => x.FsPricingId).HasMaxLength(40);
-        b.Property(x => x.FsUserId).HasMaxLength(40);
+        b.HasIndex(x => x.OrderId).IsUnique();
         b.HasIndex(x => x.UserId);
     }
 }

@@ -59,7 +59,8 @@ public static class DependencyInjection
         services.AddHttpClient(Content.ContentGenerator.OpenAiClientName, c => c.Timeout = TimeSpan.FromMinutes(3));
         services.AddScoped<Content.AiSettings>();
         services.AddScoped<Billing.IntegrationSettings>();
-        services.AddScoped<Billing.FreemiusWebhook>();
+        services.AddHttpClient(Billing.PayTrGateway.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(30));
+        services.AddScoped<Billing.PayTrGateway>();
         services.AddHttpClient(GoogleSignIn.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(20));
         services.AddScoped<GoogleSignIn>();
         services.AddScoped<Content.ContentGenerator>();

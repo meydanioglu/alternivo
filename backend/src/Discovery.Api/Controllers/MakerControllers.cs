@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.EntityFrameworkCore;
 
 namespace Discovery.Api.Controllers;
 
@@ -50,30 +51,31 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
     }
 
     /// <summary>
-    /// Validates the purchase server-side and returns the Freemius checkout URL (locked to the member's e-mail).
-    /// Nothing is granted here: the effect is applied only when the signed payment webhook arrives.
+    /// Validates the purchase server-side, creates an order at the configured price and returns a PayTR iframe token.
+    /// Nothing is granted here: the effect is applied only when PayTR's signed payment notification arrives.
     /// </summary>
     [HttpPost("checkout")]
     [EnableRateLimiting(Policies.WritesRateLimit)]
-    public async Task<IActionResult> Checkout(CheckoutRequest request, [FromServices] IntegrationSettings settings,
+    public async Task<object> Checkout(CheckoutRequest request, [FromServices] PayTrGateway paytr,
         [FromServices] UserManager<AppUser> users, [FromServices] IConfiguration config, CancellationToken ct)
     {
-        var fs = await settings.FreemiusAsync(ct);
-        if (fs is null || !fs.Plans.TryGetValue(request.Plan, out var planId))
-            return Problem(statusCode: StatusCodes.Status503ServiceUnavailable, detail: "Payments for this plan are not available yet.");
-        var user = await users.FindByIdAsync(current.RequireUserId().ToString());
-        if (user?.Email is null) return Unauthorized();
-
-        var ticket = await maker.PrepareCheckoutAsync(user.Id, request.Plan, request.TargetId, ct);
+        var user = await users.FindByIdAsync(current.RequireUserId().ToString())
+            ?? throw new Discovery.Application.Common.ForbiddenException("Please sign in again.");
         var site = (config["Site:Url"] ?? "https://alternivo.com").TrimEnd('/');
-        var query = QueryString.Create(new Dictionary<string, string?>
-        {
-            ["user_email"] = user.Email,
-            ["readonly_user"] = "true",
-            ["success_url"] = $"{site}/maker?purchase={ticket.Plan.Key}",
-            ["cancel_url"] = $"{site}/maker?canceled=1",
-        });
-        return Ok(new { url = $"https://checkout.freemius.com/product/{fs.ProductId}/plan/{planId}/{query}", intentId = ticket.IntentId });
+        var (order, token) = await paytr.StartAsync(user.Id, request.Plan, request.TargetId,
+            new PayTrBuyer(user.Email!, string.IsNullOrWhiteSpace(user.DisplayName) ? user.Email! : user.DisplayName, ClientIp.Resolve(HttpContext)),
+            $"{site}/maker?purchase={request.Plan}", $"{site}/maker?canceled=1", ct);
+        return new { orderId = order.Id, token, amountMinor = order.AmountMinor, currency = order.Currency };
+    }
+
+    /// <summary>Order status for the payment page (polls after the iframe finishes).</summary>
+    [HttpGet("orders/{id:guid}")]
+    public async Task<object> Order(Guid id, [FromServices] Discovery.Application.Abstractions.IAppDbContext db, CancellationToken ct)
+    {
+        var userId = current.RequireUserId();
+        var o = await db.PaymentOrders.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId, ct)
+            ?? throw new Discovery.Application.Common.NotFoundException("Order", id.ToString());
+        return new { o.Id, o.PlanKey, status = o.Status.ToString(), o.AmountMinor, o.Currency, o.CreatedAt };
     }
 }
 
@@ -88,7 +90,11 @@ public sealed class SponsoredController(SponsorService sponsors) : ControllerBas
     public Task<IReadOnlyList<SponsoredItemDto>> Slot([FromQuery] string slot, CancellationToken ct) => sponsors.ForSlotAsync(slot ?? "", ct);
 
     [HttpGet("pricing")]
-    public Task<PricingDto> Pricing([FromServices] MakerService maker, CancellationToken ct) => maker.PricingAsync(ct);
+    public async Task<PricingDto> Pricing([FromServices] MakerService maker, [FromServices] IntegrationSettings settings, CancellationToken ct)
+    {
+        var p = await settings.PayTrAsync(ct);
+        return await maker.PricingAsync(p?.Prices, p?.Currency, ct);
+    }
 
     [HttpPost("impressions")]
     public async Task<object> Impressions(List<SponsorEventRequest> events, CancellationToken ct) =>
@@ -111,33 +117,32 @@ public sealed class SponsoredController(SponsorService sponsors) : ControllerBas
 [Produces("application/json")]
 public sealed class BillingController(IntegrationSettings settings) : ControllerBase
 {
-    /// <summary>Public checkout settings (no secrets): which plans exist and the product to check out.</summary>
+    /// <summary>Public checkout settings (no secrets): which plans are on sale.</summary>
     [HttpGet("config")]
     public async Task<object> Config(CancellationToken ct)
     {
-        var fs = await settings.FreemiusAsync(ct);
-        return new
-        {
-            enabled = fs is not null,
-            productId = fs?.ProductId,
-            plans = fs?.Plans.Keys.ToArray() ?? [],
-        };
+        var p = await settings.PayTrAsync(ct);
+        return new { enabled = p is not null, plans = p?.Prices.Keys.ToArray() ?? [], currency = p?.Currency ?? "TL", testMode = p?.TestMode ?? false };
     }
 
-    /// <summary>Freemius webhook (forwarded by the web app with the raw body and x-signature header).</summary>
-    [HttpPost("freemius/webhook")]
+    /// <summary>
+    /// PayTR payment notification ("Bildirim URL"), forwarded by the web app. Must answer the plain text "OK";
+    /// anything else makes PayTR retry. Invalid hashes are rejected.
+    /// </summary>
+    [HttpPost("paytr/notify")]
     [AllowAnonymous]
-    public async Task<IActionResult> FreemiusWebhookCallback([FromServices] FreemiusWebhook webhook, CancellationToken ct)
+    [Consumes("application/x-www-form-urlencoded")]
+    public async Task<IActionResult> PayTrNotify([FromServices] PayTrGateway paytr, CancellationToken ct)
     {
-        using var buffer = new MemoryStream();
-        await Request.Body.CopyToAsync(buffer, ct);
-        if (buffer.Length > 512 * 1024) return StatusCode(StatusCodes.Status413PayloadTooLarge);
-        var result = await webhook.HandleAsync(buffer.ToArray(), Request.Headers["x-signature"].ToString(), ct);
+        var form = await Request.ReadFormAsync(ct);
+        var fields = form.ToDictionary(x => x.Key, x => x.Value.ToString());
+        var result = await paytr.HandleNotificationAsync(fields, ct);
         return result switch
         {
-            FreemiusWebhook.Result.BadSignature => Unauthorized(),
-            FreemiusWebhook.Result.NotConfigured => StatusCode(StatusCodes.Status503ServiceUnavailable),
-            _ => Ok(),
+            PayTrGateway.Result.BadHash => BadRequest("PAYTR notification failed: bad hash"),
+            PayTrGateway.Result.NotConfigured => StatusCode(StatusCodes.Status503ServiceUnavailable),
+            // Unknown orders are logged and acknowledged so PayTR does not retry forever.
+            _ => Content("OK", "text/plain"),
         };
     }
 }

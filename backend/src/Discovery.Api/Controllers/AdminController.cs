@@ -117,6 +117,37 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         return NoContent();
     }
 
+    // ----- Payments (admins) -----
+
+    [HttpGet("payments")]
+    [Authorize(Policy = Policies.Administration)]
+    public async Task<object> Payments([FromServices] Discovery.Application.Abstractions.IAppDbContext db,
+        [FromServices] UserManager<AppUser> users, CancellationToken ct)
+    {
+        var orders = await db.PaymentOrders.AsNoTracking().OrderByDescending(o => o.CreatedAt).Take(200).ToListAsync(ct);
+        var ids = orders.Select(o => o.Id).ToList();
+        var entitlements = await db.BillingEntitlements.AsNoTracking().Where(e => ids.Contains(e.OrderId))
+            .ToDictionaryAsync(e => e.OrderId, ct);
+        var userIds = orders.Select(o => o.UserId).Distinct().ToList();
+        var emails = await users.Users.Where(u => userIds.Contains(u.Id)).ToDictionaryAsync(u => u.Id, u => u.Email, ct);
+        return orders.Select(o => new
+        {
+            o.Id, o.MerchantOid, o.PlanKey, status = o.Status.ToString(), o.AmountMinor, o.PaidAmountMinor, o.Currency, o.TestMode,
+            o.PaymentType, o.FailedReason, o.CreatedAt, o.CompletedAt, email = emails.GetValueOrDefault(o.UserId),
+            entitlementId = entitlements.GetValueOrDefault(o.Id)?.Id,
+            refunded = entitlements.GetValueOrDefault(o.Id)?.IsCanceled ?? false,
+        });
+    }
+
+    /// <summary>Marks a paid order refunded (do the actual refund in the PayTR panel first); removes its effect.</summary>
+    [HttpPost("payments/entitlements/{id:guid}/refunded")]
+    [Authorize(Policy = Policies.Administration)]
+    public async Task<IActionResult> MarkRefunded(Guid id, [FromServices] Discovery.Application.Community.MakerService maker, CancellationToken ct)
+    {
+        await maker.CancelEntitlementAsync(current.RequireUserId(), id, ct);
+        return NoContent();
+    }
+
     // ----- Sponsorship campaigns (moderators) -----
 
     [HttpGet("campaigns")]

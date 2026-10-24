@@ -42,7 +42,8 @@ public sealed record MakerEntitlementDto(
     DateTimeOffset CreatedAt,
     string? PlanName = null,
     int? PriceCents = null,
-    bool Recurring = false);
+    bool Recurring = false,
+    string? Currency = null);
 
 public sealed record MakerCampaignDto(
     Guid Id,
@@ -76,11 +77,11 @@ public sealed record CreateCampaignRequest(Guid ApplicationId, string PlanKey, s
 
 public sealed record AvailabilityDto(string PlanKey, int Limit, int Taken, bool Available, DateTimeOffset StartsAt, DateTimeOffset EndsAt, DateTimeOffset? NextAvailableAt);
 
-public sealed record CheckoutTicket(PlanDefinition Plan, Guid IntentId);
+
 
 public sealed record PlanDto(string Key, string Name, int PriceCents, bool Recurring, int? DurationDays, int? InventoryLimit);
 
-public sealed record PricingDto(IReadOnlyList<PlanDto> Plans, int FoundingLimit, int FoundingTaken, int FreeReviewDays, int FastReviewHours);
+public sealed record PricingDto(IReadOnlyList<PlanDto> Plans, string Currency, int FoundingLimit, int FoundingTaken, int FreeReviewDays, int FastReviewHours);
 
 /// <summary>
 /// Vendor (maker) area: submissions and their review speed, owned products, paid subscriptions and sponsorship campaigns.
@@ -95,8 +96,11 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
         db.Submissions.Where(s => s.SubmittedByUserId == userId && s.Status == SubmissionStatus.Approved && s.CreatedApplicationId != null)
             .Select(s => s.CreatedApplicationId!.Value);
 
-    public async Task<PricingDto> PricingAsync(CancellationToken ct) => new(
-        PricingCatalog.Plans.Select(p => new PlanDto(p.Key, p.Name, p.PriceCents, p.Recurring, p.DurationDays, p.InventoryLimit)).ToList(),
+    /// <summary>Price list; configured prices (in the store currency) replace the default USD prices when set.</summary>
+    public async Task<PricingDto> PricingAsync(IReadOnlyDictionary<string, int>? prices, string? currency, CancellationToken ct) => new(
+        PricingCatalog.Plans.Select(p => new PlanDto(p.Key, p.Name, prices?.GetValueOrDefault(p.Key) is > 0 and var v ? v : p.PriceCents,
+            p.Recurring, p.DurationDays, p.InventoryLimit)).ToList(),
+        prices is { Count: > 0 } ? currency ?? "TL" : "USD",
         PricingCatalog.FoundingVendorLimit,
         await db.FoundingVendors.CountAsync(ct),
         PricingCatalog.FreeReviewDays,
@@ -116,11 +120,14 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
 
         var entitlements = await db.BillingEntitlements.Where(e => e.UserId == userId)
             .OrderByDescending(e => e.CreatedAt).AsNoTracking().ToListAsync(ct);
+        var orderIds = entitlements.Select(e => e.OrderId).ToList();
+        var paid = await db.PaymentOrders.Where(o => orderIds.Contains(o.Id))
+            .Select(o => new { o.Id, o.AmountMinor, o.Currency }).ToDictionaryAsync(o => o.Id, ct);
         var campaigns = await db.SponsorshipCampaigns.Where(c => c.UserId == userId)
             .OrderByDescending(c => c.CreatedAt).Take(100).AsNoTracking().ToListAsync(ct);
-        var openIntents = await db.CheckoutIntents
-            .Where(i => i.UserId == userId && i.Kind == EntitlementKind.FastTrack && i.ConsumedAt == null && i.CreatedAt > now.AddHours(-2))
-            .Select(i => i.TargetId).ToListAsync(ct);
+        var openIntents = await db.PaymentOrders
+            .Where(o => o.UserId == userId && o.Kind == EntitlementKind.FastTrack && o.Status == PaymentOrderStatus.Pending && o.CreatedAt > now.AddHours(-2))
+            .Select(o => o.TargetId).ToListAsync(ct);
 
         var nameIds = entitlements.Where(e => e.TargetId != null).Select(e => e.TargetId!.Value)
             .Concat(campaigns.Select(c => c.ApplicationId))
@@ -153,7 +160,8 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
             {
                 var plan = PricingCatalog.ByKind(e.Kind);
                 return new MakerEntitlementDto(e.Id, e.Kind.ToString(), e.IsActive(now), e.Expiration, e.IsCanceled,
-                    e.TargetId, e.TargetId is { } t ? names.GetValueOrDefault(t) : null, e.CreatedAt, plan?.Name, plan?.PriceCents, plan?.Recurring ?? false);
+                    e.TargetId, e.TargetId is { } t ? names.GetValueOrDefault(t) : null, e.CreatedAt, plan?.Name,
+                    paid.GetValueOrDefault(e.OrderId)?.AmountMinor, plan?.Recurring ?? false, paid.GetValueOrDefault(e.OrderId)?.Currency);
             }).ToList(),
             campaigns.Select(c =>
             {
@@ -303,8 +311,12 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
 
     // ---------- Checkout ----------
 
-    /// <summary>Validates a purchase before sending the member to checkout and records what it is for.</summary>
-    public async Task<CheckoutTicket> PrepareCheckoutAsync(Guid userId, string planKey, Guid? targetId, CancellationToken ct)
+    /// <summary>
+    /// Validates a purchase and creates the order that will be sent to PayTR. The price comes from the server-side
+    /// settings, never from the client.
+    /// </summary>
+    public async Task<PaymentOrder> CreateOrderAsync(Guid userId, string planKey, Guid? targetId, int amountMinor, string currency, bool testMode,
+        CancellationToken ct)
     {
         var plan = PricingCatalog.ByKey(planKey) ?? throw new BadRequestException("Unknown plan.");
         var now = clock.GetUtcNow();
@@ -321,12 +333,9 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
 
             case EntitlementKind.Featured or EntitlementKind.Growth:
             {
+                // Buying again while active extends the period by another 30 days.
                 if (targetId is not { } appId || !await OwnedApplicationIds(userId).ContainsAsync(appId, ct))
                     throw new ForbiddenException("You can only promote products you own.");
-                var active = await db.BillingEntitlements.AnyAsync(e => e.UserId == userId && e.TargetId == appId
-                    && (e.Kind == EntitlementKind.Featured || e.Kind == EntitlementKind.Growth) && !e.IsCanceled
-                    && (e.Expiration == null || e.Expiration > now), ct);
-                if (active) throw new ConflictException("This product already has an active subscription. Change plans from Billing.");
                 break;
             }
 
@@ -341,41 +350,58 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
             }
         }
 
-        // Re-use the open intent for the same thing so repeated clicks do not stack up.
-        var intent = await db.CheckoutIntents.FirstOrDefaultAsync(i => i.UserId == userId && i.Kind == plan.Kind && i.TargetId == targetId
-            && i.ConsumedAt == null && i.CreatedAt > now.AddHours(-2), ct);
-        if (intent is null)
-        {
-            intent = new CheckoutIntent { UserId = userId, Kind = plan.Kind, TargetId = targetId, CreatedAt = now };
-            db.CheckoutIntents.Add(intent);
-            await db.SaveChangesAsync(ct);
-        }
+        var pendingCount = await db.PaymentOrders.CountAsync(o => o.UserId == userId && o.Status == PaymentOrderStatus.Pending
+            && o.CreatedAt > now.AddHours(-1), ct);
+        if (pendingCount >= 10) throw new ConflictException("Too many unfinished payments. Please try again later.");
 
-        return new CheckoutTicket(plan, intent.Id);
+        var order = new PaymentOrder
+        {
+            // merchant_oid must be alphanumeric and unique.
+            MerchantOid = "ALT" + Guid.NewGuid().ToString("N").ToUpperInvariant(),
+            UserId = userId,
+            PlanKey = plan.Key,
+            Kind = plan.Kind,
+            TargetId = targetId,
+            AmountMinor = amountMinor,
+            Currency = currency,
+            TestMode = testMode,
+            CreatedAt = now,
+        };
+        db.PaymentOrders.Add(order);
+        Audit(userId, "payment.order-created", "PaymentOrder", order.Id, new { plan.Key, targetId, amountMinor, currency });
+        await db.SaveChangesAsync(ct);
+        return order;
     }
 
     /// <summary>
-    /// Called by the payment webhook after the entitlement row is saved. Idempotent: a retried or duplicated event
-    /// finds the entitlement already linked and only re-derives its effect.
+    /// Called once the payment notification marked the order paid. Idempotent: one entitlement per order (unique index),
+    /// so a repeated notification only re-derives the effect.
     /// </summary>
-    public async Task OnLicenseAsync(Guid entitlementId, CancellationToken ct)
+    public async Task OnOrderPaidAsync(Guid orderId, CancellationToken ct)
     {
-        var e = await db.BillingEntitlements.FirstOrDefaultAsync(x => x.Id == entitlementId, ct);
-        if (e is null) return;
+        var order = await db.PaymentOrders.AsNoTracking().FirstOrDefaultAsync(o => o.Id == orderId && o.Status == PaymentOrderStatus.Paid, ct);
+        if (order is null) return;
         var now = clock.GetUtcNow();
-
-        if (e.TargetId is null && e.Kind != EntitlementKind.Unknown && !e.IsCanceled)
+        var e = await db.BillingEntitlements.FirstOrDefaultAsync(x => x.OrderId == order.Id, ct);
+        if (e is null)
         {
-            var intent = await db.CheckoutIntents
-                .Where(i => i.UserId == e.UserId && i.Kind == e.Kind && i.ConsumedAt == null && i.CreatedAt > now.AddDays(-2))
-                .OrderByDescending(i => i.CreatedAt).FirstOrDefaultAsync(ct);
-            if (intent is not null)
+            DateTimeOffset? expiration = null;
+            if (PricingCatalog.ByKind(order.Kind) is { Recurring: true, DurationDays: { } days })
             {
-                intent.ConsumedAt = now;
-                intent.EntitlementId = e.Id;
-                e.TargetId = intent.TargetId;
-                e.UpdatedAt = now;
+                // Prepaid period: starts now, or when the current period of the same plan on the same product ends.
+                var current = await db.BillingEntitlements
+                    .Where(x => x.TargetId == order.TargetId && x.Kind == order.Kind && !x.IsCanceled && x.Expiration > now)
+                    .MaxAsync(x => x.Expiration, ct);
+                expiration = (current ?? now).AddDays(days);
             }
+
+            e = new BillingEntitlement
+            {
+                UserId = order.UserId, OrderId = order.Id, Kind = order.Kind, TargetId = order.TargetId,
+                Expiration = expiration, CreatedAt = now, UpdatedAt = now,
+            };
+            db.BillingEntitlements.Add(e);
+            await db.SaveChangesAsync(ct);
         }
 
         if (e.Kind is EntitlementKind.Featured or EntitlementKind.Growth && e.IsActive(now)
@@ -385,24 +411,29 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
             await LockAsync("founding", ct);
             if (await db.FoundingVendors.CountAsync(ct) < PricingCatalog.FoundingVendorLimit)
             {
-                db.FoundingVendors.Add(new FoundingVendor
-                {
-                    UserId = e.UserId, Plan = e.Kind, PriceCents = PricingCatalog.ByKind(e.Kind)!.PriceCents, GrantedAt = now,
-                });
+                db.FoundingVendors.Add(new FoundingVendor { UserId = e.UserId, Plan = e.Kind, PriceCents = order.AmountMinor, GrantedAt = now });
             }
 
             await db.SaveChangesAsync(ct);
             await tx.CommitAsync(ct);
         }
-        else
-        {
-            await db.SaveChangesAsync(ct);
-        }
 
         await ReapplyAsync(e.Id, ct);
     }
 
-    /// <summary>Manually applies an unlinked purchase (e.g. paid with another e-mail tab) to a target.</summary>
+    /// <summary>Admin: marks a purchase refunded (after refunding it in the PayTR panel); its effect is removed.</summary>
+    public async Task CancelEntitlementAsync(Guid actorId, Guid entitlementId, CancellationToken ct)
+    {
+        var e = await db.BillingEntitlements.FirstOrDefaultAsync(x => x.Id == entitlementId, ct)
+            ?? throw new NotFoundException("Purchase", entitlementId.ToString());
+        e.IsCanceled = true;
+        e.UpdatedAt = clock.GetUtcNow();
+        Audit(actorId, "payment.refunded", "BillingEntitlement", e.Id, new { e.OrderId });
+        await db.SaveChangesAsync(ct);
+        await ReapplyAsync(e.Id, ct);
+    }
+
+    /// <summary>Moves a purchase to another eligible target (e.g. a Featured period to a different product).</summary>
     public async Task AssignAsync(Guid userId, Guid entitlementId, Guid targetId, CancellationToken ct)
     {
         var e = await db.BillingEntitlements.FirstOrDefaultAsync(x => x.Id == entitlementId && x.UserId == userId, ct)
@@ -474,7 +505,7 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
                     submission.PriorityPaidAt = now;
                     submission.ReviewDeadline = now.AddHours(PricingCatalog.FastReviewHours);
                     submission.UpdatedAt = now;
-                    Audit(e.UserId, "submission.fast-review-paid", "Submission", submission.Id, new { e.FsLicenseId });
+                    Audit(e.UserId, "submission.fast-review-paid", "Submission", submission.Id, new { e.OrderId });
                     await db.SaveChangesAsync(ct);
                 }
 
@@ -497,7 +528,7 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
             {
                 c.Status = CampaignStatus.Canceled;
                 c.UpdatedAt = now;
-                Audit(e.UserId, "campaign.refunded", "SponsorshipCampaign", c.Id, new { e.FsLicenseId });
+                Audit(e.UserId, "campaign.refunded", "SponsorshipCampaign", c.Id, new { e.OrderId });
                 await db.SaveChangesAsync(ct);
                 await cache.RemoveAsync(SponsorService.CacheKey, ct);
             }
@@ -529,7 +560,7 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
         c.EntitlementId = e.Id;
         c.PaidAt = now;
         c.UpdatedAt = now;
-        Audit(e.UserId, "campaign.paid", "SponsorshipCampaign", c.Id, new { e.FsLicenseId, c.StartsAt, c.EndsAt });
+        Audit(e.UserId, "campaign.paid", "SponsorshipCampaign", c.Id, new { e.OrderId, c.StartsAt, c.EndsAt });
         await db.SaveChangesAsync(ct);
         await tx.CommitAsync(ct);
     }

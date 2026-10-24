@@ -46,7 +46,7 @@ export interface ApplicationSummary {
   likeCount: number;
   reviewCount: number;
   ratingAverage: number | null;
-  /** Paid, labelled placement (Freemius "Featured" plan). */
+  /** Paid, labelled placement ("Featured" / "Growth" plan). */
   isFeatured?: boolean;
 }
 
