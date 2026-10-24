@@ -4,6 +4,11 @@
 	header {
 		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
 		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+		Cross-Origin-Opener-Policy "same-origin-allow-popups"
+		Content-Security-Policy "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests"
 		-Server
 	}
 
@@ -25,9 +30,7 @@ www.{$DOMAIN} {
 	redir https://{$DOMAIN}{uri} permanent
 }
 
-# TEMPORARY: the bare server IP serves the site over plain HTTP (kept out of search engines).
-# To turn it off again, replace this block with:  :80 { redir https://{$DOMAIN}{uri} permanent }
+# Anything that is not the domain (bare IP, unknown Host headers, scanners) gets the connection dropped.
 :80 {
-	header X-Robots-Tag "noindex, nofollow"
-	import site
+	abort
 }

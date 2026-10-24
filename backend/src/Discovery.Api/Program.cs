@@ -80,12 +80,24 @@ builder.Services.AddRateLimiter(o =>
         && ctx.Request.Headers.TryGetValue("X-Internal-Key", out var key)
         && key == internalKey;
 
-    o.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(ctx =>
+    var general = PartitionedRateLimiter.Create<HttpContext, string>(ctx =>
         IsInternal(ctx)
             ? RateLimitPartition.GetNoLimiter("internal")
             : RateLimitPartition.GetFixedWindowLimiter(
                 ClientIp.Resolve(ctx),
                 _ => new FixedWindowRateLimiterOptions { PermitLimit = 120, Window = TimeSpan.FromMinutes(1) }));
+
+    // Credential endpoints (login, register, password reset, Google) get a tight per-client-IP budget,
+    // even when called through the web app, to slow down brute force and account enumeration.
+    var credentials = PartitionedRateLimiter.Create<HttpContext, string>(ctx =>
+        HttpMethods.IsPost(ctx.Request.Method) && ctx.Request.Path.StartsWithSegments("/api/v1/auth")
+            && !ctx.Request.Path.StartsWithSegments("/api/v1/auth/refresh")
+            ? RateLimitPartition.GetSlidingWindowLimiter(
+                "auth:" + ClientIp.Resolve(ctx),
+                _ => new SlidingWindowRateLimiterOptions { PermitLimit = 10, Window = TimeSpan.FromMinutes(5), SegmentsPerWindow = 5 })
+            : RateLimitPartition.GetNoLimiter("none"));
+
+    o.GlobalLimiter = PartitionedRateLimiter.CreateChained(general, credentials);
 
     o.AddPolicy(Policies.WritesRateLimit, ctx =>
         RateLimitPartition.GetSlidingWindowLimiter(
@@ -134,9 +146,9 @@ app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapOpenApi();
 if (app.Environment.IsDevelopment() || app.Configuration.GetValue("Swagger:Enabled", false))
 {
+    app.MapOpenApi();
     app.UseSwaggerUI(o => o.SwaggerEndpoint("/openapi/v1.json", "Discovery API v1"));
 }
 
