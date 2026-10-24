@@ -84,6 +84,7 @@ export default async function LaunchesPage({ searchParams }: Props) {
                   rank={item.rank}
                   app={item.application}
                   votes={item.votes}
+                  sponsored={item.sponsored}
                   signedIn={!!user}
                   votingOpen={data.isCurrent}
                 />

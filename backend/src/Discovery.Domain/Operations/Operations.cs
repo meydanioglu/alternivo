@@ -125,3 +125,34 @@ public class AppSetting
     public Guid? UpdatedByUserId { get; set; }
     public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 }
+
+public enum EntitlementKind
+{
+    Unknown = 0,
+    Featured = 1,
+    FastTrack = 2,
+    LaunchBoost = 3,
+}
+
+/// <summary>
+/// A Freemius license mapped to one of our members, kept in sync by the license.* webhooks.
+/// The member applies it to one of their products (Featured, Launch boost) or submissions (Fast track).
+/// </summary>
+public class BillingEntitlement
+{
+    public Guid Id { get; set; } = Guid.CreateVersion7();
+    public Guid UserId { get; set; }
+    public required string FsLicenseId { get; set; }
+    public string? FsPlanId { get; set; }
+    public string? FsPricingId { get; set; }
+    public string? FsUserId { get; set; }
+    public EntitlementKind Kind { get; set; }
+    public DateTimeOffset? Expiration { get; set; }
+    public bool IsCanceled { get; set; }
+    /// <summary>Product or submission the member applied this purchase to.</summary>
+    public Guid? TargetId { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
+    public bool IsActive(DateTimeOffset now) => !IsCanceled && (Expiration is null || Expiration > now);
+}

@@ -455,6 +455,19 @@ public sealed class AdminSettingsController(
         return await settings.ViewAsync(ct);
     }
 
+    [HttpGet("integrations")]
+    public Task<Discovery.Infrastructure.Billing.IntegrationSettingsView> Integrations(
+        [FromServices] Discovery.Infrastructure.Billing.IntegrationSettings integrations, CancellationToken ct) => integrations.ViewAsync(ct);
+
+    [HttpPut("integrations")]
+    public async Task<Discovery.Infrastructure.Billing.IntegrationSettingsView> SaveIntegrations(
+        Discovery.Infrastructure.Billing.SaveIntegrationSettingsRequest request,
+        [FromServices] Discovery.Infrastructure.Billing.IntegrationSettings integrations, CancellationToken ct)
+    {
+        await integrations.SaveAsync(current.RequireUserId(), request, ct);
+        return await integrations.ViewAsync(ct);
+    }
+
     [HttpPost("ai/test")]
     public async Task<object> Test(CancellationToken ct)
     {

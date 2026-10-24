@@ -340,6 +340,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.Property<int>("EditorialScore")
                         .HasColumnType("integer");
 
+                    b.Property<DateTimeOffset?>("FeaturedUntil")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("HasOfflineSupport")
                         .HasColumnType("boolean");
 
@@ -354,6 +357,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
 
                     b.Property<DateTimeOffset?>("LastVerifiedAt")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("LaunchBoosted")
+                        .HasColumnType("boolean");
 
                     b.Property<Guid?>("LicenseId")
                         .HasColumnType("uuid");
@@ -727,6 +733,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("character varying(3000)");
 
+                    b.Property<bool>("IsPriority")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("LicenseSlug")
                         .HasMaxLength(60)
                         .HasColumnType("character varying(60)");
@@ -866,6 +875,60 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.HasIndex("EntityType", "EntityId");
 
                     b.ToTable("AuditLogs", (string)null);
+                });
+
+            modelBuilder.Entity("Discovery.Domain.Operations.BillingEntitlement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("Expiration")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FsLicenseId")
+                        .IsRequired()
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("FsPlanId")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("FsPricingId")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<string>("FsUserId")
+                        .HasMaxLength(40)
+                        .HasColumnType("character varying(40)");
+
+                    b.Property<bool>("IsCanceled")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TargetId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FsLicenseId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BillingEntitlements", (string)null);
                 });
 
             modelBuilder.Entity("Discovery.Domain.Operations.ContentDraft", b =>

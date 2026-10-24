@@ -103,6 +103,8 @@ export const api = {
   search: (q: string, page: number) =>
     get<SearchResult>(`/api/v1/search?${toSearchParams({ q, page })}`, { revalidate: 0 }),
 
+  featured: () => get<ApplicationSummary[]>("/api/v1/launches/featured?take=8", { revalidate: 300, tags: ["applications"] }),
+
   launches: (week?: string) =>
     get<LaunchWeek>(`/api/v1/launches?${toSearchParams({ week })}`, { revalidate: 30, tags: ["launches"] }),
 

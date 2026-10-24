@@ -7,6 +7,7 @@ import { LinksSettings, PrivacySettings, ProfileSettings, SecuritySettings, Sett
 import { Container } from "@/components/layout/page-parts";
 import { GithubIcon } from "@/components/ui/brand-icons";
 import { buttonClass } from "@/components/ui/styles";
+import { googleConfig } from "@/lib/auth/integrations";
 import { getCurrentUser } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "Settings", robots: { index: false } };
@@ -20,7 +21,7 @@ const NAV = [
 ];
 
 export default async function SettingsPage() {
-  const user = await getCurrentUser();
+  const [user, google] = await Promise.all([getCurrentUser(), googleConfig()]);
   if (!user) redirect("/login?next=/settings");
 
   return (
@@ -70,19 +71,23 @@ export default async function SettingsPage() {
           <SettingsCard id="connected" icon={<Lock className="size-4 text-muted" />} title="Connected accounts">
             <ul className="flex flex-col gap-3">
               {[
-                { name: "Google", icon: <span className="text-base font-bold">G</span> },
-                { name: "GitHub", icon: <GithubIcon className="size-4" /> },
+                {
+                  name: "Google",
+                  icon: <span className="text-base font-bold">G</span>,
+                  status: google.enabled ? "Sign in with the Google account that uses this e-mail to link it automatically." : "Coming soon",
+                },
+                { name: "GitHub", icon: <GithubIcon className="size-4" />, status: "Coming soon" },
               ].map((p) => (
                 <li key={p.name} className="flex items-center justify-between gap-3 rounded-lg border border-border p-4">
                   <span className="flex items-center gap-3 text-sm font-medium">
                     <span className="grid size-8 place-items-center rounded-full bg-surface-secondary">{p.icon}</span>
                     {p.name}
                   </span>
-                  <span className="text-xs text-muted">Coming soon</span>
+                  <span className="max-w-64 text-right text-xs text-muted">{p.status}</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-muted">You currently sign in with your e-mail and password.</p>
+            <p className="mt-3 text-xs text-muted">You can always sign in with your e-mail and password as well.</p>
           </SettingsCard>
         </div>
       </div>

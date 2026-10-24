@@ -44,11 +44,12 @@ function AppSection({ title, description, href, apps }: { title: string; descrip
 }
 
 export default async function HomePage() {
-  const [home, launches, leaders, user] = await Promise.all([
+  const [home, launches, leaders, user, featured] = await Promise.all([
     api.home(),
     api.launches().catch(() => null),
     api.leaderboard("all", 1).catch(() => null),
     getCurrentUser(),
+    api.featured().catch(() => [] as ApplicationSummary[]),
   ]);
 
   return (
@@ -180,6 +181,8 @@ export default async function HomePage() {
             Submit your product <ArrowRight className="size-4" aria-hidden="true" />
           </Link>
         </section>
+
+        <AppSection title="Featured" description="Sponsored placements from makers. Always labelled; they don't affect rankings." apps={featured} />
 
         {home.featuredCategories.length > 0 && (
           <section className="py-8">

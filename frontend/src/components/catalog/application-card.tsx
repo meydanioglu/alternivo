@@ -28,6 +28,15 @@ export function CommunityStats({ app }: { app: Pick<ApplicationSummary, "likeCou
   );
 }
 
+/** Disclosure label for paid placements. */
+export function SponsoredLabel({ children }: { children: string }) {
+  return (
+    <span className="shrink-0 rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 text-[11px] font-medium text-accent" title="Paid placement">
+      {children}
+    </span>
+  );
+}
+
 export function ApplicationCard({ app }: { app: ApplicationSummary }) {
   return (
     <article className="group relative flex h-full flex-col gap-3 rounded-lg border border-border bg-surface p-4 transition-colors hover:border-accent/50">
@@ -41,6 +50,7 @@ export function ApplicationCard({ app }: { app: ApplicationSummary }) {
           </h3>
           {app.primaryCategory && <p className="truncate text-xs text-muted">{app.primaryCategory.name}</p>}
         </div>
+        {app.isFeatured && <SponsoredLabel>Featured</SponsoredLabel>}
         <CommunityStats app={app} />
       </div>
       <p className="line-clamp-2 text-sm text-foreground/80">{app.shortDescription}</p>

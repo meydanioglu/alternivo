@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<PanelService>();
         services.AddScoped<ImportService>();
         services.AddScoped<ContentService>();
+        services.AddScoped<Community.MakerService>();
         return services;
     }
 }

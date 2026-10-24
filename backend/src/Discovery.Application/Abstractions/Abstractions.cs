@@ -33,6 +33,7 @@ public interface IAppDbContext
     DbSet<PageView> PageViews { get; }
     DbSet<ImportItem> ImportItems { get; }
     DbSet<ContentDraft> ContentDrafts { get; }
+    DbSet<BillingEntitlement> BillingEntitlements { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -140,6 +140,10 @@ public sealed class LaunchesController(LaunchService launches) : ControllerBase
     [HttpGet]
     public Task<LaunchWeekDto> Week([FromQuery] string? week, CancellationToken ct) => launches.GetWeekAsync(week, ct);
 
+    [HttpGet("featured")]
+    public Task<IReadOnlyList<ApplicationSummaryDto>> Featured([FromQuery] int? take, CancellationToken ct) =>
+        launches.FeaturedAsync(take ?? 8, ct);
+
     [HttpGet("archive")]
     public Task<IReadOnlyList<LaunchArchiveWeekDto>> Archive([FromQuery] int? weeks, CancellationToken ct) =>
         launches.GetArchiveAsync(weeks ?? 26, ct);

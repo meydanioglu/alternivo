@@ -24,7 +24,8 @@ public sealed record ApplicationSummaryDto(
     CategoryRef? PrimaryCategory,
     int LikeCount,
     int ReviewCount,
-    decimal? RatingAverage);
+    decimal? RatingAverage,
+    bool IsFeatured = false);
 
 public sealed record ScreenshotDto(string Url, string? Caption, int Width, int Height);
 

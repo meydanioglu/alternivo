@@ -54,6 +54,11 @@ export async function MainHeader() {
           <Link href="/submit" className={buttonClass("ghost", "sm", "hidden whitespace-nowrap md:inline-flex")}>
             <Plus className="size-4" aria-hidden="true" /> Submit
           </Link>
+          {user && (
+            <Link href="/maker" className={buttonClass("ghost", "sm", "hidden whitespace-nowrap md:inline-flex")}>
+              Maker
+            </Link>
+          )}
           <ThemeSwitch />
           {user ? (
             <Link
@@ -100,6 +105,7 @@ const FOOTER_COLUMNS = [
     title: "Makers & community",
     links: [
       { href: "/submit", label: "Submit a product" },
+      { href: "/maker", label: "Maker dashboard" },
       { href: "/register", label: "Create an account" },
       { href: "/launches/archive", label: "Launch archive" },
       { href: "/new-apps", label: "Recently added" },
@@ -114,12 +120,21 @@ const FOOTER_COLUMNS = [
       { href: "/software?selfHosted=true", label: "Self-hosted software" },
     ],
   },
+  {
+    title: "Support",
+    links: [
+      { href: "/help", label: "Help center" },
+      { href: "/settings", label: "Settings" },
+      { href: "/terms", label: "Terms of service" },
+      { href: "/privacy", label: "Privacy policy" },
+    ],
+  },
 ];
 
 export function Footer() {
   return (
     <footer className="mt-16 border-t border-border bg-surface">
-      <Container className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-5">
+      <Container className="grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-6">
         <div className="flex flex-col gap-3">
           <Logo />
           <p className="max-w-xs text-sm text-muted">{site.tagline}</p>

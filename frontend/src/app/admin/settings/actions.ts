@@ -37,3 +37,25 @@ export async function testAiAction(): Promise<{ ok: boolean; message: string }> 
     return { ok: false, message: message(error, "Test yapılamadı.") };
   }
 }
+
+export async function saveIntegrationsAction(_: FormState, form: FormData): Promise<FormState> {
+  const value = (name: string) => String(form.get(name) ?? "").trim();
+  // Plain fields are saved as typed (empty clears them); empty secret fields keep the stored secret.
+  const body = {
+    freemiusProductId: value("freemiusProductId"),
+    freemiusPublicKey: value("freemiusPublicKey"),
+    freemiusSecretKey: value("freemiusSecretKey") || null,
+    featuredPlanId: value("featuredPlanId"),
+    fastTrackPlanId: value("fastTrackPlanId"),
+    launchBoostPlanId: value("launchBoostPlanId"),
+    googleClientId: value("googleClientId"),
+    googleClientSecret: value("googleClientSecret") || null,
+  };
+  try {
+    await userApi("/api/v1/admin/settings/integrations", { method: "PUT", body });
+  } catch (error) {
+    return { error: message(error, "Kaydedilemedi.") };
+  }
+  revalidatePath("/", "layout");
+  return { ok: "Entegrasyon ayarları kaydedildi." };
+}

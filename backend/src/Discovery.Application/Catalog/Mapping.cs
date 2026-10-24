@@ -52,7 +52,8 @@ internal static class Mapping
             primary?.Category is null ? null : new CategoryRef(primary.Category.Slug, primary.Category.Name),
             a.LikeCount,
             a.ReviewCount,
-            a.RatingAverage);
+            a.RatingAverage,
+            a.FeaturedUntil > DateTimeOffset.UtcNow);
     }
 
     public static PlatformRef ToRef(this Platform p) => new(p.Slug, p.Name, p.Kind.ToString().ToLowerInvariant());

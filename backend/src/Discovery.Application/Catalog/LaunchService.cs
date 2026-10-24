@@ -7,7 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Discovery.Application.Catalog;
 
-public sealed record LaunchItemDto(int Rank, ApplicationSummaryDto Application, int Votes, DateTimeOffset LaunchedAt);
+/// <summary>Sponsored = paid launch boost: pinned on top of its week and labelled; votes and ranks are unaffected.</summary>
+public sealed record LaunchItemDto(int Rank, ApplicationSummaryDto Application, int Votes, DateTimeOffset LaunchedAt, bool Sponsored = false);
 
 public sealed record LaunchWeekDto(
     string Week,
@@ -66,6 +67,7 @@ public sealed class LaunchService(IAppDbContext db, CatalogService catalog, Time
             .Select(a => new
             {
                 a.Id,
+                a.LaunchBoosted,
                 PublishedAt = a.PublishedAt!.Value,
                 Votes = db.ApplicationVotes.Count(v => v.ApplicationId == a.Id && v.CreatedAt >= start && v.CreatedAt < end),
             })
@@ -75,7 +77,9 @@ public sealed class LaunchService(IAppDbContext db, CatalogService catalog, Time
 
         var ids = rows.Select(r => r.Id).ToList();
         var apps = await db.Applications.Where(a => ids.Contains(a.Id)).WithSummaryIncludes().ToDictionaryAsync(a => a.Id, ct);
-        return rows.Select((r, i) => new LaunchItemDto(i + 1, apps[r.Id].ToSummary(), r.Votes, r.PublishedAt)).ToList();
+        // Rank comes from votes only; boosted launches are then moved to the top, keeping their real rank number.
+        return rows.Select((r, i) => new LaunchItemDto(i + 1, apps[r.Id].ToSummary(), r.Votes, r.PublishedAt, r.LaunchBoosted))
+            .OrderByDescending(x => x.Sponsored).ThenBy(x => x.Rank).ToList();
     }
 
     public async Task<LaunchWeekDto> GetWeekAsync(string? week, CancellationToken ct)
@@ -117,6 +121,16 @@ public sealed class LaunchService(IAppDbContext db, CatalogService catalog, Time
         }
 
         return result;
+    }
+
+    /// <summary>Currently featured (paid, labelled) products, newest featuring first.</summary>
+    public async Task<IReadOnlyList<ApplicationSummaryDto>> FeaturedAsync(int take, CancellationToken ct)
+    {
+        var now = clock.GetUtcNow();
+        var ids = await catalog.Visible().Where(a => a.FeaturedUntil > now)
+            .OrderByDescending(a => a.FeaturedUntil).Take(Math.Clamp(take, 1, 24)).Select(a => a.Id).ToListAsync(ct);
+        var apps = await db.Applications.Where(a => ids.Contains(a.Id)).WithSummaryIncludes().ToDictionaryAsync(a => a.Id, ct);
+        return ids.Where(apps.ContainsKey).Select(id => apps[id].ToSummary()).ToList();
     }
 
     /// <summary>period: week | month | all. "all" ranks by total likes; the others by likes cast in the period.</summary>

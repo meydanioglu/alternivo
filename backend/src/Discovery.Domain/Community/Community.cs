@@ -82,6 +82,8 @@ public class Submission : Entity
     public Guid? CreatedApplicationId { get; set; }
     public Guid? ModeratedByUserId { get; set; }
     public DateTimeOffset? ModeratedAt { get; set; }
+    /// <summary>Paid fast-track review: shown first in the moderation queue.</summary>
+    public bool IsPriority { get; set; }
 }
 
 public class Report : Entity

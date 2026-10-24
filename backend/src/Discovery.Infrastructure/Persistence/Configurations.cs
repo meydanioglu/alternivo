@@ -378,6 +378,20 @@ internal sealed class AppSettingConfiguration : IEntityTypeConfiguration<AppSett
     }
 }
 
+internal sealed class BillingEntitlementConfiguration : IEntityTypeConfiguration<BillingEntitlement>
+{
+    public void Configure(EntityTypeBuilder<BillingEntitlement> b)
+    {
+        b.ToTable("BillingEntitlements");
+        b.Property(x => x.FsLicenseId).HasMaxLength(40).IsRequired();
+        b.HasIndex(x => x.FsLicenseId).IsUnique();
+        b.Property(x => x.FsPlanId).HasMaxLength(40);
+        b.Property(x => x.FsPricingId).HasMaxLength(40);
+        b.Property(x => x.FsUserId).HasMaxLength(40);
+        b.HasIndex(x => x.UserId);
+    }
+}
+
 internal sealed class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
 {
     public void Configure(EntityTypeBuilder<AppUser> b)

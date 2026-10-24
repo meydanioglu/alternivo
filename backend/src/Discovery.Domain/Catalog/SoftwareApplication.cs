@@ -25,6 +25,10 @@ public class SoftwareApplication : Entity, ISoftDeletable
     /// (noindex + omitted from sitemaps) until an editor approves its content or verifies it.
     /// </summary>
     public bool NeedsContentReview { get; set; }
+    /// <summary>Paid "Featured" placement (labelled as sponsored; never changes organic ranking).</summary>
+    public DateTimeOffset? FeaturedUntil { get; set; }
+    /// <summary>Paid launch boost: pinned (labelled sponsored) on the weekly launch board of its launch week.</summary>
+    public bool LaunchBoosted { get; set; }
     public string? Developer { get; set; }
 
     public PricingModel Pricing { get; set; }

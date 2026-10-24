@@ -1,5 +1,6 @@
 import { Medal } from "lucide-react";
 import Link from "next/link";
+import { SponsoredLabel } from "@/components/catalog/application-card";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { cx } from "@/components/ui/styles";
 import type { ApplicationSummary } from "@/lib/api/types";
@@ -22,13 +23,14 @@ export function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-export function RankedRow({ rank, app, votes, signedIn, votingOpen, compact }: {
+export function RankedRow({ rank, app, votes, signedIn, votingOpen, compact, sponsored }: {
   rank: number;
   app: ApplicationSummary;
   votes: number;
   signedIn: boolean;
   votingOpen: boolean;
   compact?: boolean;
+  sponsored?: boolean;
 }) {
   return (
     <li className={cx("flex items-center gap-3 rounded-xl border border-border bg-surface transition hover:border-accent/50", compact ? "p-2.5" : "p-4")}>
@@ -38,6 +40,7 @@ export function RankedRow({ rank, app, votes, signedIn, votingOpen, compact }: {
         <Link href={`/software/${app.slug}`} className="font-semibold hover:underline">
           {app.name}
         </Link>
+        {sponsored && <span className="ml-2 align-middle"><SponsoredLabel>Sponsored</SponsoredLabel></span>}
         <p className={cx("text-sm text-muted", compact ? "truncate" : "line-clamp-2")}>{app.shortDescription}</p>
         {!compact && app.primaryCategory && <p className="mt-1 text-xs text-muted">{app.primaryCategory.name}</p>}
       </div>

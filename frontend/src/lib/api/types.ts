@@ -46,6 +46,8 @@ export interface ApplicationSummary {
   likeCount: number;
   reviewCount: number;
   ratingAverage: number | null;
+  /** Paid, labelled placement (Freemius "Featured" plan). */
+  isFeatured?: boolean;
 }
 
 export interface Review {
@@ -238,6 +240,8 @@ export interface LaunchItem {
   application: ApplicationSummary;
   votes: number;
   launchedAt: string;
+  /** Paid launch boost: pinned on top of its week and labelled. */
+  sponsored?: boolean;
 }
 
 export interface LaunchWeek {

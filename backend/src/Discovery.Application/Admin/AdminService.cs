@@ -224,7 +224,7 @@ public sealed class AdminService(
         }
 
         var total = await query.CountAsync(ct);
-        var rows = await query.OrderBy(x => x.CreatedAt).Skip((p - 1) * size).Take(size).AsNoTracking().ToListAsync(ct);
+        var rows = await query.OrderByDescending(x => x.IsPriority).ThenBy(x => x.CreatedAt).Skip((p - 1) * size).Take(size).AsNoTracking().ToListAsync(ct);
         return new PagedResult<AdminSubmissionRow>(
             rows.Select(x => new AdminSubmissionRow(x.Id, x.Name, x.WebsiteUrl, x.Description, x.CategorySlug,
                 PricingNames.ToNames(x.Pricing), x.LicenseSlug, x.PlatformSlugs, x.Tags, x.SuggestedAlternativeSlugs,
