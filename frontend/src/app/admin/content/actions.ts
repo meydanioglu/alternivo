@@ -83,3 +83,24 @@ export async function approveContentAction(_: FormState, form: FormData): Promis
   revalidatePath("/", "layout");
   redirect(next ? `/admin/content/${next}?approved=1` : "/admin/content?status=ready&approved=1");
 }
+
+/** Bulk approve: selected ids (form field "ids") or, with scope=all, every draft awaiting review. */
+export async function approveManyAction(_: FormState, form: FormData): Promise<FormState> {
+  const scope = String(form.get("scope") ?? "selected");
+  const ids = form.getAll("ids").map(String).filter(Boolean);
+  if (scope === "selected" && ids.length === 0) return { error: "Önce listeden en az bir taslak seçin." };
+  const minSourceChars = form.get("qualityOnly") === "on" ? 1500 : 0;
+  try {
+    const r = await userApi<{ approved: number; skipped: number; errors: string[] }>("/api/v1/admin/content/approve-many", {
+      method: "POST",
+      body: { ids: scope === "all" ? null : ids, minSourceChars, publish: true },
+    });
+    revalidatePath("/", "layout");
+    const parts = [`${r.approved} taslak onaylandı ve ürün sayfalarına uygulandı.`];
+    if (r.skipped) parts.push(`${r.skipped} taslak atlandı (kaynağı yetersiz ya da eksik alanlı) — tek tek inceleyin.`);
+    if (r.errors.length) parts.push(r.errors.slice(0, 2).join(" · "));
+    return { ok: parts.join(" ") };
+  } catch (error) {
+    return { error: message(error, "Toplu onay başarısız oldu.") };
+  }
+}

@@ -52,6 +52,11 @@ public sealed record ApproveContentRequest(
     ContentSectionsDto Sections,
     bool Publish);
 
+/// <summary>ids: specific drafts (null = every draft awaiting review). minSourceChars: skip drafts written from too little site text.</summary>
+public sealed record BulkApproveRequest(Guid[]? Ids, int MinSourceChars, bool Publish);
+
+public sealed record BulkApproveResult(int Approved, int Skipped, IReadOnlyList<string> Errors);
+
 public sealed record ContentOverview(IReadOnlyDictionary<string, int> Counts, PagedResult<ContentDraftRow> Items, long InputTokens, long OutputTokens);
 
 /// <summary>Queue, review and approve AI-drafted product content. Generation runs in the background worker.</summary>
@@ -170,6 +175,42 @@ public sealed class ContentService(IAppDbContext db, ICacheService cache, AdminS
 
         await cache.RemoveAsync(CacheKeys.Application(app.Slug), ct);
         await cache.RemoveAsync(CacheKeys.Home, ct);
+    }
+
+    /// <summary>
+    /// Approves drafts as written (same effect as approving each one without edits). Drafts below the source
+    /// threshold, or with empty required fields, are skipped and stay in the review queue.
+    /// </summary>
+    public async Task<BulkApproveResult> ApproveManyAsync(Guid userId, BulkApproveRequest request, CancellationToken ct)
+    {
+        var query = db.ContentDrafts.Where(d => d.Status == ContentDraftStatus.Ready);
+        if (request.Ids is { Length: > 0 } ids) query = query.Where(d => ids.Contains(d.Id));
+        var drafts = await query.OrderBy(d => d.UpdatedAt).AsNoTracking().ToListAsync(ct);
+
+        int approved = 0, skipped = 0;
+        var errors = new List<string>();
+        foreach (var d in drafts)
+        {
+            if (d.SourceChars < Math.Max(0, request.MinSourceChars) || string.IsNullOrWhiteSpace(d.ShortDescription) || string.IsNullOrWhiteSpace(d.Description))
+            {
+                skipped++;
+                continue;
+            }
+
+            try
+            {
+                var sections = ContentJson.Parse(d.SectionsJson) ?? new ContentSectionsDto([], [], [], [], [], []);
+                await ApproveAsync(userId, d.Id, new ApproveContentRequest(d.ShortDescription!, d.Description!, d.SeoTitle, d.SeoDescription, sections, request.Publish), ct);
+                approved++;
+            }
+            catch (AppException ex)
+            {
+                skipped++;
+                if (errors.Count < 10) errors.Add(ex.Message);
+            }
+        }
+
+        return new BulkApproveResult(approved, skipped, errors);
     }
 
     public async Task RejectAsync(Guid userId, Guid id, CancellationToken ct)

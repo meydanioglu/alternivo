@@ -4,6 +4,8 @@ import { cancelQueuedContentAction, queueContentAction, retryFailedContentAction
 import { AdminHeader, StatCard, Table, Tabs, dateTime } from "@/components/admin/admin-parts";
 import { ActionButton } from "@/components/admin/admin-ui";
 import { AutoRefresh } from "@/components/admin/import-form";
+import { BulkApproveBar } from "@/components/admin/bulk-approve";
+import { BULK_FORM_ID } from "@/components/admin/bulk-approve-id";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { Pagination } from "@/components/layout/page-parts";
 import { buttonClass, chipClass } from "@/components/ui/styles";
@@ -125,11 +127,17 @@ export default async function AdminContentPage({ searchParams }: Props) {
 
       <div className="mt-6">
         <Tabs items={TABS.map((t) => ({ ...t, href: href(1, t.value) }))} current={status} />
-        <Table head={["Ürün", "Durum", "Taslak", "Güncellendi", ""]} empty={data.items.items.length === 0}>
+        <BulkApproveBar readyCount={c.ready ?? 0} />
+        <Table head={["", "Ürün", "Durum", "Taslak", "Güncellendi", ""]} empty={data.items.items.length === 0}>
           {data.items.items.map((r) => {
             const s = STATUS[r.status];
             return (
               <tr key={r.id}>
+                <td className="w-8 py-3 pl-4">
+                  {r.status === "Ready" && (
+                    <input type="checkbox" name="ids" value={r.id} form={BULK_FORM_ID} aria-label={`${r.applicationName} seç`} className="size-4" />
+                  )}
+                </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-3">
                     <ApplicationLogo name={r.applicationName} logoUrl={r.logoUrl} size="sm" />

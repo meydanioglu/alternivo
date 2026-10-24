@@ -412,6 +412,10 @@ public sealed class AdminContentController(ContentService content, HttpCurrentUs
         return NoContent();
     }
 
+    [HttpPost("approve-many")]
+    public Task<BulkApproveResult> ApproveMany(BulkApproveRequest request, CancellationToken ct) =>
+        content.ApproveManyAsync(current.RequireUserId(), request, ct);
+
     [HttpPost("{id:guid}/reject")]
     public async Task<IActionResult> Reject(Guid id, CancellationToken ct)
     {
