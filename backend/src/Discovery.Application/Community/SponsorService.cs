@@ -87,9 +87,12 @@ public sealed class SponsorService(IAppDbContext db, ICacheService cache, Catalo
     public async Task<int> RecordImpressionsAsync(string visitorKey, IReadOnlyList<SponsorEventRequest> events, CancellationToken ct)
     {
         var counted = 0;
+        var live = await LiveAsync(ct);
         foreach (var e in events.Take(10).DistinctBy(e => (e.ApplicationId, e.Placement)))
         {
-            if (!Enum.TryParse<SponsorPlacement>(e.Placement, out var placement)) continue;
+            // Only products that are really sponsored in that placement right now can be counted (no forged stats).
+            if (!Enum.TryParse<SponsorPlacement>(e.Placement, out var placement)
+                || !live.Any(l => l.AppId == e.ApplicationId && l.Placement == placement)) continue;
             if (!await FirstTimeAsync($"spi:{visitorKey}:{e.ApplicationId}:{placement}", ct)) continue;
             await IncrementAsync(e.ApplicationId, placement, impressions: 1, clicks: 0, ct);
             counted++;
@@ -104,6 +107,7 @@ public sealed class SponsorService(IAppDbContext db, ICacheService cache, Catalo
         var url = await catalog.Visible().Where(a => a.Id == applicationId).Select(a => a.WebsiteUrl).FirstOrDefaultAsync(ct)
             ?? throw new NotFoundException("Application", applicationId.ToString());
         if (Enum.TryParse<SponsorPlacement>(placementName, out var placement)
+            && (await LiveAsync(ct)).Any(l => l.AppId == applicationId && l.Placement == placement)
             && await FirstTimeAsync($"spc:{visitorKey}:{applicationId}:{placement}", ct))
         {
             await IncrementAsync(applicationId, placement, impressions: 0, clicks: 1, ct);
