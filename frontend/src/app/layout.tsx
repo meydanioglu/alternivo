@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { site } from "@/config/site";
@@ -23,6 +24,9 @@ export const metadata: Metadata = {
   icons: {
     // Browser tab icon follows the OS/browser theme; favicon.ico is the fallback.
     icon: [
+      // Search engines read the first icon without a media query: a solid square (Google shows it in a circle,
+      // where a transparent mark disappears). Size is a multiple of 48px as Google requires.
+      { url: "/brand/icon-192.png", type: "image/png", sizes: "192x192" },
       { url: "/brand/favicon-on-light.png", type: "image/png", sizes: "192x192", media: "(prefers-color-scheme: light)" },
       { url: "/brand/favicon-on-dark.png", type: "image/png", sizes: "192x192", media: "(prefers-color-scheme: dark)" },
     ],
@@ -52,6 +56,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <main id="main">{children}</main>
         <Footer />
         <PageViewTracker />
+        <Script
+          src="https://dash.tinyanalytics.io/script.js?siteId=289"
+          data-web-vitals="true"
+          data-track-errors="true"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );
