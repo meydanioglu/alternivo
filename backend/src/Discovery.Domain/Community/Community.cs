@@ -82,8 +82,14 @@ public class Submission : Entity
     public Guid? CreatedApplicationId { get; set; }
     public Guid? ModeratedByUserId { get; set; }
     public DateTimeOffset? ModeratedAt { get; set; }
-    /// <summary>Paid fast-track review: shown first in the moderation queue.</summary>
+    /// <summary>Paid Fast Review (verified by the payment webhook): shown first in the moderation queue.</summary>
     public bool IsPriority { get; set; }
+    public DateTimeOffset? PriorityPaidAt { get; set; }
+    /// <summary>Promised review date: 15 days after submission (free) or 24 hours after payment (Fast Review).</summary>
+    public DateTimeOffset? ReviewDeadline { get; set; }
+    public DateTimeOffset? ReviewStartedAt { get; set; }
+    /// <summary>Moderators only; never shown to the submitter.</summary>
+    public string? InternalNote { get; set; }
 }
 
 public class Report : Entity

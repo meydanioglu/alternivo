@@ -296,6 +296,7 @@ public sealed class CommunityService(
             ScreenshotUrls = [.. (request.ScreenshotUrls ?? []).Distinct()],
             SuggestedAlternativeSlugs = [.. (request.SuggestedAlternatives ?? []).Distinct()],
             PossibleDuplicateApplicationId = duplicateId,
+            ReviewDeadline = DateTimeOffset.UtcNow.AddDays(Discovery.Domain.Operations.PricingCatalog.FreeReviewDays),
         };
         db.Submissions.Add(submission);
         await db.SaveChangesAsync(ct);

@@ -69,7 +69,8 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         [FromQuery] string? status, [FromQuery] string? q, [FromQuery] int? page,
         [FromServices] UserManager<AppUser> users, CancellationToken ct)
     {
-        var result = await admin.ListSubmissionsAsync(string.IsNullOrEmpty(status) ? null : status, page, ct, q);
+        var queue = HttpContext.Request.Query["queue"].ToString();
+        var result = await admin.ListSubmissionsAsync(string.IsNullOrEmpty(status) ? null : status, page, ct, q, queue);
         var ids = result.Items.Select(i => i.SubmittedByUserId).Distinct().ToList();
         var people = await users.Users.Where(u => ids.Contains(u.Id))
             .Select(u => new { u.Id, u.Email, u.DisplayName, u.Handle }).ToDictionaryAsync(u => u.Id, ct);
@@ -99,6 +100,37 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
             submitter = u is null ? null : new { u.Email, u.DisplayName, u.Handle, u.CreatedAt },
             duplicateSlug = row.PossibleDuplicateApplicationId is { } dup ? (await admin.GetApplicationSlugAsync(dup, ct)) : null,
         };
+    }
+
+    [HttpGet("submissions/{id:guid}/history")]
+    [Authorize(Policy = Policies.Moderation)]
+    public Task<IReadOnlyList<Discovery.Domain.Operations.AuditLog>> SubmissionHistory(Guid id, CancellationToken ct) =>
+        admin.SubmissionHistoryAsync(id, ct);
+
+    public sealed record InternalNoteRequest(string? Note);
+
+    [HttpPut("submissions/{id:guid}/internal-note")]
+    [Authorize(Policy = Policies.Moderation)]
+    public async Task<IActionResult> SubmissionInternalNote(Guid id, InternalNoteRequest request, CancellationToken ct)
+    {
+        await admin.SetSubmissionInternalNoteAsync(current.RequireUserId(), id, request.Note, ct);
+        return NoContent();
+    }
+
+    // ----- Sponsorship campaigns (moderators) -----
+
+    [HttpGet("campaigns")]
+    [Authorize(Policy = Policies.Moderation)]
+    public Task<IReadOnlyList<Discovery.Application.Community.AdminCampaignRow>> Campaigns([FromQuery] string? state,
+        [FromServices] Discovery.Application.Community.MakerService maker, CancellationToken ct) => maker.AdminCampaignsAsync(state, ct);
+
+    [HttpPost("campaigns/{id:guid}/decision")]
+    [Authorize(Policy = Policies.Moderation)]
+    public async Task<IActionResult> DecideCampaign(Guid id, ModerationDecisionRequest request,
+        [FromServices] Discovery.Application.Community.MakerService maker, CancellationToken ct)
+    {
+        await maker.DecideCampaignAsync(current.RequireUserId(), id, request.Decision, request.Note, ct);
+        return NoContent();
     }
 
     [HttpPut("submissions/{id:guid}")]

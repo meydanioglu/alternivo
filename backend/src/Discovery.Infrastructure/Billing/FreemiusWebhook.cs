@@ -100,18 +100,12 @@ public sealed class FreemiusWebhook(
         entitlement.FsPlanId = Str(license?["plan_id"]);
         entitlement.FsPricingId = Str(license?["pricing_id"]);
         entitlement.FsUserId = Str(license?["user_id"]) ?? Str(fsUser?["id"]);
-        entitlement.Kind = entitlement.FsPlanId switch
-        {
-            var p when p is not null && p == config.FeaturedPlanId => EntitlementKind.Featured,
-            var p when p is not null && p == config.FastTrackPlanId => EntitlementKind.FastTrack,
-            var p when p is not null && p == config.LaunchBoostPlanId => EntitlementKind.LaunchBoost,
-            _ => EntitlementKind.Unknown,
-        };
+        entitlement.Kind = PricingCatalog.ByKey(config.PlanKeyFor(entitlement.FsPlanId))?.Kind ?? EntitlementKind.Unknown;
         entitlement.Expiration = Date(license?["expiration"]);
         entitlement.IsCanceled = license?["is_cancelled"]?.ToString() is "true" or "True" or "1";
         entitlement.UpdatedAt = DateTimeOffset.UtcNow;
         await db.SaveChangesAsync(ct);
-        await maker.ReapplyAsync(entitlement.Id, ct);
+        await maker.OnLicenseAsync(entitlement.Id, ct);
         return Result.Ok;
     }
 

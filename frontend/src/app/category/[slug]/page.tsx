@@ -6,6 +6,7 @@ import { hasActiveFilters, parseFilters, type RawSearchParams } from "@/lib/filt
 import { currentYear } from "@/lib/format";
 import { loadOrNotFound } from "@/lib/resolve";
 import { pageMetadata } from "@/lib/seo";
+import { SponsoredSlot } from "@/components/sponsored/sponsored-slot";
 import { ApplicationGrid } from "@/components/catalog/application-card";
 import { CatalogListing } from "@/components/catalog/catalog-listing";
 import { BreadcrumbNavigation, Container, SectionHeader } from "@/components/layout/page-parts";
@@ -90,6 +91,8 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           <ApplicationGrid apps={category.featured} />
         </section>
       )}
+
+      <SponsoredSlot slot={`category:${category.slug}`} className="mt-8" />
 
       <section className="mt-10">
         <h2 className="mb-4 text-lg font-semibold">All {category.name.toLowerCase()} apps</h2>

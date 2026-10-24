@@ -106,6 +106,7 @@ const FOOTER_COLUMNS = [
     links: [
       { href: "/submit", label: "Submit a product" },
       { href: "/maker", label: "Maker dashboard" },
+      { href: "/pricing", label: "Pricing for makers" },
       { href: "/register", label: "Create an account" },
       { href: "/launches/archive", label: "Launch archive" },
       { href: "/new-apps", label: "Recently added" },

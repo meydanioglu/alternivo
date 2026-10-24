@@ -9,15 +9,23 @@ export interface IntegrationSettingsView {
   freemiusProductId: string | null;
   freemiusPublicKey: string | null;
   freemiusSecretSet: boolean;
-  featuredPlanId: string | null;
-  fastTrackPlanId: string | null;
-  launchBoostPlanId: string | null;
+  plans: Record<string, string>;
   googleClientId: string | null;
   googleSecretSet: boolean;
 }
 
 const secretHint = (set: boolean) =>
   set ? "Tanımlı. Şifreli saklanır, gösterilmez; boş bırakırsanız korunur." : "Tanımlı değil. Şifrelenerek saklanır.";
+
+export const PLAN_FIELDS = [
+  ["fastReview", "Fast Review ($5, tek seferlik)"],
+  ["featured", "Featured ($9/ay)"],
+  ["growth", "Growth ($19/ay)"],
+  ["homepageSpotlight", "Homepage Spotlight ($5, 7 gün)"],
+  ["categorySponsorship", "Category Sponsorship ($7, 7 gün)"],
+  ["competitorSponsorship", "Competitor Page ($9, 7 gün)"],
+  ["alternativeCard", "Sponsored Alternative Card ($15, 30 gün)"],
+] as const;
 
 export function IntegrationsForm({ view, siteUrl }: { view: IntegrationSettingsView; siteUrl: string }) {
   const [state, action] = useActionState(saveIntegrationsAction, {} as FormState);
@@ -39,16 +47,16 @@ export function IntegrationsForm({ view, siteUrl }: { view: IntegrationSettingsV
       <Field label="Secret key" name="freemiusSecretKey" optional hint={secretHint(view.freemiusSecretSet)}>
         <TextInput name="freemiusSecretKey" type="password" autoComplete="off" spellCheck={false} placeholder="sk_..." />
       </Field>
-      <div className="grid gap-4 sm:grid-cols-3">
-        <Field label="Featured plan ID" name="featuredPlanId" optional hint="Aylık öne çıkarma">
-          <TextInput name="featuredPlanId" defaultValue={view.featuredPlanId ?? ""} spellCheck={false} />
-        </Field>
-        <Field label="Fast track plan ID" name="fastTrackPlanId" optional hint="Hızlı inceleme">
-          <TextInput name="fastTrackPlanId" defaultValue={view.fastTrackPlanId ?? ""} spellCheck={false} />
-        </Field>
-        <Field label="Launch boost plan ID" name="launchBoostPlanId" optional hint="Buildboard'da sabitleme">
-          <TextInput name="launchBoostPlanId" defaultValue={view.launchBoostPlanId ?? ""} spellCheck={false} />
-        </Field>
+      <p className="text-sm text-muted">
+        Plan ID&apos;leri: Freemius → Plans. Fiyatı Freemius&apos;taki planla aynı tutun (tek seferlik planlar &quot;lifetime&quot;, aylıklar &quot;monthly&quot;).
+        Boş bırakılan planın satın alma butonu gösterilmez.
+      </p>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {PLAN_FIELDS.map(([key, label]) => (
+          <Field key={key} label={label} name={`plan_${key}`} optional>
+            <TextInput name={`plan_${key}`} defaultValue={view.plans?.[key] ?? ""} spellCheck={false} inputMode="numeric" />
+          </Field>
+        ))}
       </div>
 
       <h3 className="mt-2 font-semibold">Google ile giriş</h3>

@@ -114,8 +114,10 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
 
   // The first line of the description becomes the short description on approval.
   const fullDescription = `${tagline}\n\n${description}`.slice(0, 3000);
+  const fastReview = text(form, "reviewSpeed") === "fast";
+  let submissionId: string;
   try {
-    await userApi("/api/v1/submissions", {
+    ({ id: submissionId } = await userApi<{ id: string }>("/api/v1/submissions", {
       method: "POST",
       body: {
         name,
@@ -129,11 +131,20 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
         screenshotUrls: [],
         suggestedAlternatives: commaList(text(form, "alternatives")).map((s) => s.toLowerCase()).slice(0, 10),
       },
-    });
+    }));
   } catch (error) {
     return failure(error, "Your submission could not be sent. Please check the fields and try again.");
   }
-  redirect("/account?submitted=1");
+  if (!fastReview) redirect(`/maker?submitted=${submissionId}`);
+
+  // The submission is saved as a standard (free) one; it becomes Fast Review only when the payment webhook confirms it.
+  let checkout: string | null = null;
+  try {
+    checkout = (await userApi<{ url: string }>("/api/v1/maker/checkout", { method: "POST", body: { plan: "fastReview", targetId: submissionId } })).url;
+  } catch {
+    checkout = null;
+  }
+  redirect(checkout ?? `/maker?submitted=${submissionId}&fast=unavailable`);
 }
 
 // ---------- Community actions on an application ----------

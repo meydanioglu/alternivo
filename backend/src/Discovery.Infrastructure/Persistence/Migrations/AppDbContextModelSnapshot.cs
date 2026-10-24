@@ -343,6 +343,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset?>("FeaturedUntil")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<DateTimeOffset?>("GrowthUntil")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("HasOfflineSupport")
                         .HasColumnType("boolean");
 
@@ -733,6 +736,10 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .HasMaxLength(3000)
                         .HasColumnType("character varying(3000)");
 
+                    b.Property<string>("InternalNote")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
                     b.Property<bool>("IsPriority")
                         .HasColumnType("boolean");
 
@@ -764,6 +771,15 @@ namespace Discovery.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("Pricing")
                         .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("PriorityPaidAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ReviewDeadline")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("ReviewStartedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.PrimitiveCollection<List<string>>("ScreenshotUrls")
                         .IsRequired()
@@ -931,6 +947,37 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.ToTable("BillingEntitlements", (string)null);
                 });
 
+            modelBuilder.Entity("Discovery.Domain.Operations.CheckoutIntent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("ConsumedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EntitlementId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Kind")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TargetId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId", "Kind", "CreatedAt");
+
+                    b.ToTable("CheckoutIntents", (string)null);
+                });
+
             modelBuilder.Entity("Discovery.Domain.Operations.ContentDraft", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1008,6 +1055,26 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.HasIndex("Status");
 
                     b.ToTable("ContentDrafts", (string)null);
+                });
+
+            modelBuilder.Entity("Discovery.Domain.Operations.FoundingVendor", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("GrantedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Plan")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PriceCents")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("FoundingVendors", (string)null);
                 });
 
             modelBuilder.Entity("Discovery.Domain.Operations.ImportItem", b =>
@@ -1161,6 +1228,108 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         {
                             t.HasCheckConstraint("CK_SlugRedirects_Status", "\"StatusCode\" IN (301, 308, 410)");
                         });
+                });
+
+            modelBuilder.Entity("Discovery.Domain.Operations.SponsorStat", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Clicks")
+                        .HasColumnType("integer");
+
+                    b.Property<DateOnly>("Day")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Impressions")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Placement")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId", "Placement", "Day")
+                        .IsUnique();
+
+                    b.ToTable("SponsorStats", (string)null);
+                });
+
+            modelBuilder.Entity("Discovery.Domain.Operations.SponsorshipCampaign", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset>("EndsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("EntitlementId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("InventoryKey")
+                        .IsRequired()
+                        .HasMaxLength(60)
+                        .HasColumnType("character varying(60)");
+
+                    b.Property<DateTimeOffset?>("ModeratedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ModeratedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ModeratorNote")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<DateTimeOffset?>("PaidAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Placement")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PriceCents")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("StartsAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("TargetApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("TargetCategoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EntitlementId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("InventoryKey", "Status", "EndsAt");
+
+                    b.ToTable("SponsorshipCampaigns", (string)null);
                 });
 
             modelBuilder.Entity("Discovery.Infrastructure.Identity.AppUser", b =>

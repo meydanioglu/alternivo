@@ -11,17 +11,28 @@
 | altern.ai | Ücretsiz submit + Buildboard, makerlar için ücretli öne çıkarma | |
 | G2 / Capterra | Satıcı profilleri, lead satışı, PPC | Kurumsal ölçek |
 
-## Alternivo için seçilen model (faz 1, kuruldu)
+## Alternivo için seçilen model (kuruldu, 25 Ekim 2026)
 
-Ödemeler Freemius üzerinden (merchant of record: KDV/faturalar Freemius'ta). Tüm ücretli yerleşimler etiketlidir ve oyları/puanları değiştirmez.
+Arayan kullanıcılar için site tamamen ücretsiz. Gelir yazılım üreticilerinden; ödemeler Freemius üzerinden (merchant of record).
 
-| Paket | Fiyat (öneri) | Tür | Etkisi |
+| Plan | Fiyat | Tür | Ne sağlar |
 |---|---|---|---|
-| Fast track review | $19 | tek seferlik | Gönderi moderasyon kuyruğunun başına geçer ("Fast track") |
-| Launch boost | $29 | tek seferlik | Buildboard haftasında en üste sabitlenir ("Sponsored") |
-| Featured listing | $49/ay | abonelik | "Featured" rozeti + ana sayfa featured şeridi |
+| Free | $0 | sonsuza dek | Ücretsiz gönderim, 15 güne kadar standart inceleme |
+| Fast Review | $5 | tek seferlik, gönderi başına | Ödeme onayından itibaren 24 saat içinde inceleme; onay garantisi yok |
+| Featured | $9/ay | abonelik | Featured rozeti, kategori sayfalarında sponsorlu rotasyon, ana sayfa şeridi, analitik |
+| Growth | $19/ay | abonelik | Featured + rakiplerin alternatif sayfalarında "Sponsored alternative" |
 
-Submit, açılışa özel ücretsiz kalır; ücretli paketler isteğe bağlıdır.
+Kampanyalar (sınırlı envanter, admin onaylı):
+
+| Yerleşim | Fiyat | Süre | Aynı anda |
+|---|---|---|---|
+| Homepage Spotlight | $5 | 7 gün | 3 (site geneli) |
+| Category Sponsorship | $7 | 7 gün | kategori başına 2 |
+| Competitor Page Sponsorship | $9 | 7 gün | rakip sayfa başına 1 |
+| Sponsored Alternative Card | $15 | 30 gün | rakip sayfa başına 1 |
+| Custom Promotion | $29'dan | elle teklif | — |
+
+İlk 100 Featured/Growth müşterisi "founding vendor" olarak kaydedilir; abonelik kesintisiz sürdükçe fiyat Freemius'ta sabit kalır.
 
 ## Sonraki fazlar
 

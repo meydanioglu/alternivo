@@ -48,3 +48,23 @@ export async function reviewSubmissionAction(_: FormState, form: FormData): Prom
   if (decision === "save") return { ok: "Değişiklikler kaydedildi." };
   redirect(`/admin/submissions?done=${decision}`);
 }
+
+export async function startReviewAction(id: string): Promise<{ error?: string }> {
+  try {
+    await userApi(`/api/v1/admin/submissions/${encodeURIComponent(id)}/decision`, { method: "POST", body: { decision: "start-review", note: null } });
+  } catch (error) {
+    return { error: message(error, "İncelemeye alınamadı.") };
+  }
+  revalidatePath("/admin/submissions", "layout");
+  return {};
+}
+
+export async function saveInternalNoteAction(_: FormState, form: FormData): Promise<FormState> {
+  try {
+    await userApi(`/api/v1/admin/submissions/${encodeURIComponent(text(form, "id"))}/internal-note`, { method: "PUT", body: { note: text(form, "note") } });
+  } catch (error) {
+    return { error: message(error, "Kaydedilemedi.") };
+  }
+  revalidatePath("/admin/submissions", "layout");
+  return { ok: "Not kaydedildi." };
+}

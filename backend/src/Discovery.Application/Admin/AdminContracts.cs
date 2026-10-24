@@ -49,7 +49,13 @@ public sealed record AdminSubmissionRow(
     string? ModeratorNote,
     Guid? PossibleDuplicateApplicationId,
     Guid SubmittedByUserId,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt,
+    bool IsPriority = false,
+    DateTimeOffset? PriorityPaidAt = null,
+    DateTimeOffset? ReviewDeadline = null,
+    bool Overdue = false,
+    string? InternalNote = null,
+    DateTimeOffset? ReviewStartedAt = null);
 
 public sealed record AdminRelationshipRow(
     Guid Id,

@@ -1,6 +1,7 @@
 import { ArrowRight, Info, Scale } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SponsoredSlot } from "@/components/sponsored/sponsored-slot";
 import { Suspense } from "react";
 import { api } from "@/lib/api/client";
 import type { AlternativeItem, AlternativesPage } from "@/lib/api/types";
@@ -203,6 +204,8 @@ export default async function AlternativesPageRoute({ params, searchParams }: Pr
           </p>
         </div>
       </header>
+
+      <SponsoredSlot slot={`alternatives:${source.slug}`} className="mt-6" />
 
       <div className="mt-6 flex gap-8">
         <Suspense>

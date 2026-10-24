@@ -45,9 +45,9 @@ export async function saveIntegrationsAction(_: FormState, form: FormData): Prom
     freemiusProductId: value("freemiusProductId"),
     freemiusPublicKey: value("freemiusPublicKey"),
     freemiusSecretKey: value("freemiusSecretKey") || null,
-    featuredPlanId: value("featuredPlanId"),
-    fastTrackPlanId: value("fastTrackPlanId"),
-    launchBoostPlanId: value("launchBoostPlanId"),
+    plans: Object.fromEntries(
+      ["fastReview", "featured", "growth", "homepageSpotlight", "categorySponsorship", "competitorSponsorship", "alternativeCard"].map((k) => [k, value(`plan_${k}`)]),
+    ),
     googleClientId: value("googleClientId"),
     googleClientSecret: value("googleClientSecret") || null,
   };

@@ -4,7 +4,7 @@ import { urlsetXml, xmlResponse } from "@/lib/sitemap";
 export const dynamic = "force-dynamic";
 
 const API_TYPES = new Set(["software", "alternatives", "categories", "comparisons"]);
-const STATIC_PAGES = ["/", "/ais", "/software", "/categories", "/compare", "/launches", "/launches/archive", "/leaderboard", "/new-apps", "/trending", "/submit", "/help", "/terms", "/privacy"];
+const STATIC_PAGES = ["/", "/ais", "/software", "/categories", "/compare", "/launches", "/launches/archive", "/leaderboard", "/new-apps", "/trending", "/submit", "/help", "/terms", "/privacy", "/pricing"];
 
 /**
  * /sitemaps/{type}.xml. The API only returns canonical, indexable URLs (published apps,

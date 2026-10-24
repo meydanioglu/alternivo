@@ -64,6 +64,7 @@ public enum SubmissionStatus
     Approved = 1,
     Rejected = 2,
     NeedsChanges = 3,
+    InReview = 4,
 }
 
 public enum ReportTargetType

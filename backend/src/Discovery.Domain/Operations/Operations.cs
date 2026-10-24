@@ -132,6 +132,11 @@ public enum EntitlementKind
     Featured = 1,
     FastTrack = 2,
     LaunchBoost = 3,
+    Growth = 4,
+    HomepageSpotlight = 5,
+    CategorySponsorship = 6,
+    CompetitorSponsorship = 7,
+    AlternativeCard = 8,
 }
 
 /// <summary>

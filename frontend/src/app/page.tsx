@@ -11,6 +11,7 @@ import { ReviewCard } from "@/components/catalog/review-card";
 import { RankedRow } from "@/components/launches/launch-list";
 import { Countdown } from "@/components/launches/launch-parts";
 import { getCurrentUser } from "@/lib/auth/session";
+import { SponsoredSlot } from "@/components/sponsored/sponsored-slot";
 import { Container, SectionHeader } from "@/components/layout/page-parts";
 import { SearchCommand } from "@/components/search/search-command";
 import { JsonLd } from "@/components/seo/json-ld";
@@ -182,6 +183,7 @@ export default async function HomePage() {
           </Link>
         </section>
 
+        <SponsoredSlot slot="home" title="Spotlight" className="py-4" />
         <AppSection title="Featured" description="Sponsored placements from makers. Always labelled; they don't affect rankings." apps={featured} />
 
         {home.featuredCategories.length > 0 && (

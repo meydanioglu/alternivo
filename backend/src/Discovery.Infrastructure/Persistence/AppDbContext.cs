@@ -40,6 +40,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<ContentDraft> ContentDrafts => Set<ContentDraft>();
     public DbSet<AppSetting> AppSettings => Set<AppSetting>();
     public DbSet<BillingEntitlement> BillingEntitlements => Set<BillingEntitlement>();
+    public DbSet<CheckoutIntent> CheckoutIntents => Set<CheckoutIntent>();
+    public DbSet<SponsorshipCampaign> SponsorshipCampaigns => Set<SponsorshipCampaign>();
+    public DbSet<SponsorStat> SponsorStats => Set<SponsorStat>();
+    public DbSet<FoundingVendor> FoundingVendors => Set<FoundingVendor>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

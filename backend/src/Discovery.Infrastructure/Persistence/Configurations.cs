@@ -213,6 +213,46 @@ internal sealed class AlternativeVoteConfiguration : IEntityTypeConfiguration<Al
     }
 }
 
+internal sealed class CheckoutIntentConfiguration : IEntityTypeConfiguration<CheckoutIntent>
+{
+    public void Configure(EntityTypeBuilder<CheckoutIntent> b)
+    {
+        b.ToTable("CheckoutIntents");
+        b.HasIndex(x => new { x.UserId, x.Kind, x.CreatedAt });
+    }
+}
+
+internal sealed class SponsorshipCampaignConfiguration : IEntityTypeConfiguration<SponsorshipCampaign>
+{
+    public void Configure(EntityTypeBuilder<SponsorshipCampaign> b)
+    {
+        b.ToTable("SponsorshipCampaigns");
+        b.Property(x => x.InventoryKey).HasMaxLength(60).IsRequired();
+        b.Property(x => x.ModeratorNote).HasMaxLength(1000);
+        b.HasIndex(x => new { x.InventoryKey, x.Status, x.EndsAt });
+        b.HasIndex(x => x.UserId);
+        b.HasIndex(x => x.EntitlementId);
+    }
+}
+
+internal sealed class SponsorStatConfiguration : IEntityTypeConfiguration<SponsorStat>
+{
+    public void Configure(EntityTypeBuilder<SponsorStat> b)
+    {
+        b.ToTable("SponsorStats");
+        b.HasIndex(x => new { x.ApplicationId, x.Placement, x.Day }).IsUnique();
+    }
+}
+
+internal sealed class FoundingVendorConfiguration : IEntityTypeConfiguration<FoundingVendor>
+{
+    public void Configure(EntityTypeBuilder<FoundingVendor> b)
+    {
+        b.ToTable("FoundingVendors");
+        b.HasKey(x => x.UserId);
+    }
+}
+
 internal sealed class ApplicationVoteConfiguration : IEntityTypeConfiguration<ApplicationVote>
 {
     public void Configure(EntityTypeBuilder<ApplicationVote> b)
@@ -265,6 +305,7 @@ internal sealed class SubmissionConfiguration : IEntityTypeConfiguration<Submiss
         b.Property(x => x.CategorySlug).HasMaxLength(120);
         b.Property(x => x.LicenseSlug).HasMaxLength(60);
         b.Property(x => x.ModeratorNote).HasMaxLength(2000);
+        b.Property(x => x.InternalNote).HasMaxLength(2000);
         b.HasOne<AppUser>().WithMany().HasForeignKey(x => x.SubmittedByUserId).OnDelete(DeleteBehavior.Cascade);
         b.HasIndex(x => new { x.Status, x.CreatedAt });
         b.HasIndex(x => x.SubmittedByUserId);

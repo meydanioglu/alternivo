@@ -208,7 +208,28 @@ public sealed class AdminService(
 
     // ---------- Submissions ----------
 
-    public async Task<PagedResult<AdminSubmissionRow>> ListSubmissionsAsync(string? status, int? page, CancellationToken ct, string? q = null)
+    private AdminSubmissionRow ToRow(Submission x)
+    {
+        var now = clock.GetUtcNow();
+        var open = x.Status is SubmissionStatus.Pending or SubmissionStatus.InReview or SubmissionStatus.NeedsChanges;
+        return new AdminSubmissionRow(x.Id, x.Name, x.WebsiteUrl, x.Description, x.CategorySlug,
+            PricingNames.ToNames(x.Pricing), x.LicenseSlug, x.PlatformSlugs, x.Tags, x.SuggestedAlternativeSlugs,
+            x.Status.ToString(), x.ModeratorNote, x.PossibleDuplicateApplicationId, x.SubmittedByUserId, x.CreatedAt,
+            x.IsPriority, x.PriorityPaidAt, x.ReviewDeadline, open && x.ReviewDeadline < now, x.InternalNote, x.ReviewStartedAt);
+    }
+
+    public async Task<IReadOnlyList<AuditLog>> SubmissionHistoryAsync(Guid id, CancellationToken ct) =>
+        await db.AuditLogs.Where(l => l.EntityId == id).OrderByDescending(l => l.CreatedAt).Take(100).AsNoTracking().ToListAsync(ct);
+
+    public async Task SetSubmissionInternalNoteAsync(Guid actorId, Guid id, string? note, CancellationToken ct)
+    {
+        var s = await db.Submissions.FirstOrDefaultAsync(x => x.Id == id, ct) ?? throw new NotFoundException("Submission", id.ToString());
+        s.InternalNote = string.IsNullOrWhiteSpace(note) ? null : note.Trim()[..Math.Min(note.Trim().Length, 2000)];
+        Audit(actorId, "submission.internal-note", "Submission", id, null);
+        await db.SaveChangesAsync(ct);
+    }
+
+    public async Task<PagedResult<AdminSubmissionRow>> ListSubmissionsAsync(string? status, int? page, CancellationToken ct, string? q = null, string? queue = null)
     {
         var (p, size) = Paging.Normalize(page, 50);
         var query = db.Submissions.AsQueryable();
@@ -223,13 +244,17 @@ public sealed class AdminService(
             query = query.Where(x => EF.Functions.ILike(x.Name, term) || EF.Functions.ILike(x.WebsiteUrl, term));
         }
 
+        if (queue == "priority") query = query.Where(x => x.IsPriority);
+        else if (queue == "standard") query = query.Where(x => !x.IsPriority);
+
         var total = await query.CountAsync(ct);
-        var rows = await query.OrderByDescending(x => x.IsPriority).ThenBy(x => x.CreatedAt).Skip((p - 1) * size).Take(size).AsNoTracking().ToListAsync(ct);
-        return new PagedResult<AdminSubmissionRow>(
-            rows.Select(x => new AdminSubmissionRow(x.Id, x.Name, x.WebsiteUrl, x.Description, x.CategorySlug,
-                PricingNames.ToNames(x.Pricing), x.LicenseSlug, x.PlatformSlugs, x.Tags, x.SuggestedAlternativeSlugs,
-                x.Status.ToString(), x.ModeratorNote, x.PossibleDuplicateApplicationId, x.SubmittedByUserId, x.CreatedAt)).ToList(),
-            p, size, total);
+        // Paid reviews first by earliest deadline; then oldest first. Id makes the order total (stable paging).
+        var rows = await query
+            .OrderByDescending(x => x.IsPriority)
+            .ThenBy(x => x.IsPriority ? x.ReviewDeadline : null)
+            .ThenBy(x => x.CreatedAt).ThenBy(x => x.Id)
+            .Skip((p - 1) * size).Take(size).AsNoTracking().ToListAsync(ct);
+        return new PagedResult<AdminSubmissionRow>(rows.Select(ToRow).ToList(), p, size, total);
     }
 
     public async Task<Guid?> DecideSubmissionAsync(Guid actorId, Guid id, string decision, string? note, CancellationToken ct)
@@ -242,13 +267,18 @@ public sealed class AdminService(
         }
 
         var now = clock.GetUtcNow();
-        submission.ModeratorNote = note?.Trim();
+        if (decision != "start-review") submission.ModeratorNote = note?.Trim();
         submission.ModeratedByUserId = actorId;
         submission.ModeratedAt = now;
         submission.UpdatedAt = now;
 
         switch (decision)
         {
+            case "start-review":
+                if (submission.Status != SubmissionStatus.Pending) throw new ConflictException("Only pending submissions can be started.");
+                submission.Status = SubmissionStatus.InReview;
+                submission.ReviewStartedAt = now;
+                break;
             case "reject":
                 submission.Status = SubmissionStatus.Rejected;
                 break;
@@ -281,7 +311,7 @@ public sealed class AdminService(
             }
 
             default:
-                throw new BadRequestException("Decision must be approve, reject or needs-changes.");
+                throw new BadRequestException("Decision must be start-review, approve, reject or needs-changes.");
         }
 
         Audit(actorId, $"submission.{decision}", "Submission", submission.Id, new { note });
@@ -295,9 +325,7 @@ public sealed class AdminService(
     public async Task<AdminSubmissionRow> GetSubmissionAsync(Guid id, CancellationToken ct)
     {
         var x = await db.Submissions.AsNoTracking().FirstOrDefaultAsync(s => s.Id == id, ct) ?? throw new NotFoundException("Submission", id.ToString());
-        return new AdminSubmissionRow(x.Id, x.Name, x.WebsiteUrl, x.Description, x.CategorySlug,
-            PricingNames.ToNames(x.Pricing), x.LicenseSlug, x.PlatformSlugs, x.Tags, x.SuggestedAlternativeSlugs,
-            x.Status.ToString(), x.ModeratorNote, x.PossibleDuplicateApplicationId, x.SubmittedByUserId, x.CreatedAt);
+        return ToRow(x);
     }
 
     public async Task<IReadOnlyDictionary<string, int>> SubmissionCountsAsync(CancellationToken ct)

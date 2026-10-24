@@ -1,6 +1,7 @@
 import { ArrowLeft, CircleAlert, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { AdminHeader, dateTime } from "@/components/admin/admin-parts";
+import { SubmissionModeration } from "@/components/admin/submission-moderation";
 import { type SubmissionData, SubmissionReviewForm } from "@/components/admin/submission-review";
 import { buttonClass, chipClass } from "@/components/ui/styles";
 import { api } from "@/lib/api/client";
@@ -22,7 +23,7 @@ const LICENSES = [
   ["source-available", "Source available"],
 ] as const;
 
-const STATUS: Record<string, string> = { Pending: "Onay bekliyor", NeedsChanges: "Değişiklik istendi", Approved: "Onaylandı", Rejected: "Reddedildi" };
+const STATUS: Record<string, string> = { Pending: "Onay bekliyor", InReview: "İnceleniyor", NeedsChanges: "Değişiklik istendi", Approved: "Onaylandı", Rejected: "Reddedildi" };
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -83,6 +84,8 @@ export default async function SubmissionDetailPage({ params }: Props) {
           </div>
         )}
       </div>
+
+      <SubmissionModeration s={s as unknown as Parameters<typeof SubmissionModeration>[0]["s"]} />
 
       <SubmissionReviewForm
         key={s.id + s.status}

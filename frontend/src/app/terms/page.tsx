@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of service" updated="October 24, 2026" intro={<p>These terms apply to your use of {site.name} ({site.url}). By using the site or creating an account you agree to them.</p>}>
+    <LegalPage title="Terms of service" updated="October 25, 2026" intro={<p>These terms apply to your use of {site.name} ({site.url}). By using the site or creating an account you agree to them.</p>}>
       <section>
         <h2>1. The service</h2>
         <p>
@@ -45,14 +45,27 @@ export default function TermsPage() {
       <section id="paid-services">
         <h2>5. Paid services for makers</h2>
         <ul>
-          <li>We offer optional paid placements: fast-track review, launch boost and featured listings.</li>
+          <li>Submitting a product is free. Optional paid services are listed on our <Link href="/pricing">pricing page</Link>.</li>
           <li>
             Payments are processed by Freemius, Inc., which acts as reseller and merchant of record. Freemius&apos; own terms apply to the
             payment, taxes, invoices and refunds.
           </li>
-          <li>Paid placements are always labelled (“Featured”, “Sponsored”, “Fast track”). They never change votes, ratings or reviews.</li>
-          <li>Fast track speeds up review but does not guarantee approval.</li>
-          <li>Subscriptions renew until cancelled; cancelling stops the next renewal and the placement ends when the paid period ends.</li>
+          <li>
+            <strong>Fast Review</strong> ($5, one-time, per submission) means your submission is reviewed within 24 hours after the payment is
+            confirmed. It does not guarantee approval, publication, ranking or traffic. If we do not review it within 24 hours, you can ask for a
+            full refund.
+          </li>
+          <li>
+            <strong>Featured</strong> and <strong>Growth</strong> are monthly subscriptions that renew until cancelled. Cancelling stops the next
+            renewal; the placement ends when the paid month ends. Founding-vendor prices stay the same while the subscription stays active
+            without interruption.
+          </li>
+          <li>
+            <strong>Sponsorship campaigns</strong> run for a fixed period, are reviewed before they go live and are subject to limited inventory.
+            If we reject a campaign you get a full refund.
+          </li>
+          <li>All paid placements are labelled (“Featured”, “Sponsored”, “Spotlight”, “Fast Review”) and never change organic rankings, votes, ratings or reviews.</li>
+          <li>We do not promise any number of visitors, clicks, sign-ups or sales.</li>
           <li>We may refuse or end a placement that breaks these terms; in that case unused prepaid time is refunded.</li>
         </ul>
       </section>

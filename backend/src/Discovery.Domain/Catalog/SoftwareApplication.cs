@@ -29,6 +29,8 @@ public class SoftwareApplication : Entity, ISoftDeletable
     public DateTimeOffset? FeaturedUntil { get; set; }
     /// <summary>Paid launch boost: pinned (labelled sponsored) on the weekly launch board of its launch week.</summary>
     public bool LaunchBoosted { get; set; }
+    /// <summary>Paid "Growth" subscription: also shown (labelled) on alternatives pages of products in the same category.</summary>
+    public DateTimeOffset? GrowthUntil { get; set; }
     public string? Developer { get; set; }
 
     public PricingModel Pricing { get; set; }

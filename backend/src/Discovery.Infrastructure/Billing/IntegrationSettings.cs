@@ -7,7 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Discovery.Infrastructure.Billing;
 
-public sealed record FreemiusConfig(string ProductId, string PublicKey, string SecretKey, string? FeaturedPlanId, string? FastTrackPlanId, string? LaunchBoostPlanId);
+/// <summary>Plans maps PricingCatalog plan keys (fastReview, featured, growth, …) to Freemius plan ids.</summary>
+public sealed record FreemiusConfig(string ProductId, string PublicKey, string SecretKey, IReadOnlyDictionary<string, string> Plans)
+{
+    public string? PlanKeyFor(string? fsPlanId) => fsPlanId is null ? null : Plans.FirstOrDefault(p => p.Value == fsPlanId).Key;
+}
 
 public sealed record GoogleConfig(string ClientId, string ClientSecret);
 
@@ -16,9 +20,7 @@ public sealed record IntegrationSettingsView(
     string? FreemiusProductId,
     string? FreemiusPublicKey,
     bool FreemiusSecretSet,
-    string? FeaturedPlanId,
-    string? FastTrackPlanId,
-    string? LaunchBoostPlanId,
+    IReadOnlyDictionary<string, string> Plans,
     string? GoogleClientId,
     bool GoogleSecretSet);
 
@@ -26,9 +28,7 @@ public sealed record SaveIntegrationSettingsRequest(
     string? FreemiusProductId,
     string? FreemiusPublicKey,
     string? FreemiusSecretKey,
-    string? FeaturedPlanId,
-    string? FastTrackPlanId,
-    string? LaunchBoostPlanId,
+    IReadOnlyDictionary<string, string?>? Plans,
     string? GoogleClientId,
     string? GoogleClientSecret);
 
@@ -77,8 +77,7 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
             return null;
         }
 
-        return new FreemiusConfig(product, pub, secret, s.GetValueOrDefault("freemius.plan.featured"),
-            s.GetValueOrDefault("freemius.plan.fastTrack"), s.GetValueOrDefault("freemius.plan.launchBoost"));
+        return new FreemiusConfig(product, pub, secret, PlansOf(s));
     }
 
     public async Task<GoogleConfig?> GoogleAsync(CancellationToken ct)
@@ -92,7 +91,7 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         var s = await LoadAsync(ct);
         return new IntegrationSettingsView(
             s.GetValueOrDefault("freemius.productId"), s.GetValueOrDefault("freemius.publicKey"), s.ContainsKey("freemius.secretKey"),
-            s.GetValueOrDefault("freemius.plan.featured"), s.GetValueOrDefault("freemius.plan.fastTrack"), s.GetValueOrDefault("freemius.plan.launchBoost"),
+            PlansOf(s),
             s.GetValueOrDefault("google.clientId"), s.ContainsKey("google.clientSecret"));
     }
 
@@ -102,12 +101,29 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         await SetAsync("freemius.productId", r.FreemiusProductId, false, userId, IsId, ct);
         await SetAsync("freemius.publicKey", r.FreemiusPublicKey, false, userId, IsKey, ct);
         await SetAsync("freemius.secretKey", r.FreemiusSecretKey, true, userId, IsKey, ct);
-        await SetAsync("freemius.plan.featured", r.FeaturedPlanId, false, userId, IsId, ct);
-        await SetAsync("freemius.plan.fastTrack", r.FastTrackPlanId, false, userId, IsId, ct);
-        await SetAsync("freemius.plan.launchBoost", r.LaunchBoostPlanId, false, userId, IsId, ct);
+        foreach (var (key, value) in r.Plans ?? new Dictionary<string, string?>())
+        {
+            if (PricingCatalog.ByKey(key) is null) throw new BadRequestException($"Unknown plan '{key}'.");
+            await SetAsync(PlanPrefix + key, value, false, userId, IsId, ct);
+        }
         await SetAsync("google.clientId", r.GoogleClientId, false, userId, v => v.EndsWith(".apps.googleusercontent.com") && v.Length < 200, ct);
         await SetAsync("google.clientSecret", r.GoogleClientSecret, true, userId, IsKey, ct);
         await db.SaveChangesAsync(ct);
+    }
+
+    private const string PlanPrefix = "freemius.plan.";
+
+    private static Dictionary<string, string> PlansOf(Dictionary<string, string> s)
+    {
+        var plans = new Dictionary<string, string>();
+        foreach (var plan in PricingCatalog.Plans)
+        {
+            if (s.TryGetValue(PlanPrefix + plan.Key, out var id)) plans[plan.Key] = id;
+        }
+
+        // Earlier setting name for Fast Review.
+        if (!plans.ContainsKey("fastReview") && s.TryGetValue(PlanPrefix + "fastTrack", out var legacy)) plans["fastReview"] = legacy;
+        return plans;
     }
 
     private static bool IsId(string v) => v.Length <= 20 && v.All(char.IsDigit);

@@ -35,7 +35,45 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
   );
 }
 
-export function SubmitForm({ categories, platforms }: {
+function ReviewSpeed({ fastReviewAvailable }: { fastReviewAvailable: boolean }) {
+  const option = "flex cursor-pointer flex-col gap-1 rounded-xl border border-border bg-surface p-4 has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent/30";
+  return (
+    <fieldset className="flex flex-col gap-3">
+      <legend className="sr-only">Review speed</legend>
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className={option}>
+          <span className="flex items-center gap-2 font-semibold">
+            <input type="radio" name="reviewSpeed" value="standard" defaultChecked className="accent-[var(--accent)]" />
+            Standard Review <span className="ml-auto text-sm font-medium text-muted">Free</span>
+          </span>
+          <span className="text-sm text-muted">
+            Your submission enters our standard review queue. Reviews may take up to 15 days. No payment required.
+          </span>
+        </label>
+        {fastReviewAvailable && (
+          <label className={option}>
+            <span className="flex items-center gap-2 font-semibold">
+              <input type="radio" name="reviewSpeed" value="fast" className="accent-[var(--accent)]" />
+              Fast Review <span className="ml-auto text-sm font-medium text-accent">$5 one-time</span>
+            </span>
+            <span className="text-sm text-muted">
+              Skip the standard queue and get your submission reviewed within 24 hours of payment. Approval is not guaranteed.
+            </span>
+          </label>
+        )}
+      </div>
+      {fastReviewAvailable && (
+        <p className="text-xs text-muted">
+          Fast Review is a one-time fee for priority evaluation, not guaranteed publication. You can also upgrade later from your Maker
+          dashboard. Paid with Freemius; if we miss the 24-hour window you can ask for a full refund.
+        </p>
+      )}
+    </fieldset>
+  );
+}
+
+export function SubmitForm({ categories, platforms, fastReviewAvailable = false }: {
+  fastReviewAvailable?: boolean;
   categories: { slug: string; name: string }[];
   platforms: { value: string; label: string }[];
 }) {
@@ -104,9 +142,13 @@ export function SubmitForm({ categories, platforms }: {
         </Field>
       </Step>
 
+      <Step n={4} title="How quickly would you like your product reviewed?">
+        <ReviewSpeed fastReviewAvailable={fastReviewAvailable} />
+      </Step>
+
       <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted">Every submission is reviewed by a person before it goes live.</p>
-        <SubmitButton className="sm:min-w-48">Submit for review</SubmitButton>
+        <SubmitButton className="sm:min-w-48">Continue</SubmitButton>
       </div>
     </form>
   );

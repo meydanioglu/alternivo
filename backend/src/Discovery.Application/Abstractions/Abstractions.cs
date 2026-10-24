@@ -34,6 +34,11 @@ public interface IAppDbContext
     DbSet<ImportItem> ImportItems { get; }
     DbSet<ContentDraft> ContentDrafts { get; }
     DbSet<BillingEntitlement> BillingEntitlements { get; }
+    DbSet<CheckoutIntent> CheckoutIntents { get; }
+    DbSet<SponsorshipCampaign> SponsorshipCampaigns { get; }
+    DbSet<SponsorStat> SponsorStats { get; }
+    DbSet<FoundingVendor> FoundingVendors { get; }
+    Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade Database { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

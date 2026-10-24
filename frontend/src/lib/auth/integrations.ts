@@ -22,20 +22,32 @@ export interface GoogleConfig {
 export interface BillingConfig {
   enabled: boolean;
   productId: string | null;
-  plans: { featured: string | null; fastTrack: string | null; launchBoost: string | null };
+  /** Plan keys that have a Freemius plan configured (fastReview, featured, growth, …). */
+  plans: string[];
+}
+
+export interface PlanInfo {
+  key: string;
+  name: string;
+  priceCents: number;
+  recurring: boolean;
+  durationDays: number | null;
+  inventoryLimit: number | null;
+}
+
+export interface Pricing {
+  plans: PlanInfo[];
+  foundingLimit: number;
+  foundingTaken: number;
+  freeReviewDays: number;
+  fastReviewHours: number;
 }
 
 export const googleConfig = () => getJson<GoogleConfig>("/api/v1/auth/google/config", { enabled: false, clientId: null });
 
-export const billingConfig = () =>
-  getJson<BillingConfig>("/api/v1/billing/config", {
-    enabled: false,
-    productId: null,
-    plans: { featured: null, fastTrack: null, launchBoost: null },
-  });
+export const billingConfig = () => getJson<BillingConfig>("/api/v1/billing/config", { enabled: false, productId: null, plans: [] });
 
-/** Freemius hosted checkout, locked to the member's e-mail so the webhook can match the purchase to the account. */
-export function checkoutUrl(productId: string, planId: string, email: string, successUrl: string) {
-  const params = new URLSearchParams({ user_email: email, readonly_user: "true", success_url: successUrl });
-  return `https://checkout.freemius.com/product/${productId}/plan/${planId}/?${params}`;
-}
+export const pricing = () =>
+  getJson<Pricing>("/api/v1/sponsored/pricing", { plans: [], foundingLimit: 100, foundingTaken: 0, freeReviewDays: 15, fastReviewHours: 24 });
+
+export const formatPrice = (cents: number) => `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
