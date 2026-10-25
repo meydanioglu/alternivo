@@ -117,6 +117,8 @@ export interface AlternativeItem {
   score: number;
   signals: RankingSignal[];
   reasons: string[];
+  /** Editor's pick, shown first and labelled. */
+  pinned?: boolean;
   sharedFeatures: string[];
 }
 

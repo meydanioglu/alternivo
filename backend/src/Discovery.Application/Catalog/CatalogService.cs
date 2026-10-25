@@ -150,7 +150,8 @@ public sealed class CatalogService(
                 i.Score,
                 i.Signals,
                 BuildReasons(app, i.Application, i.SharedFeatures.Count),
-                i.SharedFeatures))
+                i.SharedFeatures,
+                i.Pinned))
             .ToList();
 
         return new AlternativesPageDto(
@@ -169,7 +170,8 @@ public sealed class CatalogService(
         string? Note,
         double Score,
         IReadOnlyList<RankingSignalDto> Signals,
-        IReadOnlyList<string> SharedFeatures);
+        IReadOnlyList<string> SharedFeatures,
+        bool Pinned = false);
 
     private sealed record RankingResult(int Total, IReadOnlyList<SoftwareApplication> All, IReadOnlyList<RankedAlternative> Items);
 
@@ -215,7 +217,7 @@ public sealed class CatalogService(
                 .Select(f => f.Feature!.Name)
                 .Order()
                 .ToList();
-            return new RankedAlternative(rel.Id, alt, rel.Source, rel.VoteCount, rel.Note, r.Score, r.Signals, shared);
+            return new RankedAlternative(rel.Id, alt, rel.Source, rel.VoteCount, rel.Note, r.Score, r.Signals, shared, rel.IsPinned);
         });
 
         items = filter.Sort switch
@@ -224,7 +226,8 @@ public sealed class CatalogService(
             CatalogSorts.Rating => items.OrderByDescending(i => i.Application.RatingAverage ?? 0).ThenByDescending(i => i.Score),
             CatalogSorts.Newest => items.OrderByDescending(i => i.Application.PublishedAt).ThenByDescending(i => i.Score),
             CatalogSorts.Name => items.OrderBy(i => i.Application.Name, StringComparer.OrdinalIgnoreCase),
-            _ => items,
+            // Editor's picks lead the default (relevance) order; they are labelled on the page.
+            _ => items.OrderByDescending(i => i.Pinned),
         };
 
         return new RankingResult(

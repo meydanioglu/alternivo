@@ -74,3 +74,4 @@ Thunkable | https://thunkable.com | app-builders
 Draftbit | https://draftbit.com | app-builders
 a0.dev | https://a0.dev | vibe-coding
 Superblocks | https://www.superblocks.com | app-builders
+Evonx | https://evonx.ai | gaming

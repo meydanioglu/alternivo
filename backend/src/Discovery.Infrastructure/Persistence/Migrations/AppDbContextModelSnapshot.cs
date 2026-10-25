@@ -524,6 +524,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<bool>("IsPinned")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTimeOffset?>("ModeratedAt")
                         .HasColumnType("timestamp with time zone");
 

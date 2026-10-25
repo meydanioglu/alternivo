@@ -22,6 +22,8 @@ public class AlternativeRelationship : Entity
     public Guid? ModeratedByUserId { get; set; }
     public DateTimeOffset? ModeratedAt { get; set; }
     public int VoteCount { get; set; }
+    /// <summary>Editor's pick: shown first on the source's alternatives page (default sort) and labelled as such.</summary>
+    public bool IsPinned { get; set; }
 }
 
 /// <summary>One user agreeing with an alternative relationship. Composite key prevents duplicates.</summary>

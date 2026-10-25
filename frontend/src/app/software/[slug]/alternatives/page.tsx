@@ -114,6 +114,7 @@ function AlternativeCard({ item, rank, sourceSlug, sourceName, signedIn }: { ite
             </h2>
             <CommunityStats app={app} />
             <AlternativeRelationshipBadge source={item.source} />
+            {item.pinned && <span className={chipClass("accent", "soft", "sm")}>Editor&apos;s pick</span>}
           </div>
           <p className="mt-1 text-sm text-foreground/85">{app.shortDescription}</p>
 
@@ -267,8 +268,8 @@ export default async function AlternativesPageRoute({ params, searchParams }: Pr
 
           <p className="mt-8 text-xs text-muted">
             How ranking works: each alternative gets a transparent match score from community votes, feature overlap,
-            platform compatibility, category relevance, review ratings, data freshness and an editorial score. Sponsored
-            placements never affect this order.
+            platform compatibility, category relevance, review ratings, data freshness and an editorial score. Products marked
+            “Editor&apos;s pick” are placed first by our editors. Sponsored placements never affect this order.
           </p>
         </div>
       </div>

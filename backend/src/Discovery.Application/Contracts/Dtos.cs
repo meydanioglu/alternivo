@@ -66,7 +66,8 @@ public sealed record AlternativeItemDto(
     double Score,
     IReadOnlyList<RankingSignalDto> Signals,
     IReadOnlyList<string> Reasons,
-    IReadOnlyList<string> SharedFeatures);
+    IReadOnlyList<string> SharedFeatures,
+    bool Pinned = false);
 
 public sealed record FacetValueDto(string Value, string Label, int Count);
 
