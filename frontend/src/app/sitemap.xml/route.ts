@@ -11,6 +11,7 @@ export function GET() {
       "/sitemaps/alternatives.xml",
       "/sitemaps/categories.xml",
       "/sitemaps/comparisons.xml",
+      "/sitemaps/keywords.xml",
     ]),
   );
 }

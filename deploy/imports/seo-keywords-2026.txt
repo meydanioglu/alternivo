@@ -1,0 +1,76 @@
+# Products needed by the 2026 SEO keyword plan (alternatives/compare targets and "best" lists).
+# Format: Name | URL | category-slug. URLs checked from the server before importing.
+
+# Keyword targets missing from the catalog
+Astrocade | https://www.astrocade.com | gaming
+Base44 | https://base44.com | vibe-coding
+Bitmagic | https://bitmagic.ai | gaming
+Buildbox | https://www.buildbox.com | gaming
+Dyad | https://www.dyad.sh | vibe-coding
+GDevelop | https://gdevelop.io | gaming
+Godot Engine | https://godotengine.org | gaming
+Google AI Studio | https://aistudio.google.com | ai-coding-tools
+Google Flow | https://labs.google/flow/about | video-generator
+Google Playground | https://playground.google | gaming
+Hostinger Horizons | https://www.hostinger.com/horizons | vibe-coding
+Ludo.ai | https://ludo.ai | gaming
+Makko AI | https://www.makko.ai | gaming
+PlayDrop | https://www.playdrop.ai | gaming
+Roblox Studio | https://www.roblox.com/create | gaming
+SEELE AI | https://www.seeles.ai | gaming
+Summer Engine | https://www.summerengine.com | gaming
+Unity | https://unity.com | gaming
+Websim | https://websim.com | vibe-coding
+
+# Game making
+Construct 3 | https://www.construct.net | gaming
+GameMaker | https://gamemaker.io | gaming
+Defold | https://defold.com | gaming
+Phaser | https://phaser.io | gaming
+Unreal Engine | https://www.unrealengine.com | gaming
+Inworld AI | https://inworld.ai | gaming
+Layer AI | https://www.layer.ai | gaming
+PixelLab | https://www.pixellab.ai | gaming
+Retro Diffusion | https://www.retrodiffusion.ai | image-generation
+Sloyd | https://www.sloyd.ai | 3d
+Rodin (Hyper3D) | https://hyper3d.ai | 3d
+Promethean AI | https://www.prometheanai.com | 3d
+Aseprite | https://www.aseprite.org | graphic-design
+
+# AI coding
+OpenAI Codex | https://openai.com/codex | ai-coding-tools
+Gemini CLI | https://github.com/google-gemini/gemini-cli | ai-coding-tools
+OpenHands | https://www.all-hands.dev | ai-coding-tools
+Devin | https://devin.ai | ai-coding-tools
+Zed | https://zed.dev | code-editors
+CodeRabbit | https://www.coderabbit.ai | code-review
+Qodo | https://www.qodo.ai | code-review
+Amp | https://ampcode.com | ai-coding-tools
+Kilo Code | https://kilocode.ai | ai-coding-tools
+Augment Code | https://www.augmentcode.com | ai-coding-tools
+Trae | https://www.trae.ai | code-editors
+Kiro | https://kiro.dev | code-editors
+Tabby | https://www.tabbyml.com | ai-coding-tools
+Ollama | https://ollama.com | local-llms
+LM Studio | https://lmstudio.ai | local-llms
+
+# Agents and automation
+LangGraph | https://www.langchain.com/langgraph | agent-frameworks
+AutoGen | https://microsoft.github.io/autogen | agent-frameworks
+Relevance AI | https://relevanceai.com | ai-agents
+Gumloop | https://www.gumloop.com | workflow-automation
+Activepieces | https://www.activepieces.com | workflow-automation
+Pipedream | https://pipedream.com | workflow-automation
+Browser Use | https://browser-use.com | ai-agents
+Skyvern | https://www.skyvern.com | ai-agents
+
+# App builders
+Tempo | https://www.tempo.new | vibe-coding
+Retool | https://retool.com | app-builders
+Appsmith | https://www.appsmith.com | app-builders
+Budibase | https://budibase.com | app-builders
+Adalo | https://www.adalo.com | app-builders
+Thunkable | https://thunkable.com | app-builders
+Draftbit | https://draftbit.com | app-builders
+a0.dev | https://a0.dev | vibe-coding
+Superblocks | https://www.superblocks.com | app-builders

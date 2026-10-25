@@ -88,6 +88,8 @@ const FOOTER_COLUMNS = [
       { href: "/new-apps", label: "New apps" },
       { href: "/trending", label: "Most liked" },
       { href: "/compare", label: "Comparisons" },
+      { href: "/best", label: "Best AI tools by use case" },
+      { href: "/guides", label: "Guides" },
       { href: "/launches", label: "This week's launches" },
       { href: "/leaderboard", label: "Leaderboard" },
     ],

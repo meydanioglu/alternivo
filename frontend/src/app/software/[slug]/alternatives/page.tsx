@@ -9,6 +9,7 @@ import { ATTRIBUTE_OPTIONS, filtersToQuery, hasActiveFilters, parseFilters, SORT
 import { currentYear, plural, SIGNAL_LABELS } from "@/lib/format";
 import { loadOrNotFound } from "@/lib/resolve";
 import { itemListJsonLd, pageMetadata } from "@/lib/seo";
+import { AlternativesIntents } from "@/components/catalog/alternatives-intents";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { CommunityStats } from "@/components/catalog/application-card";
 import { AlternativeRelationshipBadge, AttributeBadges, LicenseBadge, PlatformList, PricingBadge } from "@/components/catalog/badges";
@@ -54,7 +55,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
 
   return pageMetadata({
     title: page > 1 ? `${titleFor(data)} – Page ${page}` : titleFor(data),
-    description: `Compare ${plural(data.totalAlternatives, "alternative")} to ${data.source.name}${category ? ` for ${category}` : ""}. See features, pricing, platforms and license side by side, ranked transparently.`,
+    description: `Compare ${plural(data.totalAlternatives, "alternative")} to ${data.source.name}${category ? ` for ${category}` : ""}, including free and open-source apps like ${data.source.name}. See features, pricing, platforms and license side by side, ranked transparently.`,
     path: base,
     // Filtered/sorted views consolidate to the base URL; paginated pages keep a self-canonical.
     canonical: filtered ? base : page > 1 ? `${base}?page=${page}` : base,
@@ -255,6 +256,10 @@ export default async function AlternativesPageRoute({ params, searchParams }: Pr
             totalPages={results.totalPages}
             hrefFor={(p) => pageHref(`/software/${source.slug}/alternatives`, raw, p)}
           />
+
+          {!hasActiveFilters(filters) && results.page === 1 && (
+            <AlternativesIntents sourceSlug={source.slug} sourceName={source.name} items={results.items} />
+          )}
 
           <div className="mt-8">
             <SuggestAlternativeForm slug={source.slug} name={source.name} signedIn={!!user} />

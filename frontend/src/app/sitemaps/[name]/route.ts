@@ -1,9 +1,36 @@
+import { BEST_PAGES } from "@/content/best-pages";
+import { GUIDES } from "@/content/guides";
+import { COMPARE_TARGETS, canonicalPair } from "@/content/keyword-targets";
 import { api } from "@/lib/api/client";
+import { loadBest } from "@/lib/keyword-pages";
 import { urlsetXml, xmlResponse } from "@/lib/sitemap";
 
 export const dynamic = "force-dynamic";
 
 const API_TYPES = new Set(["software", "alternatives", "categories", "comparisons"]);
+/**
+ * Keyword-plan pages: guides, best lists that have enough indexable products, and the keyword comparison
+ * pairs whose page is indexable (comparisons the API sitemap already lists are not repeated).
+ */
+async function keywordEntries() {
+  const entries: { path: string; lastModified?: string }[] = [{ path: "/best" }, { path: "/guides" }];
+  for (const g of GUIDES) entries.push({ path: `/guides/${g.slug}`, lastModified: g.updated });
+  const best = await Promise.all(BEST_PAGES.map(async (p) => ((await loadBest(p)).indexable ? `/best/${p.slug}` : null)));
+  for (const path of best) if (path) entries.push({ path });
+
+  const listed = new Set((await api.sitemap("comparisons").catch(() => [])).map((e) => e.path));
+  const pairs = [...new Set(COMPARE_TARGETS.map(([a, b]) => canonicalPair(a, b)))];
+  const compare = await Promise.all(
+    pairs.map(async (pair) => {
+      const path = `/compare/${pair}`;
+      if (listed.has(path)) return null;
+      return api.compare(pair).then((c) => (c.isIndexable ? path : null), () => null);
+    }),
+  );
+  for (const path of compare) if (path) entries.push({ path });
+  return entries;
+}
+
 const STATIC_PAGES = ["/", "/ais", "/software", "/categories", "/compare", "/launches", "/launches/archive", "/leaderboard", "/new-apps", "/trending", "/submit", "/help", "/terms", "/privacy", "/pricing"];
 
 /**
@@ -16,6 +43,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ nam
 
   if (type === "pages") {
     return xmlResponse(urlsetXml(STATIC_PAGES.map((path) => ({ path }))));
+  }
+
+  if (name === "keywords.xml") {
+    return xmlResponse(urlsetXml(await keywordEntries()));
   }
 
   if (!API_TYPES.has(type) || !name.endsWith(".xml")) {

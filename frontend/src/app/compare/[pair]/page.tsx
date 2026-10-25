@@ -1,3 +1,4 @@
+import { canonicalPair } from "@/content/keyword-targets";
 import { Check, ExternalLink, Minus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -23,7 +24,8 @@ const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 async function load(pair: string) {
   const slugs = pair.split("-vs-");
   if (slugs.length !== 2 || slugs.some((s) => !SLUG.test(s)) || slugs[0] === slugs[1]) notFound();
-  const canonical = [...slugs].sort().join("-vs-");
+  // Keyword-plan names (e.g. make-com, godot) resolve to catalog slugs.
+  const canonical = canonicalPair(slugs[0]!, slugs[1]!);
   if (canonical !== pair) permanentRedirect(`/compare/${canonical}`);
   return loadOrNotFound(() => api.compare(pair), `/compare/${pair}`);
 }
