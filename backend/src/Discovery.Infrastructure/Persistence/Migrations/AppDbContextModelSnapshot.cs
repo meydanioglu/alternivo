@@ -1222,6 +1222,30 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                     b.ToTable("SearchQueryLogs", (string)null);
                 });
 
+            modelBuilder.Entity("Discovery.Domain.Operations.SeoSnapshot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("Day")
+                        .HasColumnType("date");
+
+                    b.Property<string>("MetricsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Day")
+                        .IsUnique();
+
+                    b.ToTable("SeoSnapshots", (string)null);
+                });
+
             modelBuilder.Entity("Discovery.Domain.Operations.SlugRedirect", b =>
                 {
                     b.Property<Guid>("Id")

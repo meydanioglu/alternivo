@@ -11,6 +11,7 @@ import {
   Inbox,
   Megaphone,
   CreditCard,
+  ShieldCheck,
   LayoutDashboard,
   MessageSquare,
   Settings,
@@ -24,6 +25,7 @@ import { cx } from "@/components/ui/styles";
 const ITEMS = [
   { href: "/admin", label: "Genel bakış", icon: LayoutDashboard, exact: true },
   { href: "/admin/analytics", label: "Ziyaretçiler", icon: Activity },
+  { href: "/admin/quality", label: "SEO & Kalite", icon: ShieldCheck },
   { href: "/admin/apps", label: "Uygulamalar", icon: AppWindow },
   { href: "/admin/imports", label: "İçe aktarma", icon: DownloadCloud },
   { href: "/admin/content", label: "İçerik", icon: FileText },

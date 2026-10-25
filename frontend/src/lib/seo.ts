@@ -14,8 +14,17 @@ interface PageMetaInput {
   image?: string | null;
 }
 
+/** Search engines show about 155-160 characters; cut longer descriptions at a word boundary. */
+export function clampDescription(text: string, max = 160) {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const cut = clean.slice(0, max - 1);
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), max - 30)).replace(/[\s,;:.\-–]+$/, "")}…`;
+}
+
 /** Builds complete metadata: unique title, description, canonical, Open Graph, Twitter, robots. */
-export function pageMetadata({ title, description, path, canonical, noindex, type = "website", image }: PageMetaInput): Metadata {
+export function pageMetadata({ title, description: rawDescription, path, canonical, noindex, type = "website", image }: PageMetaInput): Metadata {
+  const description = clampDescription(rawDescription);
   const canonicalUrl = absoluteUrl(canonical ?? path);
   const imageUrl = image ? (image.startsWith("http") ? image : absoluteUrl(image)) : absoluteUrl("/opengraph-image.png");
   return {

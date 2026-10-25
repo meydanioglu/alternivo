@@ -250,6 +250,16 @@ internal sealed class SponsorStatConfiguration : IEntityTypeConfiguration<Sponso
     }
 }
 
+internal sealed class SeoSnapshotConfiguration : IEntityTypeConfiguration<SeoSnapshot>
+{
+    public void Configure(EntityTypeBuilder<SeoSnapshot> b)
+    {
+        b.ToTable("SeoSnapshots");
+        b.Property(x => x.MetricsJson).HasColumnType("jsonb").IsRequired();
+        b.HasIndex(x => x.Day).IsUnique();
+    }
+}
+
 internal sealed class FoundingVendorConfiguration : IEntityTypeConfiguration<FoundingVendor>
 {
     public void Configure(EntityTypeBuilder<FoundingVendor> b)

@@ -40,7 +40,7 @@ export const GUIDES: Guide[] = [
       { heading: "5. Publish and share", body: ["Hosted platforms give you a share link. For exported HTML5 builds, upload to your own site or a game portal and add a short description and screenshots."] },
     ],
     bestLinks: ["ai-game-creators-for-browser-games", "ai-tools-for-html5-games", "prompt-to-game-ai-tools", "ai-game-asset-generators"],
-    tools: ["rosebud", "astrocade", "gdevelop", "phaser"],
+    tools: ["rosebud-ai", "astrocade", "gdevelop", "phaser"],
     updated: UPDATED,
   },
   {

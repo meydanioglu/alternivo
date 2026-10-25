@@ -4,11 +4,21 @@ import { canonicalPair } from "@/content/keyword-targets";
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /**
- * Real 308 redirects for comparison URLs that are reversed or use keyword-plan names (e.g. /compare/lovable-vs-base44
- * → /compare/base44-vs-lovable). Redirecting inside a streamed page would answer 200 with a client-side redirect.
+ * Real 308 redirects for URL normalisation, so duplicates never answer 200:
+ * - slugs are lowercase (/software/Notion → /software/notion);
+ * - comparison pairs use one canonical order and catalog slugs (/compare/lovable-vs-base44 → /compare/base44-vs-lovable).
+ * Redirecting inside a streamed page would answer 200 with a client-side redirect instead.
  */
 export function proxy(request: NextRequest) {
-  const pair = request.nextUrl.pathname.slice("/compare/".length);
+  const { pathname } = request.nextUrl;
+  if (pathname !== pathname.toLowerCase()) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname.toLowerCase();
+    return NextResponse.redirect(url, 308);
+  }
+
+  if (!pathname.startsWith("/compare/")) return NextResponse.next();
+  const pair = pathname.slice("/compare/".length);
   const slugs = pair.split("-vs-");
   if (slugs.length !== 2 || !slugs.every((s) => SLUG.test(s)) || slugs[0] === slugs[1]) return NextResponse.next();
   const canonical = canonicalPair(slugs[0]!, slugs[1]!);
@@ -18,4 +28,6 @@ export function proxy(request: NextRequest) {
   return NextResponse.redirect(url, 308);
 }
 
-export const config = { matcher: "/compare/:pair" };
+export const config = {
+  matcher: ["/software/:path*", "/category/:path*", "/compare/:path*", "/best/:path*", "/guides/:path*", "/alternatives/:path*"],
+};

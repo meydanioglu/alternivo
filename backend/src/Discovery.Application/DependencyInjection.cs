@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddScoped<ContentService>();
         services.AddScoped<Community.MakerService>();
         services.AddScoped<Community.SponsorService>();
+        services.AddScoped<Admin.QualityService>();
         return services;
     }
 }

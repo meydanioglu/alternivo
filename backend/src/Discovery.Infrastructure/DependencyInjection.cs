@@ -65,6 +65,7 @@ public static class DependencyInjection
         services.AddScoped<GoogleSignIn>();
         services.AddScoped<Content.ContentGenerator>();
         services.AddHostedService<Content.ContentWorker>();
+        services.AddHostedService<Seo.SeoSnapshotWorker>();
         if (configuration.GetValue("Import:WorkerEnabled", true))
         {
             services.AddHostedService<ImportWorker>();

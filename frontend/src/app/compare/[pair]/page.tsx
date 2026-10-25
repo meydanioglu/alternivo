@@ -35,7 +35,8 @@ const names = (apps: CompareApplication[]) => apps.map((a) => a.summary.name).jo
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { pair } = await params;
   const data = await load(pair);
-  const title = `${names(data.applications)}: Features, Pricing & Platforms Compared`;
+  // Short enough to show in full in results ("A vs B" is also how people search).
+  const title = `${names(data.applications)}: Which Is Better?`;
   return pageMetadata({
     title,
     description: `${names(data.applications)} side by side: pricing, license, supported platforms, self-hosting and ${data.featureMatrix.length} features compared.`,

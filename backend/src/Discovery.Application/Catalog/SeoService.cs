@@ -81,11 +81,17 @@ public sealed class SeoService(
                     return [];
                 }
 
+                // Same rule as the comparison page (ComparisonPolicy): curated links, or automatic links backed by shared features/tags.
                 var rows = await (
                         from r in db.AlternativeRelationships
                         where r.Status == ModerationStatus.Approved
                         join s in visible.Where(x => !x.NeedsContentReview) on r.SourceApplicationId equals s.Id
                         join a in visible.Where(x => !x.NeedsContentReview) on r.AlternativeApplicationId equals a.Id
+                        where r.Source != RelationshipSource.Import
+                            || db.ApplicationFeatures.Any(f1 => f1.ApplicationId == s.Id
+                                && db.ApplicationFeatures.Any(f2 => f2.ApplicationId == a.Id && f2.FeatureId == f1.FeatureId))
+                            || db.ApplicationTags.Any(t1 => t1.ApplicationId == s.Id
+                                && db.ApplicationTags.Any(t2 => t2.ApplicationId == a.Id && t2.TagId == t1.TagId))
                         select new { S = s.Slug, A = a.Slug, SU = s.UpdatedAt, AU = a.UpdatedAt })
                     .ToListAsync(ct);
                 return rows

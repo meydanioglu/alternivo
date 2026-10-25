@@ -160,3 +160,12 @@ public class BillingEntitlement
 
     public bool IsActive(DateTimeOffset now) => !IsCanceled && (Expiration is null || Expiration > now);
 }
+
+/// <summary>Daily internal SEO metrics (our own counts, not search-engine data), for day-over-day comparisons.</summary>
+public class SeoSnapshot
+{
+    public Guid Id { get; set; } = Guid.CreateVersion7();
+    public DateOnly Day { get; set; }
+    public required string MetricsJson { get; set; }
+    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+}

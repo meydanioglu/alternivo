@@ -397,20 +397,23 @@ public sealed class CatalogService(
             .ToList();
 
         var ids = ordered.Select(a => a.Id).ToList();
-        var related = await db.AlternativeRelationships.AnyAsync(r =>
-            r.Status == ModerationStatus.Approved
-            && ids.Contains(r.SourceApplicationId) && ids.Contains(r.AlternativeApplicationId), ct);
-        var shareCategory = ordered
-            .Select(a => a.Categories.Select(c => c.CategoryId).ToHashSet())
+        var relationSources = await db.AlternativeRelationships
+            .Where(r => r.Status == ModerationStatus.Approved && ids.Contains(r.SourceApplicationId) && ids.Contains(r.AlternativeApplicationId))
+            .Select(r => r.Source)
+            .ToListAsync(ct);
+        var sharedFeatures = matrix.Any(r => r.PresentIn.Count == ordered.Count);
+        var sharedTags = ordered
+            .Select(a => a.Tags.Select(t => t.TagId).ToHashSet())
             .Aggregate((x, y) => x.Intersect(y).ToHashSet())
             .Count > 0;
+        var comparable = ComparisonPolicy.IsIndexable(relationSources, sharedFeatures || sharedTags);
 
         return new CompareDto(
             ComparisonSlug.Canonical(ordered.Select(a => a.Slug)),
             ordered.Select(a => new CompareApplicationDto(a.ToSummary(), a.WebsiteUrl, a.Developer, a.ReleasedOn, a.CategoryRefs(), a.FeatureRefs())).ToList(),
             matrix,
             matrix.Where(r => r.PresentIn.Count == ordered.Count).Select(r => r.Name).ToList(),
-            ordered.Count == 2 && (related || shareCategory) && ordered.All(a => !a.NeedsContentReview));
+            ordered.Count == 2 && comparable && ordered.All(a => !a.NeedsContentReview));
     }
 
     /// <summary>Popular canonical comparison pairs derived from approved relationships between visible apps.</summary>
@@ -471,4 +474,15 @@ public sealed class CatalogService(
             .ToListAsync(ct);
         return apps.Select(a => a.ToSummary()).ToList();
     }
+}
+
+/// <summary>
+/// Which comparison pages are worth indexing. A pair qualifies when an editor or the community linked the two products,
+/// or when an automatic same-category link is backed by shared features/tags. Category membership alone is not enough,
+/// so broad categories do not produce thousands of near-identical comparison URLs.
+/// </summary>
+public static class ComparisonPolicy
+{
+    public static bool IsIndexable(IReadOnlyCollection<RelationshipSource> relationshipSources, bool sharesFeaturesOrTags) =>
+        relationshipSources.Any(s => s != RelationshipSource.Import) || (relationshipSources.Count > 0 && sharesFeaturesOrTags);
 }

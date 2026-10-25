@@ -117,6 +117,16 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         return NoContent();
     }
 
+    // ----- Data quality & SEO reporting (moderators) -----
+
+    [HttpGet("quality")]
+    [Authorize(Policy = Policies.Moderation)]
+    public Task<QualityReportDto> Quality([FromServices] QualityService quality, CancellationToken ct) => quality.ReportAsync(ct);
+
+    [HttpGet("seo/daily")]
+    [Authorize(Policy = Policies.Moderation)]
+    public Task<DailySeoReportDto> SeoDaily([FromServices] QualityService quality, CancellationToken ct) => quality.DailyReportAsync(ct);
+
     // ----- Payments (admins) -----
 
     [HttpGet("payments")]

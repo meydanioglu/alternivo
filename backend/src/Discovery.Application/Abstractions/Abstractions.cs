@@ -38,6 +38,7 @@ public interface IAppDbContext
     DbSet<SponsorshipCampaign> SponsorshipCampaigns { get; }
     DbSet<SponsorStat> SponsorStats { get; }
     DbSet<FoundingVendor> FoundingVendors { get; }
+    DbSet<SeoSnapshot> SeoSnapshots { get; }
     Microsoft.EntityFrameworkCore.Infrastructure.DatabaseFacade Database { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);

@@ -12,7 +12,6 @@ export const SLUG_ALIASES: Record<string, string> = {
   "meshy-ai": "meshy",
   "scenario-ai": "scenario",
   "tripo-ai": "tripo",
-  "rosebud-ai": "rosebud",
   veo: "google-veo",
   godot: "godot-engine",
 };
@@ -67,7 +66,7 @@ export const ALTERNATIVE_TARGETS: Record<string, string[]> = {
   "roblox-studio": ["ai-game-maker-with-multiplayer", "free-no-code-game-development-platforms"],
   "roo-code": ["open-source-ai-coding-agents", "vscode-ai-extensions"],
   rork: ["ai-mobile-app-generators"],
-  rosebud: ["prompt-to-game-ai-tools", "ai-game-maker-with-multiplayer", "ai-tools-for-mobile-game-development"],
+  "rosebud-ai": ["prompt-to-game-ai-tools", "ai-game-maker-with-multiplayer", "ai-tools-for-mobile-game-development"],
   runway: ["ai-video-generators", "ai-animation-generators"],
   scenario: ["ai-game-asset-generators", "ai-image-generators-for-games"],
   "seele-ai": ["prompt-to-game-ai-tools", "ai-tools-for-3d-games"],

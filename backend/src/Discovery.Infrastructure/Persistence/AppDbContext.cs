@@ -44,6 +44,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<SponsorshipCampaign> SponsorshipCampaigns => Set<SponsorshipCampaign>();
     public DbSet<SponsorStat> SponsorStats => Set<SponsorStat>();
     public DbSet<FoundingVendor> FoundingVendors => Set<FoundingVendor>();
+    public DbSet<SeoSnapshot> SeoSnapshots => Set<SeoSnapshot>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
