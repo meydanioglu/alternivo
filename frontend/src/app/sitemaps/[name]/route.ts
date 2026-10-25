@@ -15,19 +15,16 @@ const API_TYPES = new Set(["software", "alternatives", "categories", "comparison
 async function keywordEntries() {
   const entries: { path: string; lastModified?: string }[] = [{ path: "/best" }, { path: "/guides" }];
   for (const g of GUIDES) entries.push({ path: `/guides/${g.slug}`, lastModified: g.updated });
-  const best = await Promise.all(BEST_PAGES.map(async (p) => ((await loadBest(p)).indexable ? `/best/${p.slug}` : null)));
-  for (const path of best) if (path) entries.push({ path });
+  // Sequential on purpose: each list loads several products, and fanning out 80 lists at once floods the API.
+  for (const p of BEST_PAGES) if ((await loadBest(p)).indexable) entries.push({ path: `/best/${p.slug}` });
 
   const listed = new Set((await api.sitemap("comparisons").catch(() => [])).map((e) => e.path));
   const pairs = [...new Set(COMPARE_TARGETS.map(([a, b]) => canonicalPair(a, b)))];
-  const compare = await Promise.all(
-    pairs.map(async (pair) => {
-      const path = `/compare/${pair}`;
-      if (listed.has(path)) return null;
-      return api.compare(pair).then((c) => (c.isIndexable ? path : null), () => null);
-    }),
-  );
-  for (const path of compare) if (path) entries.push({ path });
+  for (const pair of pairs) {
+    const path = `/compare/${pair}`;
+    if (listed.has(path)) continue;
+    if (await api.compare(pair).then((c) => c.isIndexable, () => false)) entries.push({ path });
+  }
   return entries;
 }
 

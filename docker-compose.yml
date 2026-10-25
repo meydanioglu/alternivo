@@ -37,7 +37,7 @@ services:
         condition: service_healthy
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=${POSTGRES_DB:-discovery};Username=${POSTGRES_USER:-discovery};Password=${POSTGRES_PASSWORD}
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=${POSTGRES_DB:-discovery};Username=${POSTGRES_USER:-discovery};Password=${POSTGRES_PASSWORD};Maximum Pool Size=40;Connection Idle Lifetime=60
       ConnectionStrings__Redis: redis:6379
       Api__InternalKey: ${API_INTERNAL_KEY:?Set API_INTERNAL_KEY in .env}
       Admin__Email: ${ADMIN_EMAIL:-}

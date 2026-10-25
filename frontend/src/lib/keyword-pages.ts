@@ -12,14 +12,16 @@ export interface ListedApp {
 /** Loads the published catalog entries for a list of slugs, in order; missing or unpublished ones are skipped. */
 export async function loadApps(slugs: string[]): Promise<ListedApp[]> {
   const unique = [...new Set(slugs)];
-  const rows = await Promise.all(
-    unique.map((slug) =>
+  // Small batches keep concurrent API/database work bounded.
+  const rows: (ListedApp | null)[] = [];
+  for (let i = 0; i < unique.length; i += 4) {
+    rows.push(...(await Promise.all(unique.slice(i, i + 4).map((slug) =>
       api.application(slug).then(
         (d) => ({ summary: d.summary, indexable: d.indexable !== false, categories: d.categories.map((c) => c.name) }),
         () => null,
       ),
-    ),
-  );
+    ))));
+  }
   return rows.filter((r): r is ListedApp => r !== null);
 }
 
