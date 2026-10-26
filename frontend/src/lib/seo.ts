@@ -149,19 +149,37 @@ export function itemListJsonLd(name: string, apps: ApplicationSummary[], offset 
   };
 }
 
+/** Our own identity for search engines and answer engines: who Alternivo is and what it does. */
+export const organizationJsonLd = () => ({
+  "@type": "Organization",
+  "@id": `${site.url}/#organization`,
+  name: site.name,
+  url: site.url,
+  logo: { "@type": "ImageObject", url: absoluteUrl("/brand/app-icon-512.png"), width: 512, height: 512 },
+  image: absoluteUrl("/opengraph-image.png"),
+  description:
+    "Alternivo is a software discovery platform for finding alternatives to apps and AI tools and comparing them by features, pricing, platforms and license. Makers can submit software and AI tools for free.",
+  slogan: site.tagline,
+  knowsAbout: ["Software alternatives", "AI tools", "Software comparison", "SaaS", "Open-source software", "AI tool directory"],
+});
+
 export const websiteJsonLd = () => ({
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "WebSite",
+      "@id": `${site.url}/#website`,
       name: site.name,
       url: site.url,
+      description: site.description,
+      inLanguage: "en",
+      publisher: { "@id": `${site.url}/#organization` },
       potentialAction: {
         "@type": "SearchAction",
         target: { "@type": "EntryPoint", urlTemplate: `${site.url}/search?q={search_term_string}` },
         "query-input": "required name=search_term_string",
       },
     },
-    { "@type": "Organization", name: site.name, url: site.url },
+    organizationJsonLd(),
   ],
 });

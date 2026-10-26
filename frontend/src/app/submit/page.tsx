@@ -55,6 +55,9 @@ export default function SubmitLandingPage() {
           </Link>
         </div>
         <p className="mt-3 text-xs text-muted">A free account is required, and every listing is reviewed and approved by our team.</p>
+        <p className="mt-1 text-xs text-muted">
+          Building an AI product? <Link href="/submit-ai-tool" className="text-accent underline">Submit your AI tool</Link>.
+        </p>
       </header>
 
       <section className="mt-16" aria-labelledby="why">

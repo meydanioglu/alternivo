@@ -111,6 +111,7 @@ const FOOTER_COLUMNS = [
     title: "For makers",
     links: [
       { href: "/submit", label: "Submit a product" },
+      { href: "/submit-ai-tool", label: "Submit an AI tool" },
       { href: "/maker", label: "Maker dashboard" },
       { href: "/pricing", label: "Pricing" },
       { href: "/launches/archive", label: "Launch archive" },

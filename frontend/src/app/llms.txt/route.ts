@@ -27,6 +27,7 @@ export async function GET() {
     `- [Leaderboard](${absoluteUrl("/leaderboard")}): the most upvoted software`,
     `- [Best lists](${absoluteUrl("/best")}): editorial "best tools for X" lists with selection criteria`,
     `- [Guides](${absoluteUrl("/guides")}): how-to guides for building apps and games with AI`,
+    `- [Submit an AI tool](${absoluteUrl("/submit-ai-tool")}): makers can list AI tools and software for free; reviewed listings with a followed website link`,
     "",
     "## Best lists",
     ...(Object.keys(GROUP_LABELS) as (keyof typeof GROUP_LABELS)[]).flatMap((g) => [

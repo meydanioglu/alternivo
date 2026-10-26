@@ -8,8 +8,10 @@ import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { SponsoredLabel } from "@/components/catalog/application-card";
 import { Container, EmptyState } from "@/components/layout/page-parts";
 import { AssignForm } from "@/components/maker/assign-form";
+import { BadgeEmbed } from "@/components/maker/badge-embed";
 import { CampaignForm, CheckoutButton } from "@/components/maker/maker-forms";
 import { buttonClass, cx } from "@/components/ui/styles";
+import { site } from "@/config/site";
 import { api } from "@/lib/api/client";
 import type { ApplicationSummary, Category } from "@/lib/api/types";
 import { billingConfig, formatPrice, pricing } from "@/lib/auth/integrations";
@@ -229,6 +231,22 @@ export default async function MakerPage({ searchParams }: Props) {
                 );
               })}
             </ul>
+          )}
+          {data.products.length > 0 && (
+            <section aria-labelledby="badge" className="rounded-[10px] border border-border bg-surface p-5">
+              <h2 id="badge" className="font-semibold tracking-tight">Show the &ldquo;Featured on Alternivo&rdquo; badge</h2>
+              <p className="mt-1 text-sm text-muted">
+                Add the badge to your website or README. It links to your listing so visitors can read reviews and compare you with alternatives.
+              </p>
+              <div className="mt-5 flex flex-col gap-8">
+                {data.products.map((p) => (
+                  <div key={p.application.id}>
+                    <p className="mb-2 text-sm font-medium">{p.application.name}</p>
+                    <BadgeEmbed siteUrl={site.url} slug={p.application.slug} name={p.application.name} />
+                  </div>
+                ))}
+              </div>
+            </section>
           )}
           <Submissions data={data} can={can} priceOf={priceOf} />
           <p className="text-sm text-muted">
