@@ -78,3 +78,29 @@ export async function acceptTermsAction(_: FormState, form: FormData): Promise<F
   }
   redirect(`/maker/pay/${encodeURIComponent(orderId)}`);
 }
+
+/** Checks the maker's homepage for the Alternivo badge (shortens the free review). */
+export async function verifyBadgeAction(_: FormState, form: FormData): Promise<FormState> {
+  const id = String(form.get("submissionId") ?? "");
+  try {
+    await userApi(`/api/v1/maker/submissions/${encodeURIComponent(id)}/share/badge`, { method: "POST" });
+  } catch (error) {
+    return { error: errorText(error, "We could not check your site. Please try again.") };
+  }
+  revalidatePath("/maker");
+  return { ok: "Badge found. Your submission will be reviewed within 7 days." };
+}
+
+/** Records a link to the maker's post about Alternivo (shortens the free review; checked by a moderator). */
+export async function sharePostAction(_: FormState, form: FormData): Promise<FormState> {
+  const id = String(form.get("submissionId") ?? "");
+  const url = String(form.get("url") ?? "").trim();
+  if (!url) return { error: "Paste the link to your post." };
+  try {
+    await userApi(`/api/v1/maker/submissions/${encodeURIComponent(id)}/share/post`, { method: "POST", body: { url } });
+  } catch (error) {
+    return { error: errorText(error, "Could not save the link.") };
+  }
+  revalidatePath("/maker");
+  return { ok: "Thanks! Your submission will be reviewed within 7 days. We check the post during review." };
+}

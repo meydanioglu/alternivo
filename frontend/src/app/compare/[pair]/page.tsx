@@ -12,6 +12,7 @@ import { itemListJsonLd, pageMetadata } from "@/lib/seo";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { BreadcrumbNavigation, Container } from "@/components/layout/page-parts";
 import { JsonLd } from "@/components/seo/json-ld";
+import { outboundUrl } from "@/lib/outbound";
 import { buttonClass } from "@/components/ui/styles";
 
 export const dynamic = "force-dynamic";
@@ -199,7 +200,7 @@ export default async function ComparePairPage({ params }: Props) {
                 Alternatives
               </Link>
               {a.websiteUrl && (
-                <a href={a.websiteUrl} target="_blank" rel="noopener" className={buttonClass("ghost", "sm")}>
+                <a href={outboundUrl(a.websiteUrl)} target="_blank" rel="noopener" className={buttonClass("ghost", "sm")}>
                   Website <ExternalLink className="size-3.5" aria-hidden="true" />
                 </a>
               )}

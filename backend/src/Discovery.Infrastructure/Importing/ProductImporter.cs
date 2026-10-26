@@ -353,7 +353,7 @@ public sealed partial class ProductImporter(
         return Encoding.UTF8.GetString(bytes);
     }
 
-    private static async Task<byte[]> ReadBytesLimitedAsync(HttpResponseMessage response, int limit, CancellationToken ct)
+    internal static async Task<byte[]> ReadBytesLimitedAsync(HttpResponseMessage response, int limit, CancellationToken ct)
     {
         await using var stream = await response.Content.ReadAsStreamAsync(ct);
         using var buffer = new MemoryStream();

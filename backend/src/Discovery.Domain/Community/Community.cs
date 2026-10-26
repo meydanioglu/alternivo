@@ -89,6 +89,10 @@ public class Submission : Entity
     public DateTimeOffset? PriorityPaidAt { get; set; }
     /// <summary>Promised review date: 15 days after submission (free) or 24 hours after payment (Fast Review).</summary>
     public DateTimeOffset? ReviewDeadline { get; set; }
+    /// <summary>How the maker shared Alternivo for a faster free review (badge on their site or a public post).</summary>
+    public ShareProofKind ShareProof { get; set; }
+    public string? ShareProofUrl { get; set; }
+    public DateTimeOffset? ShareProofAt { get; set; }
     public DateTimeOffset? ReviewStartedAt { get; set; }
     /// <summary>Moderators only; never shown to the submitter.</summary>
     public string? InternalNote { get; set; }
@@ -104,4 +108,13 @@ public class Report : Entity
     public ReportStatus Status { get; set; } = ReportStatus.Open;
     public Guid? ResolvedByUserId { get; set; }
     public DateTimeOffset? ResolvedAt { get; set; }
+}
+
+public enum ShareProofKind
+{
+    None = 0,
+    /// <summary>Our badge links to Alternivo from the product's homepage (checked by fetching the page).</summary>
+    Badge = 1,
+    /// <summary>A public post on X or Substack (checked by a moderator during review).</summary>
+    Post = 2,
 }

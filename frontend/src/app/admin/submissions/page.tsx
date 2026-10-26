@@ -19,6 +19,8 @@ interface Item {
     priorityPaidAt: string | null;
     reviewDeadline: string | null;
     overdue: boolean;
+    shareProof: "none" | "badge" | "post";
+    shareProofUrl: string | null;
   };
   submitter: { email: string; displayName: string | null; handle: string | null } | null;
 }
@@ -138,6 +140,10 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
               <td className="px-4 py-3">
                 <span className={chipClass(st.color, "soft", "sm")}>{st.label}</span>
                 {s.isPriority && <span className={chipClass("accent", "soft", "sm", "ml-1")}>Fast Review · ödendi</span>}
+                {s.shareProof === "badge" && <span className={chipClass("success", "soft", "sm", "ml-1")}>Rozet doğrulandı · 7 gün</span>}
+                {s.shareProof === "post" && s.shareProofUrl && (
+                  <a href={s.shareProofUrl} target="_blank" rel="noopener nofollow" className={chipClass("warning", "soft", "sm", "ml-1")}>Paylaşım · kontrol et ↗</a>
+                )}
               </td>
               <td className="whitespace-nowrap px-4 py-3 text-xs text-muted">
                 <p>Gönderim: {dateTime(s.createdAt)}</p>

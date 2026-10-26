@@ -55,7 +55,10 @@ public sealed record AdminSubmissionRow(
     DateTimeOffset? ReviewDeadline = null,
     bool Overdue = false,
     string? InternalNote = null,
-    DateTimeOffset? ReviewStartedAt = null);
+    DateTimeOffset? ReviewStartedAt = null,
+    /// <summary>none | badge | post — the maker shared Alternivo for a 7-day review; posts must be checked by hand.</summary>
+    string ShareProof = "none",
+    string? ShareProofUrl = null);
 
 public sealed record AdminRelationshipRow(
     Guid Id,

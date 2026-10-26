@@ -35,6 +35,8 @@ public sealed record PlanDefinition(
 public static class PricingCatalog
 {
     public const int FreeReviewDays = 15;
+    /// <summary>Free submissions whose maker added our badge or posted about us are reviewed within this many days.</summary>
+    public const int SharedReviewDays = 7;
     public const int FastReviewHours = 24;
     public const int FoundingVendorLimit = 100;
     /// <summary>Unpaid campaign reservations hold inventory this long, so two sponsors cannot pay for the last slot.</summary>

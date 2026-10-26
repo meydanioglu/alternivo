@@ -19,6 +19,7 @@ import { getCurrentUser, userApi } from "@/lib/auth/session";
 import { BreadcrumbNavigation, Container } from "@/components/layout/page-parts";
 import { SectionNav } from "@/components/layout/section-nav";
 import { JsonLd } from "@/components/seo/json-ld";
+import { outboundUrl } from "@/lib/outbound";
 import { buttonClass } from "@/components/ui/styles";
 
 export const dynamic = "force-dynamic";
@@ -62,7 +63,7 @@ function Facts({ app }: { app: ApplicationDetail }) {
   if (app.websiteUrl)
     rows.push([
       "Website",
-      <a key="w" href={app.websiteUrl} target="_blank" rel="noopener" className="break-all text-accent hover:underline">
+      <a key="w" href={outboundUrl(app.websiteUrl)} target="_blank" rel="noopener" className="break-all text-accent hover:underline">
         {new URL(app.websiteUrl).hostname.replace(/^www\./, "")}
       </a>,
     ]);
@@ -201,7 +202,7 @@ export default async function SoftwarePage({ params }: Props) {
                 Find alternatives <ArrowRight className="size-4" aria-hidden="true" />
               </Link>
               {app.websiteUrl && (
-                <a href={app.websiteUrl} target="_blank" rel="noopener" className={buttonClass("outline", "md", "lg:w-full")}>
+                <a href={outboundUrl(app.websiteUrl)} target="_blank" rel="noopener" className={buttonClass("outline", "md", "lg:w-full")}>
                   Visit website <ExternalLink className="size-4" aria-hidden="true" />
                 </a>
               )}

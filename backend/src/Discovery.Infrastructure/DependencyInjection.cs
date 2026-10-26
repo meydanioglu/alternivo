@@ -55,6 +55,7 @@ public static class DependencyInjection
             })
             .ConfigurePrimaryHttpMessageHandler(ProductImporter.CreateHandler);
         services.AddScoped<ProductImporter>();
+        services.AddScoped<Community.ShareProofVerifier>();
 
         services.AddHttpClient(Content.ContentGenerator.OpenAiClientName, c => c.Timeout = TimeSpan.FromMinutes(3));
         services.AddScoped<Content.AiSettings>();

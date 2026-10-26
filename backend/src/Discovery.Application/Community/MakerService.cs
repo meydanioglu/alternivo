@@ -3,6 +3,7 @@ using Discovery.Application.Catalog;
 using Discovery.Application.Common;
 using Discovery.Application.Contracts;
 using Discovery.Domain;
+using Discovery.Domain.Community;
 using Discovery.Domain.Operations;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,7 +23,10 @@ public sealed record MakerSubmissionDto(
     /// <summary>none | awaiting | paid</summary>
     string PaymentStatus,
     DateTimeOffset? ReviewDeadline,
-    bool CanUpgrade);
+    bool CanUpgrade,
+    /// <summary>none | badge | post</summary>
+    string ShareProof = "none",
+    string? ShareProofUrl = null);
 
 public sealed record MakerProductDto(
     ApplicationSummaryDto Application,
@@ -89,6 +93,33 @@ public sealed record PricingDto(IReadOnlyList<PlanDto> Plans, string Currency, i
 /// </summary>
 public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogService catalog, TimeProvider clock)
 {
+    /// <summary>
+    /// Applies a share proof to a free, open submission: shortens its review deadline to <see cref="PricingCatalog.SharedReviewDays"/>.
+    /// Paid (Fast Review) submissions already have a shorter deadline and are left unchanged.
+    /// </summary>
+    public async Task ApplyShareProofAsync(Guid userId, Guid submissionId, ShareProofKind kind, string url, CancellationToken ct)
+    {
+        var s = await OpenFreeSubmissionAsync(userId, submissionId, ct);
+        var now = clock.GetUtcNow();
+        s.ShareProof = kind;
+        s.ShareProofUrl = url;
+        s.ShareProofAt = now;
+        s.ReviewDeadline = ShareProof.SharedDeadline(s.CreatedAt, s.ReviewDeadline, now, PricingCatalog.SharedReviewDays);
+        s.UpdatedAt = now;
+        Audit(userId, $"submission.shared-{kind.ToString().ToLowerInvariant()}", "Submission", s.Id, new { url });
+        await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>A submission of this maker that is waiting for a free review; throws otherwise.</summary>
+    public async Task<Submission> OpenFreeSubmissionAsync(Guid userId, Guid submissionId, CancellationToken ct)
+    {
+        var s = await db.Submissions.FirstOrDefaultAsync(x => x.Id == submissionId && x.SubmittedByUserId == userId, ct)
+            ?? throw new NotFoundException("Submission", submissionId.ToString());
+        if (!Reviewable.Contains(s.Status)) throw new ConflictException("This submission has already been reviewed.");
+        if (s.IsPriority) throw new ConflictException("This submission already has Fast Review.");
+        return s;
+    }
+
     private static readonly SubmissionStatus[] Reviewable = [SubmissionStatus.Pending, SubmissionStatus.NeedsChanges, SubmissionStatus.InReview];
 
     /// <summary>Products a member may promote: the published listings created from their approved submissions.</summary>
@@ -153,7 +184,8 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
                 s.IsPriority ? "fast" : "standard",
                 s.IsPriority ? "paid" : openIntents.Contains(s.Id) ? "awaiting" : "none",
                 s.ReviewDeadline ?? s.CreatedAt.AddDays(PricingCatalog.FreeReviewDays),
-                !s.IsPriority && Reviewable.Contains(s.Status))).ToList(),
+                !s.IsPriority && Reviewable.Contains(s.Status),
+                s.ShareProof.ToString().ToLowerInvariant(), s.ShareProofUrl)).ToList(),
             apps.Where(a => summaries.ContainsKey(a.Id))
                 .Select(a => new MakerProductDto(summaries[a.Id], a.FeaturedUntil, a.LaunchBoosted, a.PublishedAt, a.GrowthUntil)).ToList(),
             entitlements.Select(e =>

@@ -215,7 +215,8 @@ public sealed class AdminService(
         return new AdminSubmissionRow(x.Id, x.Name, x.WebsiteUrl, x.Description, x.CategorySlug,
             PricingNames.ToNames(x.Pricing), x.LicenseSlug, x.PlatformSlugs, x.Tags, x.SuggestedAlternativeSlugs,
             x.Status.ToString(), x.ModeratorNote, x.PossibleDuplicateApplicationId, x.SubmittedByUserId, x.CreatedAt,
-            x.IsPriority, x.PriorityPaidAt, x.ReviewDeadline, open && x.ReviewDeadline < now, x.InternalNote, x.ReviewStartedAt);
+            x.IsPriority, x.PriorityPaidAt, x.ReviewDeadline, open && x.ReviewDeadline < now, x.InternalNote, x.ReviewStartedAt,
+            x.ShareProof.ToString().ToLowerInvariant(), x.ShareProofUrl);
     }
 
     public async Task<IReadOnlyList<AuditLog>> SubmissionHistoryAsync(Guid id, CancellationToken ct) =>

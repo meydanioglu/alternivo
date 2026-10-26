@@ -19,6 +19,7 @@ export const revalidate = 300;
 const FAQ = [
   { question: "Is submitting a product free?", answer: "Yes. Submitting is free and always will be. Every product is reviewed against the same editorial guidelines." },
   { question: "How long does standard review take?", answer: "Up to 15 days from submission. Most submissions are reviewed sooner." },
+  { question: "Can I get a faster review without paying?", answer: "Yes. After submitting, add our badge to your homepage or post about your listing on X or Substack from your Maker dashboard, and your submission is reviewed within 7 days instead of 15. It is optional; free listing never depends on it." },
   { question: "What do I get with Fast Review?", answer: "Your submission moves to the priority queue and is reviewed within 24 hours of a confirmed payment. It is a one-time fee per submission, not a subscription." },
   { question: "Does Fast Review guarantee approval?", answer: "No. Fast Review only changes how quickly we review. The same approval standards apply, and approval is never guaranteed. If we miss the 24-hour window you can ask for a full refund." },
   { question: "Can I upgrade an existing submission?", answer: "Yes. While a submission is waiting for review you can buy Fast Review for it from your Maker dashboard. The 24 hours start when the payment is confirmed." },

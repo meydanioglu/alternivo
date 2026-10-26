@@ -319,6 +319,7 @@ internal sealed class SubmissionConfiguration : IEntityTypeConfiguration<Submiss
         b.ToTable("Submissions");
         b.Property(x => x.Name).HasMaxLength(100).IsRequired();
         b.Property(x => x.WebsiteUrl).HasMaxLength(2048).IsRequired();
+        b.Property(x => x.ShareProofUrl).HasMaxLength(2048);
         b.Property(x => x.Description).HasMaxLength(3000).IsRequired();
         b.Property(x => x.CategorySlug).HasMaxLength(120);
         b.Property(x => x.LicenseSlug).HasMaxLength(60);

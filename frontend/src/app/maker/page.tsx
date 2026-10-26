@@ -9,6 +9,7 @@ import { SponsoredLabel } from "@/components/catalog/application-card";
 import { Container, EmptyState } from "@/components/layout/page-parts";
 import { AssignForm } from "@/components/maker/assign-form";
 import { BadgeEmbed } from "@/components/maker/badge-embed";
+import { ShareBoost } from "@/components/maker/share-boost";
 import { CampaignForm, CheckoutButton } from "@/components/maker/maker-forms";
 import { buttonClass, cx } from "@/components/ui/styles";
 import { site } from "@/config/site";
@@ -33,6 +34,7 @@ interface MakerDashboard {
     paymentStatus: "none" | "awaiting" | "paid";
     reviewDeadline: string | null;
     canUpgrade: boolean;
+    shareProof: "none" | "badge" | "post";
   }[];
   products: { application: ApplicationSummary; featuredUntil: string | null; growthUntil: string | null; publishedAt: string | null }[];
   entitlements: {
@@ -448,11 +450,12 @@ function Submissions({ data, can, priceOf }: { data: MakerDashboard; can: (p: st
                   <span className="ml-auto text-xs text-muted">Submitted {date(s.createdAt)}</span>
                 </div>
                 <p className="text-xs text-muted">
-                  {s.reviewMethod === "fast" ? "Fast Review (paid)" : "Standard review (free)"}
+                  {s.reviewMethod === "fast" ? "Fast Review (paid)" : s.shareProof !== "none" ? `Shared review (free, ${s.shareProof === "badge" ? "badge" : "post"})` : "Standard review (free)"}
                   {open && s.reviewDeadline && ` · review by ${date(s.reviewDeadline)}`}
                 </p>
                 {s.moderatorNote && <p className="text-muted">Note from the team: {s.moderatorNote}</p>}
                 {s.applicationSlug && <Link href={`/software/${s.applicationSlug}`} className="text-accent hover:underline">View listing</Link>}
+                {s.canUpgrade && s.shareProof === "none" && <ShareBoost submissionId={s.id} productName={s.name} siteUrl={site.url} />}
                 {s.canUpgrade && can("fastReview") && (
                   <div className="self-start">
                     <CheckoutButton plan="fastReview" targetId={s.id} label={`Speed up your review — ${priceOf("fastReview")}`} />

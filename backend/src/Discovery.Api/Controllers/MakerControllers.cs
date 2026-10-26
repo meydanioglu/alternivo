@@ -78,6 +78,24 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
         return new { o.Id, o.PlanKey, status = o.Status.ToString(), o.AmountMinor, o.Currency, o.CreatedAt, o.TermsAcceptedAt, o.TermsVersion };
     }
 
+    /// <summary>Checks the product's homepage for the Alternivo badge; a match shortens the free review to 7 days.</summary>
+    [HttpPost("submissions/{id:guid}/share/badge")]
+    [EnableRateLimiting(Policies.WritesRateLimit)]
+    public async Task<IActionResult> ShareBadge(Guid id, [FromServices] Discovery.Infrastructure.Community.ShareProofVerifier verifier, CancellationToken ct)
+    {
+        await verifier.VerifyBadgeAsync(current.RequireUserId(), id, ct);
+        return NoContent();
+    }
+
+    /// <summary>Records a link to a public post about Alternivo (checked by a moderator); shortens the free review to 7 days.</summary>
+    [HttpPost("submissions/{id:guid}/share/post")]
+    [EnableRateLimiting(Policies.WritesRateLimit)]
+    public async Task<IActionResult> SharePost(Guid id, SharePostRequest request, [FromServices] Discovery.Infrastructure.Community.ShareProofVerifier verifier, CancellationToken ct)
+    {
+        await verifier.SubmitPostAsync(current.RequireUserId(), id, request.Url, ct);
+        return NoContent();
+    }
+
     /// <summary>The buyer confirms the pre-contract information and distance sales agreement before the payment form opens.</summary>
     [HttpPost("orders/{id:guid}/accept-terms")]
     public async Task<IActionResult> AcceptTerms(Guid id, AcceptTermsRequest request, [FromServices] MakerService maker, CancellationToken ct)
@@ -90,6 +108,8 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
 public sealed record CheckoutRequest(string Plan, Guid? TargetId);
 
 public sealed record AcceptTermsRequest(string Version);
+
+public sealed record SharePostRequest(string? Url);
 
 [ApiController]
 [Route("api/v1/sponsored")]

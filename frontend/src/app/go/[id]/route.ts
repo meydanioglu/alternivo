@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { site } from "@/config/site";
+import { outboundUrl } from "@/lib/outbound";
 import { apiBaseUrl } from "@/lib/api/client";
 
 /** Sponsored outbound link: counts the click, then redirects to the product's website. Not indexable (robots + header). */
@@ -27,6 +28,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
     }
   }
 
-  const safe = target && /^https?:\/\//i.test(target) ? target : site.url;
+  const safe = target && /^https?:\/\//i.test(target) ? outboundUrl(target, "sponsored") : site.url;
   return new Response(null, { status: 302, headers: { location: safe, "x-robots-tag": "noindex, nofollow", "cache-control": "no-store" } });
 }

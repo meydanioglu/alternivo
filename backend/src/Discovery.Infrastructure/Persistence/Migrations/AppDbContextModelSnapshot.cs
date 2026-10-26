@@ -788,6 +788,16 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text[]");
 
+                    b.Property<int>("ShareProof")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset?>("ShareProofAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ShareProofUrl")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
