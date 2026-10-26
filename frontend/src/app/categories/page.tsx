@@ -17,49 +17,56 @@ export const metadata: Metadata = pageMetadata({
 
 export default async function CategoriesPage() {
   const tree = await api.categories();
-  const visible = tree.filter((c) => c.applicationCount > 0);
+  const all = flattenCategories(tree);
+  const groups = tree.filter((c) => c.applicationCount > 0 && c.children.some((x) => x.applicationCount > 0));
 
   return (
     <Container className="py-6">
       <BreadcrumbNavigation items={[{ name: "Home", path: "/" }, { name: "Categories", path: "/categories" }]} />
-      <h1 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">Software categories</h1>
-      <p className="mb-6 mt-1 text-muted">{flattenCategories(tree).length} categories, from AI agents to password managers.</p>
+      <header className="mb-10 mt-5 max-w-2xl">
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Software categories</h1>
+        <p className="mt-2 text-[15px] text-muted">
+          {all.filter((c) => c.count > 0).length} categories with listed products, from AI agents to password managers. Search or
+          browse by group.
+        </p>
+      </header>
 
-      <section className="mb-10">
-        <h2 className="mb-3 text-lg font-semibold">All categories</h2>
-        <CategoryDirectory categories={flattenCategories(tree)} />
+      {groups.length > 0 && (
+        <section aria-labelledby="groups" className="mb-14">
+          <h2 id="groups" className="mb-5 text-lg font-semibold tracking-tight">Browse by group</h2>
+          <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+            {groups.map((group) => (
+              <section key={group.slug}>
+                <h3 className="flex items-center gap-2 border-b border-border pb-2 font-medium">
+                  <CategoryIcon name={group.icon} className="size-4 text-muted" />
+                  <Link href={`/category/${group.slug}`} className="hover:underline">
+                    {group.name}
+                  </Link>
+                  <span className="ml-auto text-xs font-normal tabular-nums text-muted">{group.applicationCount}</span>
+                </h3>
+                <ul className="mt-2 flex flex-col text-sm">
+                  {group.children
+                    .filter((c) => c.applicationCount > 0)
+                    .slice(0, 8)
+                    .map((child) => (
+                      <li key={child.slug}>
+                        <Link href={`/category/${child.slug}`} className="flex justify-between gap-3 py-1 text-foreground/80 hover:text-foreground">
+                          <span className="truncate">{child.name}</span>
+                          <span className="tabular-nums text-muted">{child.applicationCount}</span>
+                        </Link>
+                      </li>
+                    ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section aria-labelledby="all">
+        <h2 id="all" className="mb-3 text-lg font-semibold tracking-tight">All categories</h2>
+        <CategoryDirectory categories={all} />
       </section>
-
-      <h2 className="mb-3 text-lg font-semibold">Popular groups</h2>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {visible.map((category) => (
-          <section key={category.slug} className="rounded-lg border border-border bg-surface p-4">
-            <h2 className="flex items-center gap-2 text-base font-semibold">
-              <CategoryIcon name={category.icon} className="size-5 text-accent" />
-              <Link href={`/category/${category.slug}`} className="hover:underline">
-                {category.name}
-              </Link>
-              <span className="ml-auto text-xs font-normal tabular-nums text-muted">{category.applicationCount}</span>
-            </h2>
-            {category.description && <p className="mt-1 text-sm text-muted">{category.description}</p>}
-            {category.children.some((c) => c.applicationCount > 0) && (
-              <ul className="mt-3 flex flex-col gap-1 text-sm">
-                {category.children
-                  .filter((c) => c.applicationCount > 0)
-                  .slice(0, 8)
-                  .map((child) => (
-                    <li key={child.slug} className="flex justify-between">
-                      <Link href={`/category/${child.slug}`} className="hover:text-accent hover:underline">
-                        {child.name}
-                      </Link>
-                      <span className="tabular-nums text-muted">{child.applicationCount}</span>
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </section>
-        ))}
-      </div>
     </Container>
   );
 }

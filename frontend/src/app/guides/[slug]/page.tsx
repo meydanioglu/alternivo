@@ -22,6 +22,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return pageMetadata({ title: g.title, description: g.description, path: `/guides/${g.slug}`, type: "article" });
 }
 
+const anchor = (heading: string) =>
+  heading.toLowerCase().replace(/^\d+\.\s*/, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
 export default async function GuidePage({ params }: Props) {
   const { slug } = await params;
   const g = guide(slug);
@@ -51,15 +54,16 @@ export default async function GuidePage({ params }: Props) {
           { name: g.title, path: `/guides/${g.slug}` },
         ]}
       />
-      <article className="mx-auto mt-4 max-w-3xl">
-        <h1 className="text-3xl font-bold tracking-tight">{g.title}</h1>
-        <p className="mt-1 text-sm text-muted">Updated {new Date(g.updated).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
-        <p className="mt-4 text-lg text-foreground/80">{g.intro}</p>
+      <div className="mt-5 grid gap-10 lg:grid-cols-[minmax(0,45rem)_14rem] lg:justify-between">
+      <article className="min-w-0">
+        <p className="eyebrow">Guide · Updated {new Date(g.updated).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">{g.title}</h1>
+        <p className="mt-4 text-lg leading-relaxed text-foreground/80">{g.intro}</p>
 
-        <div className="mt-8 flex flex-col gap-8 leading-7 text-foreground/85">
+        <div className="mt-10 flex flex-col gap-10 text-[16px] leading-7 text-foreground/85">
           {g.sections.map((s) => (
-            <section key={s.heading}>
-              <h2 className="mb-2 text-xl font-semibold text-foreground">{s.heading}</h2>
+            <section key={s.heading} id={anchor(s.heading)} className="anchor-section">
+              <h2 className="mb-2 text-xl font-semibold tracking-tight text-foreground">{s.heading}</h2>
               {s.body.map((p) => <p key={p} className="mt-2">{p}</p>)}
               {s.steps && (
                 <ol className="mt-3 list-decimal space-y-1 pl-6">
@@ -76,7 +80,7 @@ export default async function GuidePage({ params }: Props) {
             <ul className="grid gap-2 sm:grid-cols-2">
               {tools.map(({ summary: app }) => (
                 <li key={app.id}>
-                  <Link href={`/software/${app.slug}`} className="flex items-center gap-3 rounded-lg border border-border bg-surface p-3 hover:border-accent/50">
+                  <Link href={`/software/${app.slug}`} className="flex items-center gap-3 rounded-[10px] border border-border bg-surface p-3 hover:border-foreground/20">
                     <ApplicationLogo name={app.name} logoUrl={app.logoUrl} size="sm" />
                     <span className="min-w-0">
                       <span className="block font-medium">{app.name}</span>
@@ -95,7 +99,7 @@ export default async function GuidePage({ params }: Props) {
             <ul className="flex flex-wrap gap-2">
               {lists.map((p) => (
                 <li key={p!.slug}>
-                  <Link href={`/best/${p!.slug}`} className="inline-block rounded-full border border-border bg-surface px-3 py-1.5 text-sm hover:border-accent/50">
+                  <Link href={`/best/${p!.slug}`} className="inline-block rounded-md border border-border bg-surface px-3 py-1.5 text-sm hover:border-foreground/20">
                     {p!.title}
                   </Link>
                 </li>
@@ -113,6 +117,21 @@ export default async function GuidePage({ params }: Props) {
           </ul>
         </section>
       </article>
+      <aside className="hidden lg:block">
+        <nav aria-label="On this page" className="sticky top-24">
+          <p className="eyebrow mb-2">On this page</p>
+          <ul className="flex flex-col gap-1.5 border-l border-border text-sm">
+            {g.sections.map((s) => (
+              <li key={s.heading}>
+                <a href={`#${anchor(s.heading)}`} className="-ml-px block border-l border-transparent pl-3 text-muted hover:border-foreground/40 hover:text-foreground">
+                  {s.heading.replace(/^\d+\.\s*/, "")}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+      </div>
     </Container>
   );
 }

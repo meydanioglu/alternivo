@@ -14,13 +14,15 @@ export default function GuidesIndexPage() {
   return (
     <Container className="py-6">
       <BreadcrumbNavigation items={[{ name: "Home", path: "/" }, { name: "Guides", path: "/guides" }]} />
-      <h1 className="mt-4 text-3xl font-bold tracking-tight">Guides</h1>
-      <p className="mt-2 max-w-2xl text-muted">Practical, tool-neutral guides for building with AI.</p>
-      <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+      <header className="mb-8 mt-5 max-w-2xl">
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Guides</h1>
+        <p className="mt-2 text-[15px] text-muted">Practical, tool-neutral guides for building with AI.</p>
+      </header>
+      <ul className="max-w-3xl divide-y divide-border border-y border-border">
         {GUIDES.map((g) => (
           <li key={g.slug}>
-            <Link href={`/guides/${g.slug}`} className="block h-full rounded-xl border border-border bg-surface p-4 hover:border-accent/50">
-              <h2 className="font-semibold">{g.title}</h2>
+            <Link href={`/guides/${g.slug}`} className="group block py-4">
+              <h2 className="font-medium group-hover:underline">{g.title}</h2>
               <p className="mt-1 text-sm text-muted">{g.description}</p>
             </Link>
           </li>

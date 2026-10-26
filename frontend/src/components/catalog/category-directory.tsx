@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ChevronDown, Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -22,7 +22,8 @@ export function CategoryDirectory({ categories, onNavigate, autoFocus, compact }
   const [query, setQuery] = useState("");
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return q ? categories.filter((c) => c.name.toLowerCase().includes(q)) : categories;
+    const list = q ? categories.filter((c) => c.name.toLowerCase().includes(q)) : categories;
+    return [...list].sort((a, b) => Number(b.count > 0) - Number(a.count > 0) || a.name.localeCompare(b.name));
   }, [categories, query]);
 
   return (
@@ -42,17 +43,19 @@ export function CategoryDirectory({ categories, onNavigate, autoFocus, compact }
       {filtered.length === 0 ? (
         <p className="py-6 text-center text-sm text-muted">No category matches “{query}”.</p>
       ) : (
-        <ul className={cx("grid grid-cols-2 gap-1.5 sm:grid-cols-3 lg:grid-cols-4", compact && "max-h-[60vh] overflow-y-auto pr-1")}>
+        <ul className={cx("grid grid-cols-1 gap-x-6 sm:grid-cols-2 lg:grid-cols-4", compact && "max-h-[60vh] overflow-y-auto pr-1")}>
           {filtered.map((c) => (
             <li key={c.slug}>
               <Link
                 href={`/category/${c.slug}`}
                 onClick={onNavigate}
-                className="group flex items-center gap-2 rounded-md border border-border bg-surface px-3 py-2.5 text-sm font-medium transition hover:border-accent/50 hover:text-accent"
+                className={cx(
+                  "group flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-surface-secondary/60",
+                  c.count === 0 && "text-muted",
+                )}
               >
                 <span className="truncate">{c.name}</span>
-                {c.count > 0 && <span className="text-xs tabular-nums text-muted">{c.count}</span>}
-                <ArrowRight className="ml-auto size-3 shrink-0 text-muted transition group-hover:text-accent" aria-hidden="true" />
+                <span className="ml-auto text-xs tabular-nums text-muted">{c.count > 0 ? c.count : ""}</span>
               </Link>
             </li>
           ))}

@@ -16,34 +16,40 @@ export default function BestIndexPage() {
   return (
     <Container className="py-6">
       <BreadcrumbNavigation items={[{ name: "Home", path: "/" }, { name: "Best lists", path: "/best" }]} />
-      <h1 className="mt-4 text-3xl font-bold tracking-tight">Best AI tools by use case</h1>
-      <p className="mt-2 max-w-2xl text-muted">Editorial lists for specific jobs. Each list explains how products were chosen; paid placements never affect them.</p>
-      {groups.map((g) => (
-        <section key={g} className="mt-8">
-          <h2 className="mb-3 text-xl font-semibold">{GROUP_LABELS[g]}</h2>
-          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {BEST_PAGES.filter((p) => p.group === g).map((p) => (
-              <li key={p.slug}>
-                <Link href={`/best/${p.slug}`} className="block rounded-lg border border-border bg-surface px-4 py-3 text-sm font-medium hover:border-accent/50">
-                  {p.title}
+      <header className="mb-10 mt-5 max-w-2xl">
+        <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Best AI tools by use case</h1>
+        <p className="mt-2 text-[15px] text-muted">
+          Editorial lists for specific jobs. Each list explains how products were chosen; paid placements never affect them.
+        </p>
+      </header>
+      <div className="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+        {groups.map((g) => (
+          <section key={g}>
+            <h2 className="border-b border-border pb-2 font-medium">{GROUP_LABELS[g]}</h2>
+            <ul className="mt-2 flex flex-col text-sm">
+              {BEST_PAGES.filter((p) => p.group === g).map((p) => (
+                <li key={p.slug}>
+                  <Link href={`/best/${p.slug}`} className="block py-1.5 text-foreground/80 hover:text-foreground">
+                    {p.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+        <section>
+          <h2 className="border-b border-border pb-2 font-medium">Guides</h2>
+          <ul className="mt-2 flex flex-col text-sm">
+            {GUIDES.map((g) => (
+              <li key={g.slug}>
+                <Link href={`/guides/${g.slug}`} className="block py-1.5 text-foreground/80 hover:text-foreground">
+                  {g.title}
                 </Link>
               </li>
             ))}
           </ul>
         </section>
-      ))}
-      <section className="mt-10">
-        <h2 className="mb-3 text-xl font-semibold">Guides</h2>
-        <ul className="grid gap-2 sm:grid-cols-2">
-          {GUIDES.map((g) => (
-            <li key={g.slug}>
-              <Link href={`/guides/${g.slug}`} className="block rounded-lg border border-border bg-surface px-4 py-3 text-sm font-medium hover:border-accent/50">
-                {g.title}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      </div>
     </Container>
   );
 }

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
-import { LicenseBadge, PlatformList, PricingBadge } from "@/components/catalog/badges";
+import { platformSummary } from "@/components/catalog/application-card";
+import { pricingSummary } from "@/components/catalog/software-row";
 import { BreadcrumbNavigation, Container } from "@/components/layout/page-parts";
 import { JsonLd } from "@/components/seo/json-ld";
 import { BEST_PAGES, GROUP_LABELS, bestPage } from "@/content/best-pages";
@@ -64,65 +65,67 @@ export default async function BestPageView({ params }: Props) {
           { name: page.title, path: `/best/${page.slug}` },
         ]}
       />
-      <header className="mt-4 max-w-3xl">
-        <p className="text-sm font-medium text-accent">{GROUP_LABELS[page.group]}</p>
-        <h1 className="mt-1 text-3xl font-bold tracking-tight">{title}</h1>
-        <p className="mt-3 text-foreground/80">{page.intro}</p>
-        <p className="mt-2 text-sm text-muted">
-          <strong className="text-foreground">How we picked:</strong> {page.criteria} Listings are editorial and never paid.
-        </p>
+      <header className="mt-5 max-w-3xl">
+        <p className="eyebrow">{GROUP_LABELS[page.group]}</p>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">{title}</h1>
+        <p className="prose-copy mt-3">{page.intro}</p>
       </header>
+      <aside className="mt-5 max-w-3xl rounded-[10px] border border-border bg-surface px-4 py-3 text-sm">
+        <p>
+          <span className="font-medium">How we picked: </span>
+          <span className="text-foreground/80">{page.criteria}</span>
+        </p>
+        <p className="mt-1 text-xs text-muted">Editorial list based on each product&apos;s official information. Paid placements never appear here.</p>
+      </aside>
 
       {summaries.length === 0 ? (
         <p className="mt-8 text-muted">We are still reviewing products for this list. Check back soon.</p>
       ) : (
-        <ol className="mt-8 flex flex-col gap-3">
-          {apps.map(({ summary: app, categories }, i) => (
-            <li key={app.id} className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 sm:flex-row sm:items-start">
-              <span className="w-6 shrink-0 text-lg font-bold tabular-nums text-muted">{i + 1}</span>
-              <ApplicationLogo name={app.name} logoUrl={app.logoUrl} />
-              <div className="min-w-0 flex-1">
-                <h2 className="text-lg font-semibold">
-                  <Link href={`/software/${app.slug}`} className="hover:underline">{app.name}</Link>
-                </h2>
-                {categories.length > 0 && <p className="text-xs text-muted">{categories.slice(0, 3).join(" · ")}</p>}
-                <p className="mt-1 text-sm text-foreground/80">{app.shortDescription}</p>
-                <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                  <PricingBadge pricing={app.pricing} />
-                  <LicenseBadge license={app.license} />
+        <ol className="mt-8 divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-surface">
+          {apps.map(({ summary: app, categories }, i) => {
+            const meta = [pricingSummary(app), app.license?.name, app.platforms.length > 0 ? platformSummary(app.platforms, 4) : null].filter(Boolean);
+            return (
+              <li key={app.id} className="flex gap-4 p-4 sm:p-5">
+                <span className="hidden w-5 pt-2.5 text-right text-sm tabular-nums text-muted sm:block">{i + 1}</span>
+                <ApplicationLogo name={app.name} logoUrl={app.logoUrl} />
+                <div className="min-w-0 flex-1">
+                  <h2 className="font-semibold sm:text-lg">
+                    <Link href={`/software/${app.slug}`} className="hover:underline">{app.name}</Link>
+                  </h2>
+                  <p className="text-xs text-muted">{[categories[0], ...meta].filter(Boolean).join(" · ")}</p>
+                  <p className="mt-1.5 text-[15px] text-foreground/85">{app.shortDescription}</p>
+                  <p className="mt-2 flex gap-4 text-sm">
+                    <Link href={`/software/${app.slug}`} className="text-accent hover:underline">Details</Link>
+                    <Link href={`/software/${app.slug}/alternatives`} className="text-muted hover:text-foreground hover:underline">Alternatives</Link>
+                  </p>
                 </div>
-                <PlatformList platforms={app.platforms} />
-              </div>
-              <div className="flex shrink-0 gap-2 text-sm sm:flex-col sm:items-end">
-                <Link href={`/software/${app.slug}`} className="text-accent hover:underline">Details</Link>
-                <Link href={`/software/${app.slug}/alternatives`} className="text-muted hover:text-foreground hover:underline">Alternatives</Link>
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ol>
       )}
 
       {faq.length > 0 && (
-        <section className="mt-10 max-w-3xl">
-          <h2 className="mb-3 text-xl font-semibold">FAQ</h2>
-          <div className="flex flex-col gap-2">
+        <section className="mt-12 max-w-3xl">
+          <h2 className="mb-2 text-lg font-semibold tracking-tight">Frequently asked questions</h2>
+          <div className="divide-y divide-border border-y border-border">
             {faq.map((f) => (
-              <details key={f.question} className="rounded-lg border border-border bg-surface px-4 py-3">
-                <summary className="cursor-pointer font-medium">{f.question}</summary>
-                <p className="mt-2 text-sm text-muted">{f.answer}</p>
-              </details>
+              <div key={f.question} className="py-4">
+                <h3 className="font-medium">{f.question}</h3>
+                <p className="mt-1.5 text-[15px] leading-relaxed text-foreground/80">{f.answer}</p>
+              </div>
             ))}
           </div>
         </section>
       )}
 
       {(related.length > 0 || sameGroup.length > 0) && (
-        <nav aria-label="Related" className="mt-10">
-          <h2 className="mb-3 text-xl font-semibold">Related</h2>
-          <ul className="flex flex-wrap gap-2">
+        <nav aria-label="Related" className="mt-12 border-t border-border pt-8">
+          <h2 className="mb-3 text-base font-semibold tracking-tight">Related lists and guides</h2>
+          <ul className="grid gap-x-8 text-sm sm:grid-cols-2 lg:grid-cols-3">
             {[...related, ...sameGroup.map((p) => ({ href: `/best/${p.slug}`, label: p.title }))].map((l) => (
               <li key={l.href}>
-                <Link href={l.href} className="inline-block rounded-full border border-border bg-surface px-3 py-1.5 text-sm hover:border-accent/50">
+                <Link href={l.href} className="block py-1.5 text-foreground/80 hover:text-foreground">
                   {l.label}
                 </Link>
               </li>

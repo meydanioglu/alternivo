@@ -11,7 +11,7 @@ import { ApplicationGrid } from "@/components/catalog/application-card";
 import { CatalogListing } from "@/components/catalog/catalog-listing";
 import { BreadcrumbNavigation, Container, SectionHeader } from "@/components/layout/page-parts";
 import { CategoryIcon } from "@/components/ui/icons";
-import { chipClass } from "@/components/ui/styles";
+import { BEST_PAGES } from "@/content/best-pages";
 
 export const dynamic = "force-dynamic";
 
@@ -43,6 +43,14 @@ export default async function CategoryPage({ params, searchParams }: Props) {
   const filters = parseFilters(raw);
   const category = await load(slug);
   const showIntro = !hasActiveFilters(filters) && (filters.page ?? 1) === 1;
+  const subcategories = category.children.filter((c) => c.applicationCount > 0);
+  // Best lists that feature this category's top products (at least two in common) — contextual, not a link farm.
+  const featuredSlugs = new Set(category.featured.map((a) => a.slug));
+  const bestLists = BEST_PAGES.map((b) => ({ b, overlap: b.apps.filter((x) => featuredSlugs.has(x)).length }))
+    .filter((x) => x.overlap >= 2)
+    .sort((x, y) => y.overlap - x.overlap)
+    .slice(0, 6)
+    .map((x) => x.b);
 
   return (
     <Container className="py-6">
@@ -55,47 +63,41 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         ]}
       />
 
-      <header className="mt-4 flex items-start gap-4">
-        <span className="grid size-12 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent-soft-foreground">
-          <CategoryIcon name={category.icon} className="size-6" />
-        </span>
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Best {category.name} software</h1>
-          <p className="mt-1 text-sm text-muted">{category.applicationCount} apps</p>
-        </div>
+      <header className="mt-5 max-w-3xl">
+        <p className="eyebrow flex items-center gap-1.5">
+          <CategoryIcon name={category.icon} className="size-3.5" /> Category · {category.applicationCount} products
+        </p>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">Best {category.name} software</h1>
+        {showIntro && (category.seoIntro ?? category.description) && (
+          <p className="prose-copy mt-3">{category.seoIntro ?? category.description}</p>
+        )}
       </header>
 
-      {showIntro && (category.seoIntro ?? category.description) && (
-        <p className="mt-4 max-w-3xl text-pretty leading-relaxed text-foreground/85">{category.seoIntro ?? category.description}</p>
-      )}
-
-      {category.children.length > 0 && (
-        <nav aria-label="Subcategories" className="mt-4">
-          <ul className="flex flex-wrap gap-2">
-            {category.children
-              .filter((c) => c.applicationCount > 0)
-              .map((c) => (
-                <li key={c.slug}>
-                  <Link href={`/category/${c.slug}`} className={chipClass("default", "secondary", "md", "hover:underline")}>
-                    {c.name} <span className="text-muted">{c.applicationCount}</span>
-                  </Link>
-                </li>
-              ))}
+      {subcategories.length > 0 && (
+        <nav aria-label="Subcategories" className="mt-5">
+          <ul className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
+            {subcategories.map((c) => (
+              <li key={c.slug}>
+                <Link href={`/category/${c.slug}`} className="text-foreground/80 hover:text-foreground hover:underline">
+                  {c.name} <span className="text-muted">{c.applicationCount}</span>
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
       )}
 
       {showIntro && category.featured.length > 0 && (
-        <section className="mt-8">
+        <section className="mt-10">
           <SectionHeader title="Editor’s picks" description="Highest editorial scores in this category." />
-          <ApplicationGrid apps={category.featured} />
+          <ApplicationGrid apps={category.featured.slice(0, 8)} />
         </section>
       )}
 
       <SponsoredSlot slot={`category:${category.slug}`} className="mt-8" />
 
-      <section className="mt-10">
-        <h2 className="mb-4 text-lg font-semibold">All {category.name.toLowerCase()} apps</h2>
+      <section className="mt-12">
+        <h2 className="mb-4 text-lg font-semibold tracking-tight">All {category.name.toLowerCase()} software</h2>
         <CatalogListing
           basePath={`/category/${category.slug}`}
           raw={raw}
@@ -105,20 +107,31 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         />
       </section>
 
-      {(category.comparisons.length > 0 || category.related.length > 0) && (
-        <div className="mt-10 grid gap-8 lg:grid-cols-2">
+      {(category.comparisons.length > 0 || category.related.length > 0 || bestLists.length > 0) && (
+        <div className="mt-14 grid gap-10 border-t border-border pt-10 lg:grid-cols-3">
           {category.comparisons.length > 0 && (
             <section>
-              <SectionHeader title={`Popular ${category.name.toLowerCase()} comparisons`} />
-              <ul className="flex flex-col gap-2">
-                {category.comparisons.map((c) => (
+              <h2 className="mb-3 text-base font-semibold tracking-tight">Popular comparisons</h2>
+              <ul className="flex flex-col text-sm">
+                {category.comparisons.slice(0, 8).map((c) => (
                   <li key={c.slug}>
-                    <Link
-                      href={`/compare/${c.slug}`}
-                      className="flex items-center justify-between rounded-lg border border-border bg-surface px-3 py-2.5 text-sm hover:border-accent/50"
-                    >
-                      {c.applications.map((a) => a.name).join(" vs ")}
-                      <ArrowRight className="size-4 text-muted" aria-hidden="true" />
+                    <Link href={`/compare/${c.slug}`} className="flex items-center justify-between gap-2 py-1.5 text-foreground/80 hover:text-foreground">
+                      <span className="truncate">{c.applications.map((a) => a.name).join(" vs ")}</span>
+                      <ArrowRight className="size-3.5 shrink-0 text-muted" aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {bestLists.length > 0 && (
+            <section>
+              <h2 className="mb-3 text-base font-semibold tracking-tight">Related best lists</h2>
+              <ul className="flex flex-col text-sm">
+                {bestLists.map((b) => (
+                  <li key={b.slug}>
+                    <Link href={`/best/${b.slug}`} className="block py-1.5 text-foreground/80 hover:text-foreground">
+                      {b.title}
                     </Link>
                   </li>
                 ))}
@@ -127,11 +140,11 @@ export default async function CategoryPage({ params, searchParams }: Props) {
           )}
           {category.related.length > 0 && (
             <section>
-              <SectionHeader title="Related categories" />
-              <ul className="flex flex-wrap gap-2">
+              <h2 className="mb-3 text-base font-semibold tracking-tight">Related categories</h2>
+              <ul className="flex flex-col text-sm">
                 {category.related.map((c) => (
                   <li key={c.slug}>
-                    <Link href={`/category/${c.slug}`} className={chipClass("default", "secondary", "md", "hover:underline")}>
+                    <Link href={`/category/${c.slug}`} className="block py-1.5 text-foreground/80 hover:text-foreground">
                       {c.name}
                     </Link>
                   </li>
