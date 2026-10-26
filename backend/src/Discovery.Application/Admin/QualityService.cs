@@ -108,10 +108,18 @@ public sealed class QualityService(IAppDbContext db, TimeProvider clock)
         foreach (var g in apps.GroupBy(a => NormalizeName(a.Name)).Where(g => g.Key.Length > 0 && g.Count() > 1))
             foreach (var a in g)
                 Add("error", "duplicate-name", a, $"Same normalised name as {string.Join(", ", g.Where(x => x != a).Select(x => x.Slug))}");
-        foreach (var g in apps.GroupBy(a => BrandStem(a.Name)).Where(g => g.Key.Length >= 4 && g.Count() > 1 && g.Select(a => HostOf(a.WebsiteUrl)).Distinct().Count() > 1))
+        foreach (var g in apps.GroupBy(a => BrandStem(a.Name)).Where(g => g.Key.Length >= 4 && g.Count() > 1))
             foreach (var a in g)
-                Add("review", "similar-brand", a, $"Similar name to {string.Join(", ", g.Where(x => x != a).Select(x => $"{x.Slug} ({HostOf(x.WebsiteUrl)})"))} on a different site — make sure lists and links use the right one");
-        foreach (var a in apps.Where(a => a.Slug.EndsWith("-2") || a.Slug.EndsWith("-3")))
+            {
+                // Same company (shared registrable domain) is a product family, not a confusable brand.
+                var others = g.Where(x => x != a
+                    && RegistrableDomain(HostOf(x.WebsiteUrl)) != RegistrableDomain(HostOf(a.WebsiteUrl))
+                    && !IsConfirmedDistinct(a.Slug, x.Slug)).ToList();
+                if (others.Count > 0)
+                    Add("review", "similar-brand", a, $"Similar name to {string.Join(", ", others.Select(x => $"{x.Slug} ({HostOf(x.WebsiteUrl)})"))} on another company's site — make sure lists and links use the right one");
+            }
+        foreach (var a in apps.Where(a => System.Text.RegularExpressions.Regex.IsMatch(a.Slug, @"-\d+$")
+                     && !a.Name.TrimEnd().EndsWith(a.Slug[(a.Slug.LastIndexOf('-') + 1)..], StringComparison.Ordinal)))
             Add("review", "suffixed-slug", a, "Slug ends with a numeric suffix, which usually means a duplicate import");
 
         foreach (var a in apps)
@@ -259,14 +267,33 @@ public sealed class QualityService(IAppDbContext db, TimeProvider clock)
     public static string? HostOf(string? url) =>
         Uri.TryCreate(url, UriKind.Absolute, out var u) ? u.Host.ToLowerInvariant().Replace("www.", "") : null;
 
-    /// <summary>Host plus first path segment for shared hosts (github.com/x, openai.com/codex) so sub-products are not flagged.</summary>
+    /// <summary>Host plus full path, so product pages on one company site (adobe.com/products/photoshop) are not duplicates.</summary>
     public static string? DomainKey(string? url)
     {
         if (!Uri.TryCreate(url, UriKind.Absolute, out var u)) return null;
         var host = u.Host.ToLowerInvariant().Replace("www.", "");
-        var first = u.AbsolutePath.Trim('/').Split('/')[0].ToLowerInvariant();
-        return first.Length > 0 ? $"{host}/{first}" : host;
+        var path = u.AbsolutePath.Trim('/').ToLowerInvariant();
+        return path.Length > 0 ? $"{host}/{path}" : host;
     }
+
+    /// <summary>example.co.uk → example.co.uk, docs.google.com → google.com (good enough for brand-family checks).</summary>
+    public static string? RegistrableDomain(string? host)
+    {
+        if (host is null) return null;
+        var parts = host.Split('.');
+        if (parts.Length <= 2) return host;
+        var take = parts[^2].Length <= 3 && parts[^1].Length <= 2 ? 3 : 2;
+        return string.Join('.', parts[^take..]);
+    }
+
+    /// <summary>Pairs an editor confirmed are different products despite similar names.</summary>
+    private static readonly HashSet<string> ConfirmedDistinct =
+    [
+        "claude|claude-code", "comet|comet-ml", "gemini-cli|gemini-code-assist", "rosebud|rosebud-ai",
+    ];
+
+    public static bool IsConfirmedDistinct(string a, string b) =>
+        ConfirmedDistinct.Contains(string.CompareOrdinal(a, b) < 0 ? $"{a}|{b}" : $"{b}|{a}");
 
     public static string NormalizeName(string name) =>
         new string(name.ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray());

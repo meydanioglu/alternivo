@@ -9,7 +9,8 @@ public class QualityTests
 {
     [Theory]
     [InlineData("https://www.rosebud.app/", "rosebud.app")]
-    [InlineData("https://github.com/google-gemini/gemini-cli", "github.com/google-gemini")]
+    [InlineData("https://github.com/google-gemini/gemini-cli", "github.com/google-gemini/gemini-cli")]
+    [InlineData("https://www.adobe.com/products/photoshop.html", "adobe.com/products/photoshop.html")]
     [InlineData("https://openai.com/codex", "openai.com/codex")]
     [InlineData("not a url", null)]
     public void Domain_key_keeps_first_path_segment_for_shared_hosts(string url, string? expected) =>
@@ -29,6 +30,20 @@ public class QualityTests
     [InlineData("Notion", "notion", "obsidian.md", false)]
     public void Brand_and_domain_matching(string name, string slug, string host, bool expected) =>
         Assert.Equal(expected, QualityService.BrandMatchesHost(name, slug, host));
+
+    [Theory]
+    [InlineData("docs.google.com", "google.com")]
+    [InlineData("podcast.adobe.com", "adobe.com")]
+    [InlineData("example.co.uk", "example.co.uk")]
+    [InlineData("shop.example.co.uk", "example.co.uk")]
+    public void Registrable_domain(string host, string expected) => Assert.Equal(expected, QualityService.RegistrableDomain(host));
+
+    [Fact]
+    public void Confirmed_distinct_pairs_are_order_independent()
+    {
+        Assert.True(QualityService.IsConfirmedDistinct("rosebud-ai", "rosebud"));
+        Assert.False(QualityService.IsConfirmedDistinct("notion", "obsidian"));
+    }
 
     [Theory]
     [InlineData("www.google.com", true)]
