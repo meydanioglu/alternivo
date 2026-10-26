@@ -35,12 +35,12 @@ export default async function PayPage({ params }: Props) {
   return (
     <Container className="py-8">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-2xl font-bold">Secure payment</h1>
+        <h1 className="text-2xl font-semibold">Secure payment</h1>
         <p className="mt-1 text-sm text-muted">
           Total: <strong className="text-foreground">{formatPrice(order.amountMinor, order.currency)}</strong>. Payments are processed by PayTR;
           your card details go directly to PayTR.
         </p>
-        <div className="mt-6 overflow-hidden rounded-xl border border-border bg-white">
+        <div className="mt-6 overflow-hidden rounded-[10px] border border-border bg-white">
           <iframe
             src={`https://www.paytr.com/odeme/guvenli/${token}`}
             id="paytriframe"

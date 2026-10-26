@@ -25,9 +25,9 @@ const LICENSES = [
 
 function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-xl border border-border bg-surface p-5 sm:p-6">
+    <section className="rounded-[10px] border border-border bg-surface p-5 sm:p-6">
       <h2 className="mb-5 flex items-center gap-3 text-base font-semibold">
-        <span className="grid size-7 place-items-center rounded-full bg-accent text-xs font-bold text-accent-foreground">{n}</span>
+        <span className="grid size-6 place-items-center rounded-md border border-border text-xs tabular-nums text-muted">{n}</span>
         {title}
       </h2>
       <div className="flex flex-col gap-5">{children}</div>
@@ -36,7 +36,7 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
 }
 
 function ReviewSpeed({ fastReviewAvailable, fastReviewPrice }: { fastReviewAvailable: boolean; fastReviewPrice: string }) {
-  const option = "flex cursor-pointer flex-col gap-1 rounded-xl border border-border bg-surface p-4 has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent/30";
+  const option = "flex cursor-pointer flex-col gap-1 rounded-[10px] border border-border bg-surface p-4 has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent/30";
   return (
     <fieldset className="flex flex-col gap-3">
       <legend className="sr-only">Review speed</legend>

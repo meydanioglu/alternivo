@@ -19,8 +19,8 @@ export default async function NewSubmissionPage() {
 
   return (
     <Container className="max-w-3xl py-8">
-      <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Submit a product</h1>
-      <p className="mt-3 inline-flex rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-medium text-accent">
+      <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Submit a product</h1>
+      <p className="mt-2 text-sm text-muted">
         Free during launch · reviewed and approved by our team before it goes live
       </p>
       <p className="mb-8 mt-3 text-muted">

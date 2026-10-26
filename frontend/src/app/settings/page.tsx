@@ -30,7 +30,7 @@ export default async function SettingsPage() {
         <div className="flex items-center gap-4">
           <UserAvatar name={user.displayName} url={user.avatarUrl} size="md" />
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
+            <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
             <p className="text-sm text-muted">{user.username ? `@${user.username}` : user.email}</p>
           </div>
         </div>

@@ -63,7 +63,7 @@ export default async function PublicProfilePage({ params }: Props) {
       <header className="flex flex-col gap-5 border-b border-border pb-8 sm:flex-row sm:items-center">
         <UserAvatar name={p.displayName} url={p.avatarUrl} size="lg" />
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{p.displayName}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">{p.displayName}</h1>
           <p className="text-muted">@{p.username}</p>
           {p.bio && <p className="mt-2 max-w-2xl whitespace-pre-line text-foreground/85">{p.bio}</p>}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted">
@@ -79,7 +79,7 @@ export default async function PublicProfilePage({ params }: Props) {
           </div>
         </div>
         {isMe && (
-          <a href="/settings" className="self-start rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:border-accent/50">
+          <a href="/settings" className="self-start rounded-lg border border-border px-3 py-1.5 text-sm font-medium hover:border-foreground/20">
             Edit profile
           </a>
         )}
@@ -91,8 +91,8 @@ export default async function PublicProfilePage({ params }: Props) {
           { n: p.activity.launched.length, label: "Launches" },
           { n: p.showLikes ? p.activity.liked.length : "—", label: "Likes" },
         ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-border bg-surface p-3">
-            <p className="text-xl font-bold tabular-nums">{s.n}</p>
+          <div key={s.label} className="rounded-[10px] border border-border bg-surface p-3">
+            <p className="text-xl font-semibold tabular-nums">{s.n}</p>
             <p className="text-xs text-muted">{s.label}</p>
           </div>
         ))}

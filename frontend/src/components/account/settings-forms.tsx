@@ -20,7 +20,7 @@ import type { UserProfile } from "@/lib/auth/session";
 
 export function SettingsCard({ id, icon, title, children }: { id: string; icon: ReactNode; title: string; children: ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-24 overflow-hidden rounded-xl border border-border bg-surface">
+    <section id={id} className="scroll-mt-24 overflow-hidden rounded-[10px] border border-border bg-surface">
       <h2 className="flex items-center gap-2 border-b border-border px-5 py-4 font-semibold">
         {icon} {title}
       </h2>

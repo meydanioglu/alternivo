@@ -132,11 +132,11 @@ export default async function MakerPage({ searchParams }: Props) {
     <Container className="py-8">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-sm text-muted">Maker dashboard{data.foundingVendor && " · Founding vendor"}</p>
-          <h1 className="text-2xl font-bold">Welcome back, {user.displayName}</h1>
+          <p className="eyebrow">Maker dashboard{data.foundingVendor && " · Founding vendor"}</p>
+          <h1 className="text-2xl font-semibold tracking-tight">Welcome back, {user.displayName}</h1>
         </div>
         <Link href="/submit/new" className={buttonClass("primary", "md")}>
-          <Plus className="size-4" aria-hidden="true" /> Submit an AI
+          <Plus className="size-4" aria-hidden="true" /> Submit a product
         </Link>
       </div>
 
@@ -169,7 +169,7 @@ export default async function MakerPage({ searchParams }: Props) {
 
       {tab === "overview" && (
         <div className="flex flex-col gap-8">
-          <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-border bg-border md:grid-cols-4">
             <Stat label="Your products" value={data.products.length} />
             <Stat label="Pending submissions" value={data.stats.pending} />
             <Stat label="Active subscriptions" value={data.stats.activeSubscriptions} />
@@ -184,7 +184,7 @@ export default async function MakerPage({ searchParams }: Props) {
             )}
           </dl>
           <Submissions data={data} can={can} priceOf={priceOf} />
-          <section className="rounded-xl border border-border bg-surface p-4">
+          <section className="rounded-[10px] border border-border bg-surface p-4">
             <h2 className="mb-1 flex items-center gap-2 font-semibold">
               <Rocket className="size-4 text-accent" aria-hidden="true" /> Buildboard
             </h2>
@@ -199,12 +199,12 @@ export default async function MakerPage({ searchParams }: Props) {
           {data.products.length === 0 ? (
             <EmptyState title="No live products yet">Once a submission is approved, you can promote it here.</EmptyState>
           ) : (
-            <ul className="flex flex-col gap-3">
+            <ul className="divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-surface">
               {data.products.map((p) => {
                 const growth = future(p.growthUntil);
                 const featured = future(p.featuredUntil);
                 return (
-                  <li key={p.application.id} className="flex flex-col gap-3 rounded-xl border border-border bg-surface p-4 sm:flex-row sm:items-center">
+                  <li key={p.application.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
                     <div className="flex min-w-0 flex-1 items-center gap-3">
                       <ApplicationLogo name={p.application.name} logoUrl={p.application.logoUrl} size="sm" />
                       <div className="min-w-0">
@@ -240,7 +240,7 @@ export default async function MakerPage({ searchParams }: Props) {
 
       {tab === "campaigns" && (
         <div className="flex flex-col gap-8">
-          <section className="rounded-xl border border-border bg-surface p-5">
+          <section className="rounded-[10px] border border-border bg-surface p-5">
             <h2 className="mb-1 font-semibold">Create a campaign</h2>
             <p className="mb-4 text-sm text-muted">
               Fixed-length placements for your approved products. See <Link href="/pricing" className="text-accent underline">pricing</Link> for details.
@@ -263,9 +263,9 @@ export default async function MakerPage({ searchParams }: Props) {
             {data.campaigns.length === 0 ? (
               <p className="text-sm text-muted">No campaigns yet.</p>
             ) : (
-              <ul className="flex flex-col gap-2">
+              <ul className="divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-surface">
                 {data.campaigns.map((c) => (
-                  <li key={c.id} className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-3 text-sm sm:flex-row sm:items-center">
+                  <li key={c.id} className="flex flex-col gap-2 p-3 text-sm sm:flex-row sm:items-center">
                     <div className="min-w-0 flex-1">
                       <p className="font-medium">{c.planName} · {c.applicationName}</p>
                       <p className="text-xs text-muted">
@@ -297,13 +297,13 @@ export default async function MakerPage({ searchParams }: Props) {
               </Link>
             ))}
           </nav>
-          <dl className="grid grid-cols-2 gap-3 md:grid-cols-4">
+          <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-[10px] border border-border bg-border md:grid-cols-4">
             <Stat label="Profile views" value={analytics.profileViews} />
             <Stat label="Sponsor impressions" value={analytics.impressions} />
             <Stat label="Outbound clicks" value={analytics.clicks} />
             <Stat label="Click-through rate" value={`${analytics.clickThroughRate}%`} />
           </dl>
-          <div className="overflow-x-auto rounded-xl border border-border">
+          <div className="overflow-x-auto rounded-[10px] border border-border">
             <table className="w-full text-left text-sm">
               <thead className="bg-surface-secondary text-muted">
                 <tr>
@@ -333,7 +333,7 @@ export default async function MakerPage({ searchParams }: Props) {
 
       {tab === "billing" && (
         <div className="flex flex-col gap-6">
-          <section className="rounded-xl border border-border bg-surface p-5 text-sm">
+          <section className="rounded-[10px] border border-border bg-surface p-5 text-sm">
             <h2 className="mb-2 font-semibold">Plan</h2>
             <p>
               {data.entitlements.some((e) => e.active && (e.kind === "Growth" || e.kind === "Featured"))
@@ -351,14 +351,14 @@ export default async function MakerPage({ searchParams }: Props) {
             {data.entitlements.length === 0 ? (
               <p className="text-sm text-muted">No payments yet.</p>
             ) : (
-              <ul className="flex flex-col gap-2">
+              <ul className="divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-surface">
                 {data.entitlements.map((e) => {
                   const targets = e.kind === "FastTrack"
                     ? data.submissions.filter((s) => s.canUpgrade).map((s) => ({ id: s.id, name: s.name }))
                     : e.kind === "Featured" || e.kind === "Growth" ? products
                       : data.campaigns.filter((c) => c.state === "awaiting-payment" || c.state === "reservation-expired").map((c) => ({ id: c.id, name: `${c.planName} · ${c.applicationName}` }));
                   return (
-                    <li key={e.id} className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-3 text-sm">
+                    <li key={e.id} className="flex flex-col gap-2 p-3 text-sm">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium">{e.planName ?? "Unknown plan"}</span>
                         {e.priceCents !== null && <span className="text-muted">{formatPrice(e.priceCents, e.currency ?? "USD")}{e.recurring && " · 30 days"}</span>}
@@ -400,9 +400,9 @@ function Notice({ tone, children }: { tone: "success" | "warning"; children: Rea
 
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
-      <dt className="text-sm text-muted">{label}</dt>
-      <dd className="mt-1 text-2xl font-bold tabular-nums">{value}</dd>
+    <div className="bg-surface p-4">
+      <dt className="text-xs text-muted">{label}</dt>
+      <dd className="mt-1 text-xl font-semibold tabular-nums">{value}</dd>
     </div>
   );
 }
@@ -416,12 +416,12 @@ function Submissions({ data, can, priceOf }: { data: MakerDashboard; can: (p: st
           Submitting is free. Every submission is reviewed by our team.
         </EmptyState>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-surface">
           {data.submissions.map((s) => {
             const status = STATUS[s.status] ?? { label: s.status, className: "bg-surface-secondary text-muted" };
             const open = ["Pending", "InReview", "NeedsChanges"].includes(s.status);
             return (
-              <li key={s.id} className="flex flex-col gap-2 rounded-xl border border-border bg-surface p-3 text-sm">
+              <li key={s.id} className="flex flex-col gap-2 p-3 text-sm">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{s.name}</span>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${status.className}`}>{status.label}</span>

@@ -28,7 +28,7 @@ export function ModerationRow({ row }: { row: SubmissionRow }) {
   const meta = [row.categorySlug, row.licenseSlug, ...row.pricing, ...row.platforms].filter(Boolean) as string[];
 
   return (
-    <li className={cx("rounded-xl border border-border bg-surface p-5", done && "opacity-60")}>
+    <li className={cx("rounded-[10px] border border-border bg-surface p-5", done && "opacity-60")}>
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="text-lg font-semibold">{row.name}</h3>

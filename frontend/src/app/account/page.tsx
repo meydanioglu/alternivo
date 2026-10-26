@@ -46,7 +46,7 @@ export default async function AccountPage({ searchParams }: Props) {
       <header className="flex flex-wrap items-center gap-4 border-b border-border pb-6">
         <UserAvatar name={user.displayName} url={user.avatarUrl} size="md" />
         <div className="min-w-0 flex-1">
-          <h1 className="text-2xl font-bold tracking-tight">{user.displayName}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{user.displayName}</h1>
           <p className="text-sm text-muted">{user.username ? `@${user.username}` : user.email}</p>
         </div>
         <div className="flex flex-wrap gap-2">

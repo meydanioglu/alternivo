@@ -71,7 +71,8 @@ export default async function PricingPage() {
     <Container className="py-12">
       <JsonLd data={faqJsonLd(FAQ)} />
       <header className="mx-auto max-w-2xl text-center">
-        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Grow your software with {site.name}</h1>
+        <p className="eyebrow">For makers</p>
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Grow your software with {site.name}</h1>
         <p className="mt-3 text-lg text-muted">
           Get discovered by people actively searching for software alternatives. Start for free and promote your product when you’re ready.
         </p>
@@ -83,18 +84,18 @@ export default async function PricingPage() {
           return (
             <section
               key={t.key}
-              className={cx("flex flex-col rounded-2xl border bg-surface p-6", t.highlight ? "border-accent ring-2 ring-accent/30" : "border-border")}
+              className={cx("flex flex-col rounded-[10px] border bg-surface p-6", t.highlight ? "border-accent" : "border-border")}
             >
               <h2 className="font-semibold">{t.name}</h2>
               <p className="mt-3 flex items-baseline gap-1">
-                <span className="text-3xl font-bold">{t.price ?? (plan ? formatPrice(plan.priceCents, data.currency) : "—")}</span>
+                <span className="text-3xl font-semibold">{t.price ?? (plan ? formatPrice(plan.priceCents, data.currency) : "—")}</span>
                 <span className="text-sm text-muted">{t.period}</span>
               </p>
               {t.note && <p className="mt-1 text-xs font-medium text-accent">{t.note}</p>}
               <ul className="mt-5 flex flex-1 flex-col gap-2 text-sm">
                 {t.features.map((f) => (
                   <li key={f} className="flex gap-2">
-                    <Check className="mt-0.5 size-4 shrink-0 text-success" aria-hidden="true" /> {f}
+                    <Check className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden="true" /> {f}
                   </li>
                 ))}
               </ul>
@@ -123,7 +124,7 @@ export default async function PricingPage() {
             Book a fixed-length placement for one of your approved products. Inventory is limited, so each spot is shared by only a few
             sponsors. Every campaign is reviewed before it goes live and is clearly labelled.
           </p>
-          <div className="mt-4 overflow-x-auto rounded-xl border border-border">
+          <div className="mt-4 overflow-x-auto rounded-[10px] border border-border">
             <table className="w-full text-left text-sm">
               <thead className="bg-surface-secondary text-muted">
                 <tr>
@@ -157,13 +158,13 @@ export default async function PricingPage() {
       )}
 
       <section className="mx-auto mt-14 max-w-3xl">
-        <h2 className="mb-4 text-xl font-semibold">Frequently asked questions</h2>
-        <div className="flex flex-col gap-2">
+        <h2 className="mb-2 text-lg font-semibold tracking-tight">Frequently asked questions</h2>
+        <div className="divide-y divide-border border-y border-border">
           {FAQ.map((f) => (
-            <details key={f.question} className="rounded-lg border border-border bg-surface px-4 py-3">
-              <summary className="cursor-pointer font-medium">{f.question}</summary>
-              <p className="mt-2 text-sm text-muted">{f.answer}</p>
-            </details>
+            <div key={f.question} className="py-4">
+              <h3 className="font-medium">{f.question}</h3>
+              <p className="mt-1.5 text-[15px] leading-relaxed text-foreground/80">{f.answer}</p>
+            </div>
           ))}
         </div>
         <p className="mt-6 text-xs text-muted">

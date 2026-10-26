@@ -1,4 +1,4 @@
-import { ArrowRight, BadgeCheck, Link2, Search, Sparkles, Trophy } from "lucide-react";
+import { ArrowRight, BadgeCheck, Link2, Search, Trophy } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { site } from "@/config/site";
@@ -35,75 +35,76 @@ const FAQ = [
 ];
 
 export default function SubmitLandingPage() {
-  const cta = (
-    <Link href="/submit/new" className={buttonClass("primary", "lg")}>
-      Submit your product <ArrowRight className="size-4" aria-hidden="true" />
-    </Link>
-  );
-
   return (
-    <>
-      <section className="border-b border-border bg-surface">
-        <Container className="py-14 text-center sm:py-20">
-          <p className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-xs font-semibold uppercase tracking-wider text-accent">
-            <Sparkles className="size-3.5" aria-hidden="true" /> Free during launch
-          </p>
-          <h1 className="mx-auto mt-5 max-w-3xl text-balance text-3xl font-bold tracking-tight sm:text-5xl">
-            Get your product in front of people looking to switch
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-pretty text-muted sm:text-lg">
-            {site.name} is where people compare software and find better alternatives. If you build something great, we
-            want it here.
-          </p>
-          <div className="mt-8 flex justify-center">{cta}</div>
-          <p className="mt-3 text-xs text-muted">Free for a limited time while we launch. A free account is required, and every listing is reviewed and approved by our team.</p>
-        </Container>
-      </section>
+    <Container className="py-12 sm:py-16">
+      <header className="max-w-2xl">
+        <p className="eyebrow">For makers · Free during launch</p>
+        <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+          Get your product in front of people looking to switch
+        </h1>
+        <p className="mt-4 text-pretty text-[17px] leading-relaxed text-muted">
+          {site.name} is where people compare software and find better alternatives. If you build something great, we want it
+          here.
+        </p>
+        <div className="mt-7 flex flex-wrap items-center gap-3">
+          <Link href="/submit/new" className={buttonClass("primary", "lg")}>
+            Submit your product <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+          <Link href="/pricing" className={buttonClass("ghost", "lg")}>
+            Optional paid options
+          </Link>
+        </div>
+        <p className="mt-3 text-xs text-muted">A free account is required, and every listing is reviewed and approved by our team.</p>
+      </header>
 
-      <Container className="py-14">
-        <h2 className="text-center text-xs font-semibold uppercase tracking-wider text-muted">Why list here</h2>
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+      <section className="mt-16" aria-labelledby="why">
+        <h2 id="why" className="eyebrow mb-5">Why list here</h2>
+        <div className="grid gap-px overflow-hidden rounded-[10px] border border-border bg-border sm:grid-cols-2">
           {BENEFITS.map(({ icon: Icon, title, text }) => (
-            <div key={title} className="rounded-xl border border-border bg-surface p-6">
-              <Icon className="size-6 text-accent" aria-hidden="true" />
-              <h3 className="mt-3 font-semibold">{title}</h3>
-              <p className="mt-1 text-sm text-muted">{text}</p>
+            <div key={title} className="bg-surface p-6">
+              <h3 className="flex items-center gap-2 font-medium">
+                <Icon className="size-4 text-muted" aria-hidden="true" /> {title}
+              </h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted">{text}</p>
             </div>
           ))}
         </div>
+      </section>
 
-        <h2 className="mt-16 text-center text-xs font-semibold uppercase tracking-wider text-muted">How it works</h2>
-        <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="mt-16" aria-labelledby="how">
+        <h2 id="how" className="eyebrow mb-5">How it works</h2>
+        <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {STEPS.map(([title, text], i) => (
-            <li key={title} className="rounded-xl border border-border p-6">
-              <span className="text-3xl font-bold text-accent/40">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-2 font-semibold">{title}</h3>
-              <p className="mt-1 text-sm text-muted">{text}</p>
+            <li key={title} className="border-t border-border pt-4">
+              <span className="text-sm tabular-nums text-muted">Step {i + 1}</span>
+              <h3 className="mt-1 font-medium">{title}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-muted">{text}</p>
             </li>
           ))}
         </ol>
+      </section>
 
-        <h2 className="mt-16 text-center text-xs font-semibold uppercase tracking-wider text-muted">FAQ</h2>
-        <div className="mx-auto mt-6 max-w-3xl divide-y divide-border rounded-xl border border-border bg-surface">
+      <section className="mt-16 max-w-3xl" aria-labelledby="faq">
+        <h2 id="faq" className="eyebrow mb-2">Questions</h2>
+        <div className="divide-y divide-border border-y border-border">
           {FAQ.map(([q, a]) => (
-            <details key={q} className="group px-5 py-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between font-medium">
-                {q}
-                <span className="text-muted transition group-open:rotate-45">+</span>
-              </summary>
-              <p className="mt-2 text-sm text-muted">{a}</p>
-            </details>
+            <div key={q} className="py-4">
+              <h3 className="font-medium">{q}</h3>
+              <p className="mt-1.5 text-[15px] leading-relaxed text-foreground/80">{a}</p>
+            </div>
           ))}
         </div>
+      </section>
 
-        <div className="mt-16 rounded-2xl bg-accent px-6 py-10 text-center text-accent-foreground">
-          <h2 className="text-2xl font-bold">Ready to get listed?</h2>
-          <p className="mt-2 opacity-85">It takes about two minutes.</p>
-          <Link href="/submit/new" className="mt-6 inline-flex items-center gap-2 rounded-lg bg-white px-5 py-2.5 font-semibold text-accent hover:bg-white/90">
-            Submit your product <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
+      <section className="mt-16 flex flex-col gap-4 border-t border-border pt-10 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">Ready to get listed?</h2>
+          <p className="mt-1 text-sm text-muted">It takes about two minutes.</p>
         </div>
-      </Container>
-    </>
+        <Link href="/submit/new" className={buttonClass("primary", "md")}>
+          Submit your product <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+      </section>
+    </Container>
   );
 }
