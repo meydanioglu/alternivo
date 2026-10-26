@@ -11,7 +11,8 @@ import { loadOrNotFound } from "@/lib/resolve";
 import { itemListJsonLd, pageMetadata } from "@/lib/seo";
 import { AlternativesIntents } from "@/components/catalog/alternatives-intents";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
-import { CommunityStats } from "@/components/catalog/application-card";
+import { platformSummary } from "@/components/catalog/application-card";
+import { pricingSummary } from "@/components/catalog/software-row";
 import { AlternativeRelationshipBadge, AttributeBadges, LicenseBadge, PlatformList, PricingBadge } from "@/components/catalog/badges";
 import { FilterSidebar, MobileFilterDrawer, type FilterGroup, type ToggleOption } from "@/components/filters/filter-panel";
 import { SortSelector } from "@/components/filters/sort-selector";
@@ -63,26 +64,34 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   });
 }
 
-function SignalBreakdown({ item }: { item: AlternativeItem }) {
+function SignalBreakdown({ item, sourceName }: { item: AlternativeItem; sourceName: string }) {
   return (
     <details className="group text-xs text-muted">
-      <summary className="inline-flex cursor-pointer list-none items-center gap-1 hover:text-foreground">
-        <Info className="size-3.5" aria-hidden="true" />
-        Match score {Math.round(item.score)}
-        <span className="sr-only">— show how this was calculated</span>
+      <summary className="inline-flex cursor-pointer list-none items-center gap-1.5 hover:text-foreground">
+        <span>
+          Match score <span className="font-medium tabular-nums text-foreground">{Math.round(item.score)}/100</span>
+        </span>
+        <span className="inline-flex items-center gap-0.5 underline decoration-dotted underline-offset-2">
+          <Info className="size-3.5" aria-hidden="true" /> How is this calculated?
+        </span>
       </summary>
-      <dl className="mt-2 grid max-w-sm grid-cols-[1fr_auto_auto] gap-x-3 gap-y-1 rounded-md border border-border bg-surface-secondary p-2">
-        <dt className="font-medium text-foreground">Signal</dt>
-        <dd className="font-medium text-foreground">Value</dd>
-        <dd className="font-medium text-foreground">Weight</dd>
-        {item.signals.map((s) => (
-          <div key={s.name} className="contents">
-            <dt>{SIGNAL_LABELS[s.name] ?? s.name}</dt>
-            <dd className="tabular-nums">{Math.round(s.value * 100)}%</dd>
-            <dd className="tabular-nums">{Math.round(s.weight * 100)}%</dd>
-          </div>
-        ))}
-      </dl>
+      <div className="mt-2 max-w-md rounded-md border border-border bg-surface-secondary p-3">
+        <p className="mb-2">
+          How closely this product matches {sourceName} — not a quality rating. Each signal is scored 0–100% and weighted:
+        </p>
+        <dl className="grid grid-cols-[1fr_auto_auto] gap-x-4 gap-y-1">
+          <dt className="font-medium text-foreground">Signal</dt>
+          <dd className="font-medium text-foreground">Value</dd>
+          <dd className="font-medium text-foreground">Weight</dd>
+          {item.signals.map((sg) => (
+            <div key={sg.name} className="contents">
+              <dt>{SIGNAL_LABELS[sg.name] ?? sg.name}</dt>
+              <dd className="tabular-nums">{Math.round(sg.value * 100)}%</dd>
+              <dd className="tabular-nums">{Math.round(sg.weight * 100)}%</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
     </details>
   );
 }
@@ -90,49 +99,37 @@ function SignalBreakdown({ item }: { item: AlternativeItem }) {
 function AlternativeCard({ item, rank, sourceSlug, sourceName, signedIn }: { item: AlternativeItem; rank: number; sourceSlug: string; sourceName: string; signedIn: boolean }) {
   const app = item.application;
   const compareSlug = [sourceSlug, app.slug].sort().join("-vs-");
+  const meta = [pricingSummary(app), app.license?.name, app.platforms.length > 0 ? platformSummary(app.platforms, 4) : null].filter(Boolean);
   return (
-    <li className="rounded-lg border border-border bg-surface p-4">
-      <div className="flex gap-4">
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-xs font-semibold tabular-nums text-muted" aria-label={`Rank ${rank}`}>
-            #{rank}
-          </span>
-          <AlternativeVoteButton
-            relationshipId={item.relationshipId}
-            count={item.voteCount}
-            path={`/software/${sourceSlug}/alternatives`}
-            signedIn={signedIn}
-          />
-        </div>
+    <li className="rounded-[10px] border border-border bg-surface">
+      <div className="flex gap-4 p-4 sm:p-5">
+        <span className="hidden w-6 pt-3 text-right text-sm tabular-nums text-muted sm:block" aria-label={`Rank ${rank}`}>
+          {rank}
+        </span>
         <ApplicationLogo name={app.name} logoUrl={app.logoUrl} />
         <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h2 className="text-lg font-semibold">
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <h2 className="text-base font-semibold sm:text-lg">
               <Link href={`/software/${app.slug}`} className="hover:underline">
                 {app.name}
               </Link>
             </h2>
-            <CommunityStats app={app} />
-            <AlternativeRelationshipBadge source={item.source} />
-            {item.pinned && <span className={chipClass("accent", "soft", "sm")}>Editor&apos;s pick</span>}
+            {item.pinned ? (
+              <span className={chipClass("accent", "soft", "sm")}>Editor&apos;s pick</span>
+            ) : (
+              <AlternativeRelationshipBadge source={item.source} />
+            )}
           </div>
-          <p className="mt-1 text-sm text-foreground/85">{app.shortDescription}</p>
-
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            <PricingBadge pricing={app.pricing} />
-            <LicenseBadge license={app.license} />
-            <AttributeBadges app={app} />
-          </div>
-          <div className="mt-2">
-            <PlatformList platforms={app.platforms} max={6} />
-          </div>
+          {meta.length > 0 && <p className="mt-0.5 text-xs text-muted">{meta.join(" · ")}</p>}
+          <p className="mt-2 text-[15px] text-foreground/85">{app.shortDescription}</p>
 
           {item.reasons.length > 0 && (
             <div className="mt-3">
-              <h3 className="sr-only">Why choose {app.name} over {sourceName}</h3>
-              <ul className="flex flex-wrap gap-1.5">
-                {item.reasons.map((r) => (
-                  <li key={r} className={chipClass("accent", "soft")}>
+              <h3 className="eyebrow mb-1">Why consider it</h3>
+              <ul className="flex flex-col gap-0.5 text-sm text-foreground/80">
+                {item.reasons.slice(0, 4).map((r) => (
+                  <li key={r} className="flex gap-2">
+                    <span className="mt-[0.55rem] size-1 shrink-0 rounded-full bg-accent" aria-hidden="true" />
                     {r}
                   </li>
                 ))}
@@ -140,21 +137,21 @@ function AlternativeCard({ item, rank, sourceSlug, sourceName, signedIn }: { ite
             </div>
           )}
           {item.sharedFeatures.length > 0 && (
-            <p className="mt-2 text-xs text-muted">Shared features: {item.sharedFeatures.join(", ")}</p>
+            <p className="mt-2 text-xs text-muted">Also has: {item.sharedFeatures.slice(0, 6).join(", ")}</p>
           )}
           {item.note && <p className="mt-2 text-sm italic text-foreground/75">“{item.note}”</p>}
-
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-            <SignalBreakdown item={item} />
-            <div className="flex gap-2">
-              <Link href={`/compare/${compareSlug}`} className={buttonClass("ghost", "sm")}>
-                <Scale className="size-4" aria-hidden="true" /> Compare
-              </Link>
-              <Link href={`/software/${app.slug}`} className={buttonClass("secondary", "sm")}>
-                Details <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
+        </div>
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-2.5 sm:px-5">
+        <SignalBreakdown item={item} sourceName={sourceName} />
+        <div className="flex items-center gap-1">
+          <AlternativeVoteButton relationshipId={item.relationshipId} count={item.voteCount} path={`/software/${sourceSlug}/alternatives`} signedIn={signedIn} />
+          <Link href={`/compare/${compareSlug}`} className={buttonClass("ghost", "sm")}>
+            <Scale className="size-4" aria-hidden="true" /> Compare
+          </Link>
+          <Link href={`/software/${app.slug}`} className={buttonClass("outline", "sm")}>
+            Details <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
         </div>
       </div>
     </li>

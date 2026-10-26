@@ -15,22 +15,44 @@
  * The accent is close to Tailwind indigo-700, chosen so white text on it and accent text
  * on white both meet WCAG AA for normal text.
  */
+/*
+ * Design tokens. Neutral canvas, white surfaces and hairline borders; the brand colour (#8F9BFB) is reserved for
+ * primary actions, selection, focus and links. Light mode uses a deeper brand shade so white text on it stays AA.
+ */
 :root {
-  /* Brand primary is #8F9BFB; light mode uses a deeper shade so white text on it stays AA. */
   --accent: #4f5be0;
-  --accent-foreground: oklch(0.99 0 0);
-  --focus: #4f5be0;
-  --radius: 0.375rem;
+  --accent-foreground: #ffffff;
+  --focus: #6c78f0;
+  --radius: 0.5rem;
+  --field-radius: 0.5rem;
 }
 
 :root:not(.dark):not([data-theme="dark"]) {
-  --background: oklch(0.985 0.003 265);
+  --background: #f8f9fc;
+  --surface: #ffffff;
+  --surface-secondary: #f2f3f8;
+  --foreground: #171922;
+  --muted: #626775;
+  --border: #e7e9ef;
+  --separator: #e7e9ef;
+  --accent-soft: #eef0ff;
+  --accent-soft-foreground: #3f4ac4;
 }
 
+/* Dark: layered greys (not black, not purple-tinted); brand used as-is because dark text on it is AA. */
 .dark,
 [data-theme="dark"] {
+  --background: #0e0f13;
+  --surface: #15171d;
+  --surface-secondary: #1c1f27;
+  --foreground: #eceef3;
+  --muted: #9a9fad;
+  --border: #262933;
+  --separator: #262933;
   --accent: #8f9bfb;
-  --accent-foreground: #0b0b1a;
+  --accent-foreground: #0b0c1a;
+  --accent-soft: #1f2340;
+  --accent-soft-foreground: #b9c0ff;
   --focus: #8f9bfb;
 }
 
@@ -73,4 +95,30 @@ body {
 /* Grid items default to min-width:auto, so one long unbreakable line (truncate, URLs) widens the page on phones. */
 .grid > * {
   min-width: 0;
+}
+
+/* ---------- Typography helpers (one scale for the whole site) ---------- */
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Editorial body copy: readable measure and rhythm for long product descriptions. */
+.prose-copy {
+  max-width: 68ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: color-mix(in oklab, var(--foreground) 88%, transparent);
+  text-wrap: pretty;
+}
+.prose-copy p + p {
+  margin-top: 0.9em;
+}
+
+/* Anchored sections clear the sticky header and section nav. */
+.anchor-section {
+  scroll-margin-top: 7.5rem;
 }

@@ -62,24 +62,25 @@ export function LikeSaveButtons({ applicationId, path, signedIn, liked, likeCoun
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <button
           type="button"
           onClick={toggleLike}
           aria-pressed={like.voted}
           disabled={pending}
-          className={buttonClass(like.voted ? "primary" : "outline", "md", "flex-1")}
+          className={buttonClass("ghost", "sm", cx(like.voted && "text-accent"))}
         >
           <Heart className={cx("size-4", like.voted && "fill-current")} aria-hidden="true" />
           {like.voted ? "Liked" : "Like"}
-          <span className="tabular-nums opacity-80">{like.count}</span>
+          {/* Small counts are noise on a young site; show the number once it means something. */}
+          {like.count >= 5 && <span className="tabular-nums opacity-70">{like.count}</span>}
         </button>
         <button
           type="button"
           onClick={toggleSave}
           aria-pressed={isSaved}
           disabled={pending}
-          className={buttonClass("outline", "md", "flex-1")}
+          className={buttonClass("ghost", "sm")}
         >
           {isSaved ? <BookmarkCheck className="size-4" aria-hidden="true" /> : <Bookmark className="size-4" aria-hidden="true" />}
           {isSaved ? "Saved" : "Save"}
@@ -116,14 +117,15 @@ export function AlternativeVoteButton({ relationshipId, count, path, signedIn }:
       onClick={toggle}
       disabled={pending}
       aria-pressed={state.voted}
-      title="Vote for this alternative"
+      title="This is a good alternative"
       className={cx(
-        "flex w-12 shrink-0 flex-col items-center rounded-lg border py-1.5 text-xs font-semibold tabular-nums transition",
-        state.voted ? "border-accent bg-accent text-accent-foreground" : "border-border hover:border-accent hover:text-accent",
+        "inline-flex h-8 shrink-0 items-center gap-1 rounded-md px-2 text-xs font-medium tabular-nums transition-colors",
+        state.voted ? "bg-accent-soft text-accent-soft-foreground" : "text-muted hover:bg-surface-secondary hover:text-foreground",
       )}
     >
       <ChevronUp className="size-4" aria-hidden="true" />
-      {state.count}
+      {state.voted ? "Upvoted" : "Upvote"}
+      {state.count > 0 && <span>{state.count}</span>}
       <span className="sr-only">votes</span>
     </button>
   );

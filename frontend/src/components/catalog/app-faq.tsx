@@ -71,13 +71,13 @@ export function buildAppFaq(app: ApplicationDetail): { question: string; answer:
 export function AppFaq({ name, items }: { name: string; items: { question: string; answer: string }[] }) {
   if (items.length === 0) return null;
   return (
-    <section>
-      <h2 className="mb-3 text-lg font-semibold">{name}: frequently asked questions</h2>
-      <div className="divide-y divide-border rounded-lg border border-border bg-surface">
+    <section id="faq" className="anchor-section">
+      <h2 className="mb-2 text-lg font-semibold tracking-tight">Frequently asked questions about {name}</h2>
+      <div className="divide-y divide-border border-y border-border">
         {items.map((q) => (
-          <div key={q.question} className="px-4 py-3">
+          <div key={q.question} className="py-4">
             <h3 className="font-medium">{q.question}</h3>
-            <p className="mt-1 text-sm text-foreground/85">{q.answer}</p>
+            <p className="mt-1.5 max-w-[68ch] text-[15px] leading-relaxed text-foreground/80">{q.answer}</p>
           </div>
         ))}
       </div>

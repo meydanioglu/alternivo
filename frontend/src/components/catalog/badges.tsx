@@ -83,7 +83,7 @@ export function AttributeBadges({ app }: { app: Pick<ApplicationSummary, "isSelf
 export function AlternativeRelationshipBadge({ source }: { source: "editorial" | "community" | "import" }) {
   return (
     <span className={chipClass(source === "community" ? "accent" : "default", "tertiary")}>
-      {source === "community" ? "Community suggestion" : source === "editorial" ? "Editor curated" : "Imported"}
+      {source === "community" ? "Community suggestion" : source === "editorial" ? "Editor curated" : "Same category"}
     </span>
   );
 }

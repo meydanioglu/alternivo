@@ -18,11 +18,11 @@ export function SectionHeader({ title, href, linkLabel = "View all", description
   return (
     <div className="mb-4 flex items-end justify-between gap-4">
       <div>
-        <h2 className="text-lg font-semibold tracking-tight sm:text-xl">{title}</h2>
+        <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
         {description && <p className="mt-0.5 text-sm text-muted">{description}</p>}
       </div>
       {href && (
-        <Link href={href} className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-accent hover:underline">
+        <Link href={href} className="inline-flex shrink-0 items-center gap-0.5 text-sm text-muted hover:text-foreground">
           {linkLabel} <ChevronRight className="size-4" aria-hidden="true" />
         </Link>
       )}

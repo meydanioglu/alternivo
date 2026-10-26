@@ -88,7 +88,7 @@ export function CategoriesMenu({ categories }: { categories: DirectoryCategory[]
         aria-expanded={open}
         aria-haspopup="dialog"
         onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-foreground/80 hover:bg-surface-secondary hover:text-foreground"
+        className="inline-flex items-center gap-1 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm text-muted transition-colors hover:text-foreground"
       >
         Categories <ChevronDown className={cx("size-4 transition", open && "rotate-180")} aria-hidden="true" />
       </button>

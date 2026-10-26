@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
       ? [{ protocol: "https", hostname: process.env.MEDIA_HOST }]
       : [],
   },
+  // In production Caddy serves /media from the API; in local development, proxy it to the live site.
+  async rewrites() {
+    return process.env.NODE_ENV === "development" && process.env.DEV_MEDIA_ORIGIN
+      ? [{ source: "/media/:path*", destination: `${process.env.DEV_MEDIA_ORIGIN}/media/:path*` }]
+      : [];
+  },
   async headers() {
     return [
       {

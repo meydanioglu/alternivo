@@ -22,7 +22,7 @@ export function ShareButton({ title, url }: { title: string; url: string }) {
   };
 
   return (
-    <Button variant="ghost" size="md" onPress={share}>
+    <Button variant="ghost" size="sm" onPress={share}>
       {copied ? <Check className="size-4" aria-hidden="true" /> : <Share2 className="size-4" aria-hidden="true" />}
       <span aria-live="polite">{copied ? "Link copied" : "Share"}</span>
     </Button>

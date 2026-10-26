@@ -3,14 +3,19 @@ import Link from "next/link";
 import type { ApplicationSummary } from "@/lib/api/types";
 import { formatNumber } from "@/lib/format";
 import { ApplicationLogo } from "./application-logo";
+import { pricingSummary } from "./software-row";
 import { LicenseBadge, PlatformList, PricingBadge } from "./badges";
 
-/** Real community numbers only; nothing is shown when there is no data yet. */
+/** Below this, a like count says more about how new the site is than about the product, so it is not shown. */
+const MIN_VISIBLE_LIKES = 5;
+
+/** Real community numbers only; nothing is shown when there is not enough data to mean anything. */
 export function CommunityStats({ app }: { app: Pick<ApplicationSummary, "likeCount" | "reviewCount" | "ratingAverage"> }) {
-  if (app.likeCount === 0 && app.reviewCount === 0) return null;
+  const showLikes = app.likeCount >= MIN_VISIBLE_LIKES;
+  if (!showLikes && app.reviewCount === 0) return null;
   return (
     <span className="inline-flex items-center gap-3 text-xs text-muted">
-      {app.likeCount > 0 && (
+      {showLikes && (
         <span className="inline-flex items-center gap-1" title="Community likes">
           <Heart className="size-3.5" aria-hidden="true" />
           {formatNumber(app.likeCount)}
@@ -37,13 +42,15 @@ export function SponsoredLabel({ children }: { children: string }) {
   );
 }
 
+/** Grid card for visual browsing: identity, one line of context, and a single metadata line. */
 export function ApplicationCard({ app }: { app: ApplicationSummary }) {
+  const meta = [pricingSummary(app), app.platforms.length > 0 ? platformSummary(app.platforms) : null].filter(Boolean);
   return (
-    <article className="group relative flex h-full flex-col gap-3 rounded-lg border border-border bg-surface p-4 transition-colors hover:border-accent/50">
+    <article className="group relative flex h-full flex-col gap-3 rounded-[10px] border border-border bg-surface p-4 transition-colors hover:border-foreground/20">
       <div className="flex items-start gap-3">
         <ApplicationLogo name={app.name} logoUrl={app.logoUrl} />
         <div className="min-w-0 flex-1">
-          <h3 className="truncate text-base font-semibold">
+          <h3 className="truncate font-semibold">
             <Link href={`/software/${app.slug}`} className="after:absolute after:inset-0 focus-visible:outline-none">
               {app.name}
             </Link>
@@ -51,21 +58,22 @@ export function ApplicationCard({ app }: { app: ApplicationSummary }) {
           {app.primaryCategory && <p className="truncate text-xs text-muted">{app.primaryCategory.name}</p>}
         </div>
         {app.isFeatured && <SponsoredLabel>Featured</SponsoredLabel>}
-        <CommunityStats app={app} />
       </div>
-      <p className="line-clamp-2 text-sm text-foreground/80">{app.shortDescription}</p>
-      <div className="mt-auto flex flex-wrap items-center gap-1.5">
-        <PricingBadge pricing={app.pricing} />
-        <LicenseBadge license={app.license} />
-      </div>
-      <PlatformList platforms={app.platforms} />
+      <p className="line-clamp-2 text-sm text-foreground/75">{app.shortDescription}</p>
+      {meta.length > 0 && <p className="mt-auto truncate text-xs text-muted">{meta.join(" · ")}</p>}
     </article>
   );
 }
 
+/** "Windows, macOS, Linux" or "Web + 4 more" — short enough for one line. */
+export function platformSummary(platforms: ApplicationSummary["platforms"], max = 3) {
+  const names = platforms.map((p) => p.name);
+  return names.length <= max ? names.join(", ") : `${names.slice(0, max).join(", ")} +${names.length - max}`;
+}
+
 export function CompactApplicationRow({ app, rank }: { app: ApplicationSummary; rank?: number }) {
   return (
-    <li className="relative flex min-w-0 items-center gap-3 rounded-md px-2 py-2.5 hover:bg-surface-secondary">
+    <li className="relative flex min-w-0 items-center gap-3 rounded-md px-2 py-2.5 hover:bg-surface-secondary/60">
       {rank !== undefined && <span className="w-5 text-right text-sm tabular-nums text-muted">{rank}</span>}
       <ApplicationLogo name={app.name} logoUrl={app.logoUrl} size="sm" />
       <div className="min-w-0 flex-1">

@@ -4,10 +4,13 @@ import { Button, Drawer } from "@heroui/react";
 import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { NAV_LINKS } from "./nav-links";
+import { MORE_LINKS, NAV_LINKS } from "./nav-links";
+
+const itemClass = "block rounded-md px-3 py-2.5 text-[15px] hover:bg-surface-secondary";
 
 export function MobileNav({ signedIn }: { signedIn: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
+  const close = () => setIsOpen(false);
 
   return (
     <>
@@ -22,30 +25,43 @@ export function MobileNav({ signedIn }: { signedIn: boolean }) {
               <Drawer.Heading>Menu</Drawer.Heading>
             </Drawer.Header>
             <Drawer.Body>
-              <nav aria-label="Mobile">
-                <ul className="flex flex-col gap-1">
+              <nav aria-label="Mobile" className="flex flex-col gap-5">
+                <ul className="flex flex-col">
                   {NAV_LINKS.map((link) => (
                     <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        onClick={() => setIsOpen(false)}
-                        className="block rounded-md px-3 py-2 text-base hover:bg-surface-secondary"
-                      >
+                      <Link href={link.href} onClick={close} className={`${itemClass} font-medium`}>
                         {link.label}
                       </Link>
                     </li>
                   ))}
-                  <li className="mt-2 border-t border-border pt-2">
-                    <Link href="/submit" onClick={() => setIsOpen(false)} className="block rounded-md px-3 py-2 text-base hover:bg-surface-secondary">
+                </ul>
+                <div>
+                  <p className="eyebrow px-3 pb-1">More</p>
+                  <ul className="flex flex-col">
+                    {MORE_LINKS.map((link) => (
+                      <li key={link.href}>
+                        <Link href={link.href} onClick={close} className={itemClass}>
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <ul className="flex flex-col border-t border-border pt-3">
+                  <li>
+                    <Link href="/submit" onClick={close} className={itemClass}>
                       Submit a product
                     </Link>
                   </li>
+                  {signedIn && (
+                    <li>
+                      <Link href="/maker" onClick={close} className={itemClass}>
+                        Maker dashboard
+                      </Link>
+                    </li>
+                  )}
                   <li>
-                    <Link
-                      href={signedIn ? "/account" : "/login"}
-                      onClick={() => setIsOpen(false)}
-                      className="block rounded-md px-3 py-2 text-base hover:bg-surface-secondary"
-                    >
+                    <Link href={signedIn ? "/account" : "/login"} onClick={close} className={itemClass}>
                       {signedIn ? "Your account" : "Sign in"}
                     </Link>
                   </li>
