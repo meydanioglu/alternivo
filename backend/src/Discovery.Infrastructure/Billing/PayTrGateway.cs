@@ -121,46 +121,70 @@ public sealed class PayTrGateway(
             return Result.UnknownOrder;
         }
 
-        if (order.Status != PaymentOrderStatus.Pending)
-        {
-            // Duplicate notification: re-derive in case an earlier attempt failed half-way, never charge or grant twice.
-            if (order.Status == PaymentOrderStatus.Paid) await maker.OnOrderPaidAsync(order.Id, ct);
-            return Result.Ok;
-        }
-
+        var paid = int.TryParse(total, NumberStyles.Integer, CultureInfo.InvariantCulture, out var t) ? t : 0;
+        var outcome = Classify(order.Status, order.TestMode, status, paid, order.AmountMinor, f.GetValueOrDefault("test_mode") == "1");
         var now = clock.GetUtcNow();
-        if (status == "success")
+        switch (outcome)
         {
-            // total_amount can be higher than the order (installment fees) but never lower.
-            var paid = int.TryParse(total, NumberStyles.Integer, CultureInfo.InvariantCulture, out var t) ? t : 0;
-            if (paid < order.AmountMinor)
-            {
-                order.Status = PaymentOrderStatus.Failed;
-                order.FailedReason = $"Amount mismatch: paid {paid}, expected {order.AmountMinor}";
-                logger.LogError("PayTR amount mismatch for {Order}: {Paid} < {Expected}", oid, paid, order.AmountMinor);
-            }
-            else
-            {
+            case Outcome.AlreadyPaid:
+                // Duplicate notification: re-derive in case an earlier attempt failed half-way, never charge or grant twice.
+                await maker.OnOrderPaidAsync(order.Id, ct);
+                return Result.Ok;
+            case Outcome.Ignore:
+                return Result.Ok;
+            case Outcome.MarkPaid or Outcome.LatePaid:
+                if (outcome == Outcome.LatePaid)
+                    logger.LogWarning("PayTR success for order {Order} that was marked {Status}; applying it", oid, order.Status);
                 order.Status = PaymentOrderStatus.Paid;
                 order.PaidAmountMinor = paid;
                 order.PaymentType = Truncate(f.GetValueOrDefault("payment_type") ?? "", 20);
-            }
-        }
-        else
-        {
-            order.Status = PaymentOrderStatus.Failed;
-            order.FailedReason = Truncate($"{f.GetValueOrDefault("failed_reason_code")} {f.GetValueOrDefault("failed_reason_msg")}".Trim(), 500);
+                order.FailedReason = null;
+                break;
+            case Outcome.AmountMismatch:
+                order.Status = PaymentOrderStatus.Failed;
+                order.FailedReason = $"Amount mismatch: paid {paid}, expected {order.AmountMinor} (needs reconciliation)";
+                logger.LogError("PayTR amount mismatch for {Order}: {Paid} < {Expected}", oid, paid, order.AmountMinor);
+                break;
+            case Outcome.TestModeMismatch:
+                order.Status = PaymentOrderStatus.Failed;
+                order.FailedReason = "Test-mode payment for a live order";
+                logger.LogError("PayTR test-mode notification for live order {Order}", oid);
+                break;
+            default:
+                order.Status = PaymentOrderStatus.Failed;
+                order.FailedReason = Truncate($"{f.GetValueOrDefault("failed_reason_code")} {f.GetValueOrDefault("failed_reason_msg")}".Trim(), 500);
+                break;
         }
 
         order.CompletedAt = now;
         db.AuditLogs.Add(new AuditLog
         {
-            UserId = order.UserId, Action = $"payment.{order.Status.ToString().ToLowerInvariant()}", EntityType = "PaymentOrder", EntityId = order.Id,
+            UserId = order.UserId, Action = $"payment.{(outcome == Outcome.LatePaid ? "late-paid" : order.Status.ToString().ToLowerInvariant())}",
+            EntityType = "PaymentOrder", EntityId = order.Id,
             DataJson = JsonSerializer.Serialize(new { oid, status, total, test = f.GetValueOrDefault("test_mode") }), CreatedAt = now,
         });
         await db.SaveChangesAsync(ct);
         if (order.Status == PaymentOrderStatus.Paid) await maker.OnOrderPaidAsync(order.Id, ct);
         return Result.Ok;
+    }
+
+    public enum Outcome { MarkPaid, LatePaid, MarkFailed, AmountMismatch, TestModeMismatch, AlreadyPaid, Ignore }
+
+    /// <summary>
+    /// Payment state machine for a signed notification. Pending orders complete once; paid orders are only re-derived;
+    /// refunded orders never change. A success for an order we had marked failed (e.g. the token call timed out but the
+    /// buyer still paid) is applied, because the money was taken — unless the amount or the mode does not match.
+    /// </summary>
+    public static Outcome Classify(PaymentOrderStatus current, bool orderTestMode, string status, int paidMinor, int expectedMinor, bool notificationTestMode)
+    {
+        if (current == PaymentOrderStatus.Paid) return Outcome.AlreadyPaid;
+        if (current is PaymentOrderStatus.Refunded or PaymentOrderStatus.PartiallyRefunded) return Outcome.Ignore;
+        var pending = current == PaymentOrderStatus.Pending;
+        if (status != "success") return pending ? Outcome.MarkFailed : Outcome.Ignore;
+        if (notificationTestMode && !orderTestMode) return pending ? Outcome.TestModeMismatch : Outcome.Ignore;
+        // total_amount can be higher than the order (installment fees) but never lower.
+        if (paidMinor < expectedMinor) return pending ? Outcome.AmountMismatch : Outcome.Ignore;
+        return pending ? Outcome.MarkPaid : Outcome.LatePaid;
     }
 
     private async Task MarkFailedAsync(Guid orderId, string reason, CancellationToken ct)

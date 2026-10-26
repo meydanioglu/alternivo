@@ -28,7 +28,7 @@ async function keywordEntries() {
   return entries;
 }
 
-const STATIC_PAGES = ["/", "/ais", "/software", "/categories", "/compare", "/launches", "/launches/archive", "/leaderboard", "/new-apps", "/trending", "/submit", "/submit-ai-tool", "/help", "/terms", "/privacy", "/pricing"];
+const STATIC_PAGES = ["/", "/ais", "/software", "/categories", "/compare", "/launches", "/launches/archive", "/leaderboard", "/new-apps", "/trending", "/submit", "/submit-ai-tool", "/help", "/terms", "/privacy", "/pricing", "/about", "/contact", "/refund-policy", "/delivery-policy", "/distance-sales-agreement"];
 
 /**
  * /sitemaps/{type}.xml. The API only returns canonical, indexable URLs (published apps,

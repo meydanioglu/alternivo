@@ -75,11 +75,21 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
         var userId = current.RequireUserId();
         var o = await db.PaymentOrders.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId, ct)
             ?? throw new Discovery.Application.Common.NotFoundException("Order", id.ToString());
-        return new { o.Id, o.PlanKey, status = o.Status.ToString(), o.AmountMinor, o.Currency, o.CreatedAt };
+        return new { o.Id, o.PlanKey, status = o.Status.ToString(), o.AmountMinor, o.Currency, o.CreatedAt, o.TermsAcceptedAt, o.TermsVersion };
+    }
+
+    /// <summary>The buyer confirms the pre-contract information and distance sales agreement before the payment form opens.</summary>
+    [HttpPost("orders/{id:guid}/accept-terms")]
+    public async Task<IActionResult> AcceptTerms(Guid id, AcceptTermsRequest request, [FromServices] MakerService maker, CancellationToken ct)
+    {
+        await maker.AcceptOrderTermsAsync(current.RequireUserId(), id, request.Version, ct);
+        return NoContent();
     }
 }
 
 public sealed record CheckoutRequest(string Plan, Guid? TargetId);
+
+public sealed record AcceptTermsRequest(string Version);
 
 [ApiController]
 [Route("api/v1/sponsored")]

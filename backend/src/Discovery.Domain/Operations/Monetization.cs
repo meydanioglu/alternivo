@@ -74,6 +74,10 @@ public enum PaymentOrderStatus
     Pending = 0,
     Paid = 1,
     Failed = 2,
+    /// <summary>The full amount was refunded; the purchase no longer has any effect.</summary>
+    Refunded = 3,
+    /// <summary>Part of the amount was refunded (e.g. unused prepaid days); the purchase was ended.</summary>
+    PartiallyRefunded = 4,
 }
 
 /// <summary>
@@ -100,6 +104,13 @@ public class PaymentOrder
     public string? FailedReason { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? CompletedAt { get; set; }
+    /// <summary>When the buyer confirmed the pre-contract information and the distance sales agreement.</summary>
+    public DateTimeOffset? TermsAcceptedAt { get; set; }
+    /// <summary>Version (date) of the agreement text the buyer accepted.</summary>
+    public string? TermsVersion { get; set; }
+    public int? RefundedAmountMinor { get; set; }
+    public DateTimeOffset? RefundedAt { get; set; }
+    public string? RefundReason { get; set; }
 }
 
 public class SponsorshipCampaign

@@ -11,14 +11,14 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy policy" updated="October 24, 2026" intro={<p>We collect as little personal data as we need to run {site.name}. This page explains what we collect and why.</p>}>
+    <LegalPage title="Privacy policy" updated="October 26, 2026" intro={<p>We collect as little personal data as we need to run {site.name}. This page explains what we collect and why.</p>}>
       <section>
         <h2>What we collect</h2>
         <ul>
           <li><strong>Account data:</strong> e-mail, display name, password hash, and the optional profile fields you fill in (username, bio, avatar, links).</li>
           <li><strong>Google sign-in:</strong> if you use it, we receive your Google account ID, e-mail, name and whether the e-mail is verified. We never see your Google password.</li>
           <li><strong>Your activity:</strong> likes, votes, bookmarks, reviews and product submissions.</li>
-          <li><strong>Purchases:</strong> for paid maker services we store the order, amount and payment result reported by PayTR. Card details are entered on PayTR&apos;s secure page and never reach us.</li>
+          <li><strong>Purchases:</strong> for paid maker services we store the order, amount and payment result reported by PayTR. Card details are entered on PayTR&apos;s secure page and never reach us. We also record when you accepted the distance sales agreement for an order, which version you accepted, and any refund made.</li>
           <li><strong>Technical data:</strong> IP address and user agent in server logs, kept for security and abuse prevention.</li>
         </ul>
       </section>
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
       <section>
         <h2>Contact</h2>
         <p>
-          For privacy questions see the <Link href="/help">Help center</Link>. We may update this policy and will show the date of the last
+          For privacy questions see <Link href="/contact">Contact</Link>. We may update this policy and will show the date of the last
           change at the top.
         </p>
       </section>

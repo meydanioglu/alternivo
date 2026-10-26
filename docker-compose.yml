@@ -75,6 +75,18 @@ services:
       API_INTERNAL_URL: http://api:8080
       API_INTERNAL_KEY: ${API_INTERNAL_KEY}
       MEDIA_HOST: ${MEDIA_HOST:-}
+      # Seller details for legal pages and checkout (see docs/paytr-readiness.md).
+      LEGAL_NAME: ${LEGAL_NAME:-}
+      LEGAL_TRADE_NAME: ${LEGAL_TRADE_NAME:-}
+      LEGAL_ADDRESS: ${LEGAL_ADDRESS:-}
+      LEGAL_TAX_OFFICE: ${LEGAL_TAX_OFFICE:-}
+      LEGAL_TAX_NUMBER: ${LEGAL_TAX_NUMBER:-}
+      LEGAL_MERSIS: ${LEGAL_MERSIS:-}
+      LEGAL_REGISTRY_NUMBER: ${LEGAL_REGISTRY_NUMBER:-}
+      LEGAL_KEP: ${LEGAL_KEP:-}
+      SUPPORT_EMAIL: ${SUPPORT_EMAIL:-}
+      SUPPORT_PHONE: ${SUPPORT_PHONE:-}
+      PRICE_TAX_NOTE: ${PRICE_TAX_NOTE:-}
     ports:
       - "127.0.0.1:3000:3000"
 

@@ -23,6 +23,7 @@ const FAQ = [
   { question: "Does Fast Review guarantee approval?", answer: "No. Fast Review only changes how quickly we review. The same approval standards apply, and approval is never guaranteed. If we miss the 24-hour window you can ask for a full refund." },
   { question: "Can I upgrade an existing submission?", answer: "Yes. While a submission is waiting for review you can buy Fast Review for it from your Maker dashboard. The 24 hours start when the payment is confirmed." },
   { question: "Can I cancel Featured or Growth?", answer: "There is nothing to cancel: Featured and Growth are prepaid 30-day periods that never renew automatically. Buy another period to extend." },
+  { question: "Can I get a refund?", answer: "Yes, in clear cases: Fast Review not completed within 24 hours, a rejected sponsored campaign, a period that has not started yet, a placement we end early, or a mistake on our side. Consumers also keep their statutory rights. See the refund policy for details." },
   { question: "Are clicks or customers guaranteed?", answer: "No. We show your product to people browsing relevant pages and report impressions and clicks, but we cannot promise traffic, rankings, sign-ups or sales." },
   { question: "How are sponsored products displayed?", answer: "In separate, clearly labelled areas (“Sponsored”, “Featured”, “Spotlight”). Paid placements never change organic rankings, votes, ratings or reviews, and sponsored links use rel=\"sponsored\"." },
 ];
@@ -168,7 +169,9 @@ export default async function PricingPage() {
           ))}
         </div>
         <p className="mt-6 text-xs text-muted">
-          Card payments are processed securely by PayTR. See our{" "}
+          Card payments are processed securely by PayTR. Before paying you see the total amount and confirm the{" "}
+          <Link href="/distance-sales-agreement" className="underline">distance sales agreement</Link>. See also our{" "}
+          <Link href="/refund-policy" className="underline">refund policy</Link>, <Link href="/delivery-policy" className="underline">delivery policy</Link> and{" "}
           <Link href="/terms#paid-services" className="underline">terms</Link>.
         </p>
       </section>

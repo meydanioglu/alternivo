@@ -129,8 +129,13 @@ const FOOTER_COLUMNS = [
   {
     title: "Legal",
     links: [
+      { href: "/about", label: "About" },
+      { href: "/contact", label: "Contact" },
       { href: "/terms", label: "Terms of service" },
       { href: "/privacy", label: "Privacy policy" },
+      { href: "/refund-policy", label: "Refund policy" },
+      { href: "/delivery-policy", label: "Delivery policy" },
+      { href: "/distance-sales-agreement", label: "Distance sales agreement" },
       { href: "/settings", label: "Settings" },
     ],
   },

@@ -433,6 +433,46 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
         await ReapplyAsync(e.Id, ct);
     }
 
+    /// <summary>
+    /// Records that the buyer confirmed the pre-contract information and the distance sales agreement for a pending order.
+    /// The payment form is only shown after this. Accepting again keeps the first timestamp.
+    /// </summary>
+    public async Task AcceptOrderTermsAsync(Guid userId, Guid orderId, string version, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(version) || version.Length > 20) throw new BadRequestException("Unknown agreement version.");
+        var order = await db.PaymentOrders.FirstOrDefaultAsync(o => o.Id == orderId && o.UserId == userId, ct)
+            ?? throw new NotFoundException("Order", orderId.ToString());
+        if (order.Status != PaymentOrderStatus.Pending) throw new ConflictException("This order is no longer open.");
+        if (order.TermsAcceptedAt is not null) return;
+        order.TermsAcceptedAt = clock.GetUtcNow();
+        order.TermsVersion = version;
+        Audit(userId, "payment.terms-accepted", "PaymentOrder", order.Id, new { version });
+        await db.SaveChangesAsync(ct);
+    }
+
+    /// <summary>
+    /// Records a refund made in the PayTR panel (or via its refund API) and ends the purchase's effect.
+    /// A partial refund (e.g. unused prepaid days) also ends the purchase.
+    /// </summary>
+    public async Task RecordRefundAsync(Guid actorId, Guid orderId, int amountMinor, string reason, CancellationToken ct)
+    {
+        var order = await db.PaymentOrders.FirstOrDefaultAsync(o => o.Id == orderId, ct)
+            ?? throw new NotFoundException("Order", orderId.ToString());
+        var paid = order.PaidAmountMinor ?? order.AmountMinor;
+        if (order.Status != PaymentOrderStatus.Paid) throw new ConflictException("Only paid orders can be refunded.");
+        if (amountMinor <= 0 || amountMinor > paid) throw new BadRequestException("Refund amount must be between 1 and the paid amount.");
+        if (string.IsNullOrWhiteSpace(reason)) throw new BadRequestException("A refund reason is required.");
+        var now = clock.GetUtcNow();
+        order.Status = amountMinor >= paid ? PaymentOrderStatus.Refunded : PaymentOrderStatus.PartiallyRefunded;
+        order.RefundedAmountMinor = amountMinor;
+        order.RefundedAt = now;
+        order.RefundReason = reason.Length <= 500 ? reason : reason[..500];
+        Audit(actorId, "payment.refund-recorded", "PaymentOrder", order.Id, new { amountMinor, reason });
+        await db.SaveChangesAsync(ct);
+        var e = await db.BillingEntitlements.FirstOrDefaultAsync(x => x.OrderId == order.Id, ct);
+        if (e is { IsCanceled: false }) await CancelEntitlementAsync(actorId, e.Id, ct);
+    }
+
     /// <summary>Moves a purchase to another eligible target (e.g. a Featured period to a different product).</summary>
     public async Task AssignAsync(Guid userId, Guid entitlementId, Guid targetId, CancellationToken ct)
     {

@@ -143,7 +143,8 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         return orders.Select(o => new
         {
             o.Id, o.MerchantOid, o.PlanKey, status = o.Status.ToString(), o.AmountMinor, o.PaidAmountMinor, o.Currency, o.TestMode,
-            o.PaymentType, o.FailedReason, o.CreatedAt, o.CompletedAt, email = emails.GetValueOrDefault(o.UserId),
+            o.PaymentType, o.FailedReason, o.CreatedAt, o.CompletedAt, o.TermsAcceptedAt, o.TermsVersion,
+            o.RefundedAmountMinor, o.RefundedAt, o.RefundReason, email = emails.GetValueOrDefault(o.UserId),
             entitlementId = entitlements.GetValueOrDefault(o.Id)?.Id,
             refunded = entitlements.GetValueOrDefault(o.Id)?.IsCanceled ?? false,
         });
@@ -155,6 +156,16 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
     public async Task<IActionResult> MarkRefunded(Guid id, [FromServices] Discovery.Application.Community.MakerService maker, CancellationToken ct)
     {
         await maker.CancelEntitlementAsync(current.RequireUserId(), id, ct);
+        return NoContent();
+    }
+
+    /// <summary>Records a refund made in the PayTR panel against the order (full or partial) and ends the purchase.</summary>
+    [HttpPost("payments/{id:guid}/refund")]
+    [Authorize(Policy = Policies.Administration)]
+    public async Task<IActionResult> RecordRefund(Guid id, RecordRefundRequest request,
+        [FromServices] Discovery.Application.Community.MakerService maker, CancellationToken ct)
+    {
+        await maker.RecordRefundAsync(current.RequireUserId(), id, request.AmountMinor, request.Reason ?? "", ct);
         return NoContent();
     }
 
@@ -548,3 +559,5 @@ public sealed class AdminSettingsController(
         return new { ok, message };
     }
 }
+
+public sealed record RecordRefundRequest(int AmountMinor, string? Reason);

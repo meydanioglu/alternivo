@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms of service" updated="October 25, 2026" intro={<p>These terms apply to your use of {site.name} ({site.url}). By using the site or creating an account you agree to them.</p>}>
+    <LegalPage title="Terms of service" updated="October 26, 2026" intro={<p>These terms apply to your use of {site.name} ({site.url}). By using the site or creating an account you agree to them.</p>}>
       <section>
         <h2>1. The service</h2>
         <p>
@@ -45,7 +45,12 @@ export default function TermsPage() {
       <section id="paid-services">
         <h2>5. Paid services for makers</h2>
         <ul>
-          <li>Submitting a product is free. Optional paid services are listed on our <Link href="/pricing">pricing page</Link>.</li>
+          <li>Submitting a product is free. Optional paid services are listed on our <Link href="/pricing">pricing page</Link>. They are digital promotional services provided by {site.name} itself; we do not sell or license third-party software.</li>
+          <li>
+            Each purchase is governed by the <Link href="/distance-sales-agreement">pre-contract information and distance sales agreement</Link>,
+            which you confirm at checkout, together with our <Link href="/delivery-policy">delivery policy</Link> and{" "}
+            <Link href="/refund-policy">refund policy</Link>.
+          </li>
           <li>
             Card payments are processed by PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş. Prices are shown before payment, in the currency
             charged.
@@ -66,6 +71,7 @@ export default function TermsPage() {
           <li>All paid placements are labelled (“Featured”, “Sponsored”, “Spotlight”, “Fast Review”) and never change organic rankings, votes, ratings or reviews.</li>
           <li>We do not promise any number of visitors, clicks, sign-ups or sales.</li>
           <li>We may refuse or end a placement that breaks these terms; in that case unused prepaid time is refunded.</li>
+          <li>If you buy as a consumer, you also have the statutory rights described in the distance sales agreement, including the right of withdrawal where it applies.</li>
         </ul>
       </section>
       <section>
@@ -90,7 +96,7 @@ export default function TermsPage() {
       <section>
         <h2>9. Contact</h2>
         <p>
-          Questions? See the <Link href="/help">Help center</Link>. Our <Link href="/privacy">Privacy policy</Link> explains how we handle
+          Questions? See <Link href="/contact">Contact</Link> or the <Link href="/help">Help center</Link>. Our <Link href="/privacy">Privacy policy</Link> explains how we handle
           personal data.
         </p>
       </section>

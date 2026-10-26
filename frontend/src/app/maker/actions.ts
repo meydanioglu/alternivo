@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { FormState } from "@/app/actions";
+import { AGREEMENT_VERSION } from "@/config/business";
 import { startCheckout } from "@/lib/auth/checkout";
 import { AuthApiError, userApi } from "@/lib/auth/session";
 
@@ -62,4 +63,18 @@ export async function cancelCampaignAction(id: string): Promise<{ error?: string
   }
   revalidatePath("/maker");
   return {};
+}
+
+/** Records the buyer's confirmation of the pre-contract information and agreement, then shows the payment form. */
+export async function acceptTermsAction(_: FormState, form: FormData): Promise<FormState> {
+  const orderId = String(form.get("orderId") ?? "");
+  if (form.get("agreement") !== "on" || form.get("immediate") !== "on") {
+    return { error: "Please tick both boxes to continue." };
+  }
+  try {
+    await userApi(`/api/v1/maker/orders/${encodeURIComponent(orderId)}/accept-terms`, { method: "POST", body: { version: AGREEMENT_VERSION } });
+  } catch (error) {
+    return { error: errorText(error, "Could not confirm the order. Please start again from your dashboard.") };
+  }
+  redirect(`/maker/pay/${encodeURIComponent(orderId)}`);
 }

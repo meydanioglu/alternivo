@@ -224,6 +224,8 @@ internal sealed class PaymentOrderConfiguration : IEntityTypeConfiguration<Payme
         b.Property(x => x.Currency).HasMaxLength(4).IsRequired();
         b.Property(x => x.PaymentType).HasMaxLength(20);
         b.Property(x => x.FailedReason).HasMaxLength(500);
+        b.Property(x => x.TermsVersion).HasMaxLength(20);
+        b.Property(x => x.RefundReason).HasMaxLength(500);
         b.HasIndex(x => new { x.UserId, x.CreatedAt });
     }
 }
