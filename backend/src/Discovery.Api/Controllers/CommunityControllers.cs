@@ -55,6 +55,7 @@ public sealed class ApplicationCommunityController(CommunityService community, H
         community.GetReviewsAsync(id, page, ct);
 
     [HttpPost("{id:guid}/reviews")]
+    [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public async Task<ActionResult<ReviewDto>> CreateReview(Guid id, CreateReviewRequest request, CancellationToken ct)
     {
@@ -64,6 +65,7 @@ public sealed class ApplicationCommunityController(CommunityService community, H
 
     /// <summary>Suggest that {alternativeSlug} is an alternative to {slug}. Goes to moderation.</summary>
     [HttpPost("{slug}/alternatives")]
+    [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public async Task<IActionResult> SuggestAlternative(string slug, SuggestAlternativeRequest request, CancellationToken ct)
     {
@@ -96,6 +98,7 @@ public sealed class AlternativesController(CommunityService community, HttpCurre
 public sealed class ReviewsController(CommunityService community, HttpCurrentUser user) : ControllerBase
 {
     [HttpPut("{id:guid}")]
+    [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public Task<ReviewDto> Update(Guid id, UpdateReviewRequest request, CancellationToken ct) =>
         community.UpdateReviewAsync(user.RequireUserId(), id, request, ct);
@@ -105,6 +108,7 @@ public sealed class ReviewsController(CommunityService community, HttpCurrentUse
 [Route("api/v1/submissions")]
 [Produces("application/json")]
 [Authorize]
+[RequireConfirmedEmail]
 public sealed class SubmissionsController(CommunityService community, HttpCurrentUser user) : ControllerBase
 {
     [HttpPost]
@@ -120,6 +124,7 @@ public sealed class SubmissionsController(CommunityService community, HttpCurren
 [Route("api/v1/reports")]
 [Produces("application/json")]
 [Authorize]
+[RequireConfirmedEmail]
 public sealed class ReportsController(CommunityService community, HttpCurrentUser user) : ControllerBase
 {
     [HttpPost]

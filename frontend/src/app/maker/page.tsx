@@ -16,6 +16,7 @@ import { site } from "@/config/site";
 import { api } from "@/lib/api/client";
 import type { ApplicationSummary, Category } from "@/lib/api/types";
 import { billingConfig, formatPrice, pricing } from "@/lib/auth/integrations";
+import { ConfirmEmailNotice } from "@/components/account/confirm-email-notice";
 import { getCurrentUser, userApi } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "Maker dashboard", robots: { index: false, follow: false } };
@@ -134,6 +135,11 @@ export default async function MakerPage({ searchParams }: Props) {
 
   return (
     <Container className="py-8">
+      {!user.emailConfirmed && (
+        <div className="mb-6">
+          <ConfirmEmailNotice email={user.email} />
+        </div>
+      )}
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Maker dashboard{data.foundingVendor && " · Founding vendor"}</p>

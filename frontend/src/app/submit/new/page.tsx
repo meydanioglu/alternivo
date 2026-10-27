@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { ConfirmEmailNotice } from "@/components/account/confirm-email-notice";
 import { Container } from "@/components/layout/page-parts";
 import { SubmitForm } from "@/components/submit/submit-form";
 import { api } from "@/lib/api/client";
@@ -13,7 +14,16 @@ const flatten = (items: Category[], prefix = ""): { slug: string; name: string }
   items.flatMap((c) => [{ slug: c.slug, name: prefix + c.name }, ...flatten(c.children ?? [], `${prefix}${c.name} › `)]);
 
 export default async function NewSubmissionPage() {
-  if (!(await getCurrentUser())) redirect("/login?next=/submit/new");
+  const user = await getCurrentUser();
+  if (!user) redirect("/login?next=/submit/new");
+  if (!user.emailConfirmed) {
+    return (
+      <Container className="max-w-3xl py-8">
+        <h1 className="mb-6 text-2xl font-semibold tracking-tight sm:text-3xl">Submit a product</h1>
+        <ConfirmEmailNotice email={user.email} />
+      </Container>
+    );
+  }
   const [categories, platforms, billing, prices] = await Promise.all([api.categories(), api.platforms(), billingConfig(), pricing()]);
   const fast = prices.plans.find((p) => p.key === "fastReview");
 

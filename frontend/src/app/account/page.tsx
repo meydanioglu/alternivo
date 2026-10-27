@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logoutAction } from "@/app/actions";
+import { ConfirmEmailNotice } from "@/components/account/confirm-email-notice";
 import { UserAvatar } from "@/components/account/user-avatar";
 import { ApplicationGrid } from "@/components/catalog/application-card";
 import { Container, EmptyState } from "@/components/layout/page-parts";
@@ -43,6 +44,11 @@ export default async function AccountPage({ searchParams }: Props) {
 
   return (
     <Container className="py-8">
+      {!user.emailConfirmed && (
+        <div className="mb-6">
+          <ConfirmEmailNotice email={user.email} />
+        </div>
+      )}
       <header className="flex flex-wrap items-center gap-4 border-b border-border pb-6">
         <UserAvatar name={user.displayName} url={user.avatarUrl} size="md" />
         <div className="min-w-0 flex-1">

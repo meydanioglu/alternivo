@@ -22,6 +22,7 @@ const safeNext = (value: string) => (value.startsWith("/") && !value.startsWith(
 
 function failure(error: unknown, fallback: string): FormState {
   if (error instanceof AuthApiError) {
+    if (error.status === 403 && error.message.startsWith("Confirm your e-mail")) return { error: error.message };
     if (error.status === 401 || error.status === 403) return { error: "Please sign in again to continue." };
     if (error.status === 429) return { error: "Too many attempts. Please wait a few minutes and try again." };
     return { error: error.message || fallback };
@@ -79,6 +80,18 @@ export async function registerAction(_: FormState, form: FormData): Promise<Form
     // The account works without a display name; it can be set later on the account page.
   }
   redirect(safeNext(text(form, "next")));
+}
+
+/** Sends a new confirmation e-mail to the signed-in user. The API answers the same way whether or not it was sent. */
+export async function resendConfirmationAction(_: FormState, form: FormData): Promise<FormState> {
+  const email = text(form, "email");
+  if (!email) return { error: "Sign in again to request a new link." };
+  try {
+    await authPost("resendConfirmationEmail", { email });
+  } catch (error) {
+    return failure(error, "Could not send the e-mail. Please try again later.");
+  }
+  return { ok: `We sent a new confirmation link to ${email}. Check your inbox and spam folder.` };
 }
 
 export async function logoutAction() {

@@ -38,6 +38,7 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
         maker.AvailabilityAsync(plan, target, startsAt, ct);
 
     [HttpPost("campaigns")]
+    [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public async Task<object> CreateCampaign(CreateCampaignRequest request, CancellationToken ct) =>
         new { id = await maker.CreateCampaignAsync(current.RequireUserId(), request, ct) };
@@ -55,6 +56,7 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
     /// Nothing is granted here: the effect is applied only when PayTR's signed payment notification arrives.
     /// </summary>
     [HttpPost("checkout")]
+    [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public async Task<object> Checkout(CheckoutRequest request, [FromServices] PayTrGateway paytr,
         [FromServices] UserManager<AppUser> users, [FromServices] IConfiguration config, CancellationToken ct)
@@ -89,6 +91,7 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
 
     /// <summary>Records a link to a public post about Alternivo (checked by a moderator); shortens the free review to 7 days.</summary>
     [HttpPost("submissions/{id:guid}/share/post")]
+    [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public async Task<IActionResult> SharePost(Guid id, SharePostRequest request, [FromServices] Discovery.Infrastructure.Community.ShareProofVerifier verifier, CancellationToken ct)
     {

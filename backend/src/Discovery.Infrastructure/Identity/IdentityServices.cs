@@ -4,6 +4,7 @@ using Discovery.Application.Abstractions;
 using Discovery.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -42,11 +43,27 @@ public sealed class SmtpOptions
 /// Sends Identity e-mails (confirmation, password reset). When SMTP is not configured the
 /// message is written to the log so local development still works.
 /// </summary>
-public sealed class EmailSender(IOptions<SmtpOptions> options, ILogger<EmailSender> logger) : IEmailSender<AppUser>
+public sealed class EmailSender(IOptions<SmtpOptions> options, IConfiguration config, ILogger<EmailSender> logger) : IEmailSender<AppUser>
 {
-    public Task SendConfirmationLinkAsync(AppUser user, string email, string confirmationLink) =>
-        SendAsync(email, "Confirm your e-mail address",
-            $"<p>Confirm your account by <a href=\"{WebUtility.HtmlEncode(confirmationLink)}\">clicking here</a>.</p>");
+    public Task SendConfirmationLinkAsync(AppUser user, string email, string confirmationLink)
+    {
+        var link = WebUtility.HtmlEncode(SiteConfirmationLink(config["Site:Url"], confirmationLink));
+        return SendAsync(email, "Confirm your e-mail address for Alternivo",
+            $"<p>Welcome to Alternivo.</p><p>Please confirm your e-mail address so you can submit products, write reviews and suggest alternatives:</p>" +
+            $"<p><a href=\"{link}\">Confirm my e-mail address</a></p>" +
+            "<p>If you did not create an account, you can ignore this e-mail.</p>");
+    }
+
+    /// <summary>
+    /// Identity builds the link against the API's internal host. Users get a link to the public site instead,
+    /// whose /confirm-email page passes the same userId and code on to the API.
+    /// </summary>
+    public static string SiteConfirmationLink(string? siteUrl, string apiLink)
+    {
+        var site = siteUrl?.TrimEnd('/');
+        var q = Uri.TryCreate(apiLink, UriKind.Absolute, out var uri) ? uri.Query : null;
+        return string.IsNullOrEmpty(site) || string.IsNullOrEmpty(q) ? apiLink : $"{site}/confirm-email{q}";
+    }
 
     public Task SendPasswordResetLinkAsync(AppUser user, string email, string resetLink) =>
         SendAsync(email, "Reset your password",
