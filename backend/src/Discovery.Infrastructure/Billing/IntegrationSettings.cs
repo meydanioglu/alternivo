@@ -119,7 +119,9 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
     private static LemonConfig? LemonOf(Dictionary<string, string> s) =>
         s.TryGetValue("lemon.apiKey", out var key) && s.TryGetValue("lemon.webhookSecret", out var secret) && s.TryGetValue("lemon.storeId", out var store)
             // The Lemon Squeezy store is set up in US dollars; plan prices are entered in cents.
-            ? new LemonConfig(key, secret, store, s.GetValueOrDefault("lemon.testMode") == "1", "USD", PricesOf(s))
+            // A plan without an entered price sells at the catalogue price shown on the pricing page.
+            ? new LemonConfig(key, secret, store, s.GetValueOrDefault("lemon.testMode") == "1", "USD",
+                PricingCatalog.Plans.ToDictionary(p => p.Key, p => PricesOf(s).GetValueOrDefault(p.Key, p.PriceCents)))
             : null;
 
     /// <summary>Lemon Squeezy when it is selected and configured, otherwise PayTR when configured; null when nothing is on sale.</summary>
