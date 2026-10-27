@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Mail;
 using Discovery.Application.Abstractions;
 using Discovery.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Identity;
@@ -83,18 +82,26 @@ public sealed class EmailSender(IOptions<SmtpOptions> options, Billing.Integrati
             return;
         }
 
-        using var message = new MailMessage(o.From, to, subject, html) { IsBodyHtml = true };
-        using var client = new SmtpClient(o.Host, o.Port) { EnableSsl = o.EnableSsl };
-        if (!string.IsNullOrEmpty(o.Username))
-        {
-            client.Credentials = new NetworkCredential(o.Username, o.Password);
-        }
+        var message = new MimeKit.MimeMessage();
+        message.From.Add(MimeKit.MailboxAddress.Parse(o.From));
+        message.To.Add(MimeKit.MailboxAddress.Parse(to));
+        message.Subject = subject;
+        message.Body = new MimeKit.TextPart(MimeKit.Text.TextFormat.Html) { Text = html };
 
         try
         {
-            await client.SendMailAsync(message);
+            using var client = new MailKit.Net.Smtp.SmtpClient();
+            // 465 is implicit TLS; other ports (587) upgrade with STARTTLS, which Brevo requires before it accepts AUTH.
+            var security = !o.EnableSsl ? MailKit.Security.SecureSocketOptions.None
+                : o.Port == 465 ? MailKit.Security.SecureSocketOptions.SslOnConnect
+                : MailKit.Security.SecureSocketOptions.StartTls;
+            await client.ConnectAsync(o.Host, o.Port, security);
+            if (!string.IsNullOrEmpty(o.Username)) await client.AuthenticateAsync(o.Username, o.Password);
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
         }
-        catch (Exception ex) when (ex is SmtpException or InvalidOperationException or IOException)
+        catch (Exception ex) when (ex is MailKit.ProtocolException or MailKit.Net.Smtp.SmtpCommandException or MailKit.Security.AuthenticationException
+            or MailKit.Security.SslHandshakeException or System.Net.Sockets.SocketException or IOException or InvalidOperationException)
         {
             // A mail failure must not fail registration; the user can request a new link from their account page.
             logger.LogError(ex, "Could not send e-mail {Subject} to {To} via {Host}", subject, to, o.Host);
