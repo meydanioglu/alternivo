@@ -43,7 +43,9 @@ function titleFor(data: AlternativesPage) {
   const hasFree = pricing.has("free") || pricing.has("freemium");
   const hasPaid = pricing.has("paid") || pricing.has("subscription") || pricing.has("one-time-purchase");
   const suffix = hasFree && hasPaid ? " (Free & Paid)" : hasFree ? " (Free)" : "";
-  return `Best ${name} Alternatives in ${currentYear()}${suffix}`;
+  const base = `Best ${name} Alternatives in ${currentYear()}`;
+  // Long product names drop the pricing suffix so the <title> stays readable in search results.
+  return base.length + suffix.length > 58 ? base : base + suffix;
 }
 
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
