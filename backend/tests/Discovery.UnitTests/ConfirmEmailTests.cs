@@ -21,3 +21,26 @@ public class ConfirmEmailTests
         Assert.Equal(api, EmailSender.SiteConfirmationLink(site, api));
     }
 }
+
+public class EmailTemplateTests
+{
+    [Fact]
+    public void Confirmation_contains_the_link_as_button_and_plain_text()
+    {
+        const string link = "https://alternivo.com/confirm-email?userId=abc&code=x%2By";
+        var mail = EmailTemplate.Confirmation("https://alternivo.com/", link);
+        Assert.Contains("href=\"https://alternivo.com/confirm-email?userId=abc&amp;code=x%2By\"", mail.Html);
+        Assert.Contains(link, mail.Text);
+        Assert.Contains("https://alternivo.com/brand/logo-on-light.png", mail.Html);
+        var preview = Environment.GetEnvironmentVariable("EMAIL_PREVIEW");
+        if (!string.IsNullOrEmpty(preview)) File.WriteAllText(preview, mail.Html);
+    }
+
+    [Fact]
+    public void Reset_code_is_html_encoded()
+    {
+        var mail = EmailTemplate.PasswordResetCode("https://alternivo.com", "<b>1</b>");
+        Assert.DoesNotContain("<b>1</b>", mail.Html);
+        Assert.Contains("&lt;b&gt;1&lt;/b&gt;", mail.Html);
+    }
+}

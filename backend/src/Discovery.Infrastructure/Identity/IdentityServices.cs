@@ -45,14 +45,10 @@ public sealed class SmtpOptions
 public sealed class EmailSender(IOptions<SmtpOptions> options, Billing.IntegrationSettings settings, IConfiguration config,
     ILogger<EmailSender> logger) : IEmailSender<AppUser>
 {
-    public Task SendConfirmationLinkAsync(AppUser user, string email, string confirmationLink)
-    {
-        var link = WebUtility.HtmlEncode(SiteConfirmationLink(config["Site:Url"], confirmationLink));
-        return SendAsync(email, "Confirm your e-mail address for Alternivo",
-            $"<p>Welcome to Alternivo.</p><p>Please confirm your e-mail address so you can submit products, write reviews and suggest alternatives:</p>" +
-            $"<p><a href=\"{link}\">Confirm my e-mail address</a></p>" +
-            "<p>If you did not create an account, you can ignore this e-mail.</p>");
-    }
+    private string Site => config["Site:Url"] ?? "https://alternivo.com";
+
+    public Task SendConfirmationLinkAsync(AppUser user, string email, string confirmationLink) =>
+        SendAsync(email, EmailTemplate.Confirmation(Site, SiteConfirmationLink(Site, confirmationLink)));
 
     /// <summary>
     /// Identity builds the link against the API's internal host. Users get a link to the public site instead,
@@ -66,15 +62,14 @@ public sealed class EmailSender(IOptions<SmtpOptions> options, Billing.Integrati
     }
 
     public Task SendPasswordResetLinkAsync(AppUser user, string email, string resetLink) =>
-        SendAsync(email, "Reset your password",
-            $"<p>Reset your password by <a href=\"{WebUtility.HtmlEncode(resetLink)}\">clicking here</a>.</p>");
+        SendAsync(email, EmailTemplate.PasswordReset(Site, resetLink));
 
     public Task SendPasswordResetCodeAsync(AppUser user, string email, string resetCode) =>
-        SendAsync(email, "Your password reset code",
-            $"<p>Your password reset code is: <strong>{WebUtility.HtmlEncode(resetCode)}</strong></p>");
+        SendAsync(email, EmailTemplate.PasswordResetCode(Site, resetCode));
 
-    private async Task SendAsync(string to, string subject, string html)
+    private async Task SendAsync(string to, EmailContent content)
     {
+        var (subject, html) = (content.Subject, content.Html);
         var o = await settings.SmtpAsync(CancellationToken.None) ?? options.Value;
         if (string.IsNullOrWhiteSpace(o.Host))
         {
@@ -83,10 +78,10 @@ public sealed class EmailSender(IOptions<SmtpOptions> options, Billing.Integrati
         }
 
         var message = new MimeKit.MimeMessage();
-        message.From.Add(MimeKit.MailboxAddress.Parse(o.From));
+        message.From.Add(new MimeKit.MailboxAddress("Alternivo", MimeKit.MailboxAddress.Parse(o.From).Address));
         message.To.Add(MimeKit.MailboxAddress.Parse(to));
         message.Subject = subject;
-        message.Body = new MimeKit.TextPart(MimeKit.Text.TextFormat.Html) { Text = html };
+        message.Body = new MimeKit.BodyBuilder { HtmlBody = html, TextBody = content.Text }.ToMessageBody();
 
         try
         {
