@@ -14,6 +14,15 @@ public sealed record PayTrConfig(string MerchantId, string MerchantKey, string M
     public int? PriceOf(string planKey) => Prices.TryGetValue(planKey, out var p) && p > 0 ? p : null;
 }
 
+/// <summary>Lemon Squeezy store credentials. Prices are the same plan prices as PayTR, charged in the store currency.</summary>
+public sealed record LemonConfig(string ApiKey, string WebhookSecret, string StoreId, bool TestMode, string Currency, IReadOnlyDictionary<string, int> Prices)
+{
+    public int? PriceOf(string planKey) => Prices.TryGetValue(planKey, out var p) && p > 0 ? p : null;
+}
+
+/// <summary>The payment provider used for new checkouts, with the plans on sale and their currency.</summary>
+public sealed record ActivePayments(string Provider, IReadOnlyDictionary<string, int> Prices, string Currency, bool TestMode);
+
 public sealed record GoogleConfig(string ClientId, string ClientSecret);
 
 /// <summary>Admin view: secrets are never returned, only whether they are set.</summary>
@@ -25,7 +34,12 @@ public sealed record IntegrationSettingsView(
     string PayTrCurrency,
     IReadOnlyDictionary<string, int> Prices,
     string? GoogleClientId,
-    bool GoogleSecretSet);
+    bool GoogleSecretSet,
+    string PaymentProvider,
+    string? LemonStoreId,
+    bool LemonApiKeySet,
+    bool LemonWebhookSecretSet,
+    bool LemonTestMode);
 
 public sealed record SaveIntegrationSettingsRequest(
     string? PayTrMerchantId,
@@ -36,7 +50,13 @@ public sealed record SaveIntegrationSettingsRequest(
     /// <summary>Plan key → price in minor units; 0 or missing disables the plan.</summary>
     IReadOnlyDictionary<string, int?>? Prices,
     string? GoogleClientId,
-    string? GoogleClientSecret);
+    string? GoogleClientSecret,
+    /// <summary>"paytr" or "lemonsqueezy".</summary>
+    string? PaymentProvider = null,
+    string? LemonStoreId = null,
+    string? LemonApiKey = null,
+    string? LemonWebhookSecret = null,
+    bool? LemonTestMode = null);
 
 /// <summary>
 /// Payment (PayTR) and Google sign-in settings stored in AppSettings. Secret values are encrypted with
@@ -46,14 +66,14 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
 {
     private readonly IDataProtector _protector = protection.CreateProtector("Discovery.Settings.v1");
 
-    private static readonly string[] Secrets = ["paytr.merchantKey", "paytr.merchantSalt", "google.clientSecret"];
+    private static readonly string[] Secrets = ["paytr.merchantKey", "paytr.merchantSalt", "google.clientSecret", "lemon.apiKey", "lemon.webhookSecret"];
     private static readonly string[] Currencies = ["TL", "USD", "EUR", "GBP"];
     private const string PricePrefix = "paytr.price.";
 
     private async Task<Dictionary<string, string>> LoadAsync(CancellationToken ct)
     {
         var rows = await db.AppSettings.AsNoTracking()
-            .Where(s => s.Key.StartsWith("paytr.") || s.Key.StartsWith("google."))
+            .Where(s => s.Key.StartsWith("paytr.") || s.Key.StartsWith("google.") || s.Key.StartsWith("lemon.") || s.Key.StartsWith("payments."))
             .ToListAsync(ct);
         var result = new Dictionary<string, string>();
         foreach (var row in rows)
@@ -94,6 +114,27 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         return new PayTrConfig(id, key, salt, s.GetValueOrDefault("paytr.testMode") == "1", s.GetValueOrDefault("paytr.currency") ?? "TL", PricesOf(s));
     }
 
+    public async Task<LemonConfig?> LemonAsync(CancellationToken ct) => LemonOf(await LoadAsync(ct));
+
+    private static LemonConfig? LemonOf(Dictionary<string, string> s) =>
+        s.TryGetValue("lemon.apiKey", out var key) && s.TryGetValue("lemon.webhookSecret", out var secret) && s.TryGetValue("lemon.storeId", out var store)
+            // The Lemon Squeezy store is set up in US dollars; plan prices are entered in cents.
+            ? new LemonConfig(key, secret, store, s.GetValueOrDefault("lemon.testMode") == "1", "USD", PricesOf(s))
+            : null;
+
+    /// <summary>Lemon Squeezy when it is selected and configured, otherwise PayTR when configured; null when nothing is on sale.</summary>
+    public async Task<ActivePayments?> ActiveAsync(CancellationToken ct)
+    {
+        var s = await LoadAsync(ct);
+        if (s.GetValueOrDefault("payments.provider") == "lemonsqueezy")
+        {
+            return LemonOf(s) is { } l ? new ActivePayments("lemonsqueezy", l.Prices, l.Currency, l.TestMode) : null;
+        }
+
+        var p = await PayTrAsync(ct);
+        return p is null ? null : new ActivePayments("paytr", p.Prices, p.Currency, p.TestMode);
+    }
+
     public async Task<GoogleConfig?> GoogleAsync(CancellationToken ct)
     {
         var s = await LoadAsync(ct);
@@ -106,7 +147,9 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         return new IntegrationSettingsView(
             s.GetValueOrDefault("paytr.merchantId"), s.ContainsKey("paytr.merchantKey"), s.ContainsKey("paytr.merchantSalt"),
             s.GetValueOrDefault("paytr.testMode") == "1", s.GetValueOrDefault("paytr.currency") ?? "TL", PricesOf(s),
-            s.GetValueOrDefault("google.clientId"), s.ContainsKey("google.clientSecret"));
+            s.GetValueOrDefault("google.clientId"), s.ContainsKey("google.clientSecret"),
+            s.GetValueOrDefault("payments.provider") ?? "paytr", s.GetValueOrDefault("lemon.storeId"), s.ContainsKey("lemon.apiKey"),
+            s.ContainsKey("lemon.webhookSecret"), s.GetValueOrDefault("lemon.testMode") == "1");
     }
 
     /// <summary>null leaves a value unchanged; "" removes it.</summary>
@@ -127,6 +170,13 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
 
         await SetAsync("google.clientId", r.GoogleClientId, false, userId, v => v.EndsWith(".apps.googleusercontent.com") && v.Length < 200, ct);
         await SetAsync("google.clientSecret", r.GoogleClientSecret, true, userId, IsKey, ct);
+
+        await SetAsync("payments.provider", r.PaymentProvider, false, userId, v => v is "paytr" or "lemonsqueezy", ct);
+        await SetAsync("lemon.storeId", r.LemonStoreId, false, userId, v => v.Length <= 20 && v.All(char.IsDigit), ct);
+        // API keys are long JWTs.
+        await SetAsync("lemon.apiKey", r.LemonApiKey, true, userId, v => v.Length is >= 20 and <= 4000 && !v.Any(char.IsWhiteSpace), ct);
+        await SetAsync("lemon.webhookSecret", r.LemonWebhookSecret, true, userId, v => v.Length is >= 6 and <= 200 && !v.Any(char.IsWhiteSpace), ct);
+        if (r.LemonTestMode is { } lemonTest) await SetAsync("lemon.testMode", lemonTest ? "1" : "0", false, userId, _ => true, ct);
 
         // Old payment-provider settings are no longer used.
         db.AppSettings.RemoveRange(db.AppSettings.Where(x => x.Key.StartsWith("freemius.")));

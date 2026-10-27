@@ -59,6 +59,11 @@ export async function saveIntegrationsAction(_: FormState, form: FormData): Prom
     prices,
     googleClientId: value("googleClientId"),
     googleClientSecret: value("googleClientSecret") || null,
+    paymentProvider: value("paymentProvider") || "paytr",
+    lemonStoreId: value("lemonStoreId"),
+    lemonApiKey: value("lemonApiKey") || null,
+    lemonWebhookSecret: value("lemonWebhookSecret") || null,
+    lemonTestMode: form.get("lemonTestMode") === "on",
   };
   try {
     await userApi("/api/v1/admin/settings/integrations", { method: "PUT", body });

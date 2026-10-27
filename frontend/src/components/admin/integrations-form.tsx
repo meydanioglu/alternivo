@@ -14,6 +14,11 @@ export interface IntegrationSettingsView {
   prices: Record<string, number>;
   googleClientId: string | null;
   googleSecretSet: boolean;
+  paymentProvider: string;
+  lemonStoreId: string | null;
+  lemonApiKeySet: boolean;
+  lemonWebhookSecretSet: boolean;
+  lemonTestMode: boolean;
 }
 
 const secretHint = (set: boolean) =>
@@ -36,7 +41,38 @@ export function IntegrationsForm({ view, siteUrl }: { view: IntegrationSettingsV
   return (
     <form action={action} className="flex flex-col gap-4">
       <FormMessage state={state} />
-      <h3 className="font-semibold">PayTR (ödemeler)</h3>
+      <h3 className="font-semibold">Ödeme sağlayıcısı</h3>
+      <Field label="Yeni ödemelerde kullanılacak sağlayıcı" name="paymentProvider" hint="Seçilen sağlayıcının bilgileri eksikse ödemeler kapalı görünür.">
+        <select id="paymentProvider" name="paymentProvider" defaultValue={view.paymentProvider} className={select}>
+          <option value="lemonsqueezy">Lemon Squeezy</option>
+          <option value="paytr">PayTR</option>
+        </select>
+      </Field>
+
+      <h3 className="mt-2 font-semibold">Lemon Squeezy</h3>
+      <p className="-mt-2 text-sm text-muted">
+        Settings → API: API anahtarı. Settings → Stores: mağaza numarası (Store ID). Settings → Webhooks: URL{" "}
+        <span className="font-mono">{siteUrl}/bff/billing/lemonsqueezy</span>, olaylar <span className="font-mono">order_created</span> ve{" "}
+        <span className="font-mono">order_refunded</span>; orada yazdığınız &quot;Signing secret&quot; buraya girilir. Ürünler mağazada plan
+        adlarıyla (ör. &quot;Featured (30 days)&quot;) bulunmalı; tutar aşağıdaki fiyatlardan USD olarak alınır.
+      </p>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Field label="Store ID" name="lemonStoreId" optional>
+          <TextInput name="lemonStoreId" defaultValue={view.lemonStoreId ?? ""} spellCheck={false} inputMode="numeric" />
+        </Field>
+        <Field label="API anahtarı" name="lemonApiKey" optional hint={secretHint(view.lemonApiKeySet)}>
+          <TextInput name="lemonApiKey" type="password" autoComplete="off" spellCheck={false} />
+        </Field>
+        <Field label="Webhook signing secret" name="lemonWebhookSecret" optional hint={secretHint(view.lemonWebhookSecretSet)}>
+          <TextInput name="lemonWebhookSecret" type="password" autoComplete="off" spellCheck={false} />
+        </Field>
+      </div>
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" name="lemonTestMode" defaultChecked={view.lemonTestMode} />
+        Test modu (Lemon test modundaki API anahtarıyla birlikte kullanın; gerçek para çekilmez)
+      </label>
+
+      <h3 className="mt-2 font-semibold">PayTR</h3>
       <p className="-mt-2 text-sm text-muted">
         PayTR Mağaza Paneli → Bilgi sayfasındaki API bilgileri. Mağaza Paneli → Destek &amp; Kurulum → Ayarlar → Bildirim URL:{" "}
         <span className="font-mono">{siteUrl}/bff/billing/paytr</span>

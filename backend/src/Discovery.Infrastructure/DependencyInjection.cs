@@ -62,6 +62,8 @@ public static class DependencyInjection
         services.AddScoped<Billing.IntegrationSettings>();
         services.AddHttpClient(Billing.PayTrGateway.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(30));
         services.AddScoped<Billing.PayTrGateway>();
+        services.AddHttpClient(Billing.LemonSqueezyGateway.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(30));
+        services.AddScoped<Billing.LemonSqueezyGateway>();
         services.AddHttpClient(GoogleSignIn.HttpClientName, c => c.Timeout = TimeSpan.FromSeconds(20));
         services.AddScoped<GoogleSignIn>();
         services.AddScoped<Content.ContentGenerator>();

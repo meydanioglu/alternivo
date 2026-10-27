@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import Script from "next/script";
 import { Container, EmptyState } from "@/components/layout/page-parts";
 import { buttonClass } from "@/components/ui/styles";
-import { paymentToken } from "@/lib/auth/checkout";
+import { paymentTarget } from "@/lib/auth/checkout";
 import { AcceptTermsForm } from "@/components/maker/accept-terms-form";
 import { SERVICE_TERMS, SellerDetails } from "@/components/legal/legal-parts";
 import { business } from "@/config/business";
@@ -15,17 +15,20 @@ export const metadata: Metadata = { title: "Secure payment", robots: { index: fa
 
 type Props = { params: Promise<{ orderId: string }> };
 
-/** PayTR iFrame payment page. Card details are entered on PayTR's page inside the iframe; we never see them. */
+/**
+ * Payment page: order review and agreement first, then the provider's own payment form (PayTR iframe, or a link to the
+ * Lemon Squeezy hosted checkout). Card details go straight to the provider; we never see them.
+ */
 export default async function PayPage({ params }: Props) {
   const { orderId } = await params;
   if (!(await getCurrentUser())) redirect("/login?next=/maker");
   const order = await userApi<{ planKey: string; status: string; amountMinor: number; currency: string; termsAcceptedAt: string | null }>(
     `/api/v1/maker/orders/${encodeURIComponent(orderId)}`, { persist: false }).catch(() => null);
-  const token = await paymentToken(orderId);
+  const target = await paymentTarget(orderId);
 
   if (!order) redirect("/maker");
   if (order.status === "Paid") redirect(`/maker?purchase=${order.planKey}`);
-  if (order.status !== "Pending" || !token) {
+  if (order.status !== "Pending" || !target) {
     return (
       <Container className="py-12">
         <EmptyState title="This payment link has expired" action={<Link href="/maker" className={buttonClass("primary", "sm", "mt-2")}>Back to Maker dashboard</Link>}>
@@ -73,6 +76,25 @@ export default async function PayPage({ params }: Props) {
     );
   }
 
+  if (target.provider === "lemonsqueezy") {
+    return (
+      <Container className="py-8">
+        <div className="mx-auto max-w-2xl">
+          <h1 className="text-2xl font-semibold">Secure payment</h1>
+          <p className="mt-1 text-sm text-muted">
+            Total: <strong className="text-foreground">{total}</strong> ({order.currency}), plus any sales tax shown at checkout. You pay on the
+            secure checkout of our payment provider, Lemon Squeezy, which acts as the merchant of record for this purchase.
+          </p>
+          <a href={target.url} className={buttonClass("primary", "md", "mt-6")}>Continue to secure payment</a>
+          <p className="mt-4 text-xs text-muted">
+            Your purchase is applied automatically once the payment is confirmed. <Link href="/maker" className="underline">Cancel and go back</Link>
+          </p>
+        </div>
+      </Container>
+    );
+  }
+
+  const token = target.token;
   return (
     <Container className="py-8">
       <div className="mx-auto max-w-2xl">
