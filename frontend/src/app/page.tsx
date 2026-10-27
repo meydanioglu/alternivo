@@ -7,6 +7,7 @@ import type { ApplicationSummary } from "@/lib/api/types";
 import { formatNumber } from "@/lib/format";
 import { pageMetadata, websiteJsonLd } from "@/lib/seo";
 import { ApplicationGrid } from "@/components/catalog/application-card";
+import { CategoryStrip } from "@/components/catalog/category-strip";
 import { SoftwareList } from "@/components/catalog/software-row";
 import { SponsoredSlot } from "@/components/sponsored/sponsored-slot";
 import { Container, SectionHeader } from "@/components/layout/page-parts";
@@ -62,6 +63,11 @@ export default async function HomePage() {
             <div className="mx-auto mt-8 max-w-xl text-left">
               <SearchCommand size="lg" placeholder="What do you want to replace?" />
             </div>
+          </div>
+          <div className="mx-auto mt-8 max-w-5xl">
+            <CategoryStrip />
+          </div>
+          <div className="mx-auto max-w-2xl text-center">
             <p className="mt-5 text-sm text-muted">
               <span className="mr-2">Popular:</span>
               {POPULAR_ALTERNATIVES.map((s, i) => (
