@@ -58,7 +58,7 @@ const agents = (slug: string, title: string, intro: string, criteria: string, ap
 const creative = (slug: string, title: string, intro: string, criteria: string, apps: string[], related?: string[]): BestPage =>
   ({ slug, title, intro, criteria, apps, group: "creative", related });
 
-export const BEST_PAGES: BestPage[] = [
+const ALL_PAGES: BestPage[] = [
   // ---------- AI game development ----------
   games("ai-game-makers", "Best AI game makers",
     "AI game makers turn a written idea into a playable game, or speed up building one in a full engine. This list mixes prompt-to-game platforms with engines that ship AI assistance.",
@@ -67,7 +67,7 @@ export const BEST_PAGES: BestPage[] = [
   games("free-ai-game-generators", "Best free AI game generators",
     "You can prototype a game with AI without paying. These tools offer a free tier or are free to use, so you can test an idea before committing.",
     "Has a free plan or is free to use for creating games with AI help (paid upgrades may exist).",
-    ["astrocade", "rosebud-ai", "websim", "gdevelop", "playdrop", "bitmagic", "godot-engine", "google-playground"], ["ai-game-makers", "free-no-code-game-development-platforms"]),
+    ["evonx", "astrocade", "rosebud-ai", "websim", "gdevelop", "playdrop", "bitmagic", "godot-engine", "google-playground"], ["ai-game-makers", "free-no-code-game-development-platforms"]),
   games("prompt-to-game-ai-tools", "Best prompt-to-game AI tools",
     "Prompt-to-game tools build a playable game from a text description and let you refine it by chatting. They are the fastest way from idea to something you can share.",
     "Generates a playable game primarily from natural-language prompts.",
@@ -390,4 +390,31 @@ export const BEST_PAGES: BestPage[] = [
     ["meshy", "tripo", "rodin-hyper3d", "kaedim", "sloyd"], ["ai-3d-model-generators"]),
 ];
 
-export const bestPage = (slug: string) => BEST_PAGES.find((p) => p.slug === slug);
+/**
+ * Lists that answered the same search intent with the same products were merged: the old URL redirects (308)
+ * to the list that kept the content, and its products are folded into that list.
+ */
+export const MERGED_BEST: Record<string, string> = {
+  "text-to-game-generators": "prompt-to-game-ai-tools",
+  "self-hosted-ai-app-builders": "open-source-ai-app-builders",
+  "text-to-video-ai-tools": "ai-video-generators",
+  "prompt-to-app-tools": "ai-app-builders",
+  "ai-tools-for-workflow-automation": "ai-workflow-automation-tools",
+  "ai-tools-for-mobile-app-development": "ai-mobile-app-generators",
+};
+
+const resolve = (slug: string) => MERGED_BEST[slug] ?? slug;
+
+export const BEST_PAGES: BestPage[] = ALL_PAGES.filter((p) => !(p.slug in MERGED_BEST)).map((p) => {
+  const merged = ALL_PAGES.filter((m) => MERGED_BEST[m.slug] === p.slug);
+  return {
+    ...p,
+    apps: [...new Set([...p.apps, ...merged.flatMap((m) => m.apps)])],
+    related: p.related && [...new Set(p.related.map(resolve))].filter((r) => r !== p.slug),
+  };
+});
+
+export const bestPage = (slug: string) => BEST_PAGES.find((p) => p.slug === resolve(slug));
+
+/** Best-list slugs referenced elsewhere (guides, keyword targets) resolved past merges, without duplicates. */
+export const resolveBestSlugs = (slugs: string[]) => [...new Set(slugs.map(resolve))];

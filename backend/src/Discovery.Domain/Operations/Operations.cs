@@ -42,6 +42,10 @@ public class PageView
     public required string VisitorId { get; set; }
     public required string Device { get; set; }
     public Guid? UserId { get; set; }
+    /// <summary>utm_* parameters of the landing URL (campaign attribution; no personal data).</summary>
+    public string? UtmSource { get; set; }
+    public string? UtmMedium { get; set; }
+    public string? UtmCampaign { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
 }
 

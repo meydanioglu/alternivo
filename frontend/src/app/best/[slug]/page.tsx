@@ -9,7 +9,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { BEST_PAGES, GROUP_LABELS, bestPage } from "@/content/best-pages";
 import { guide } from "@/content/guides";
 import { currentYear } from "@/lib/format";
-import { loadBest } from "@/lib/keyword-pages";
+import { loadBest, requiresFree } from "@/lib/keyword-pages";
 import { faqJsonLd, itemListJsonLd, pageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
@@ -48,7 +48,8 @@ export default async function BestPageView({ params }: Props) {
   const { apps } = await loadBest(page);
   const summaries = apps.map((a) => a.summary);
   const title = titleOf(page.title);
-  const faq = summaries.length > 0 ? faqFor(page.title, summaries.map((s) => s.name), page.criteria) : [];
+  const criteria = requiresFree(page) ? `${page.criteria} Only products with a confirmed free plan, free use or open-source license are included.` : page.criteria;
+  const faq = summaries.length > 0 ? faqFor(page.title, summaries.map((s) => s.name), criteria) : [];
   const related = (page.related ?? [])
     .map((r) => bestPage(r) ? { href: `/best/${r}`, label: bestPage(r)!.title } : guide(r) ? { href: `/guides/${r}`, label: guide(r)!.title } : null)
     .filter((x): x is { href: string; label: string } => x !== null);
@@ -73,7 +74,7 @@ export default async function BestPageView({ params }: Props) {
       <aside className="mt-5 max-w-3xl rounded-[10px] border border-border bg-surface px-4 py-3 text-sm">
         <p>
           <span className="font-medium">How we picked: </span>
-          <span className="text-foreground/80">{page.criteria}</span>
+          <span className="text-foreground/80">{page.criteria}{requiresFree(page) && " Only products whose free plan, free use or open-source license is confirmed in our data are listed."}</span>
         </p>
         <p className="mt-1 text-xs text-muted">Editorial list based on each product&apos;s official information. Paid placements never appear here.</p>
       </aside>

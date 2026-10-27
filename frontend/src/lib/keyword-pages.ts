@@ -30,7 +30,16 @@ export function bestIndexable(apps: ListedApp[]) {
   return apps.filter((a) => a.indexable).length >= MIN_BEST_ITEMS;
 }
 
+/** Free, freemium or open source according to the catalogue — "Pricing unknown" never counts as free. */
+export function verifiedFree(app: Pick<ApplicationSummary, "pricing" | "isOpenSource">) {
+  return app.isOpenSource || app.pricing.includes("free") || app.pricing.includes("freemium");
+}
+
+/** Lists that promise free tools ("free-…" slugs) only show products whose free option is in the data. */
+export const requiresFree = (page: BestPage) => page.slug.startsWith("free-") || page.slug.includes("-free-");
+
 export async function loadBest(page: BestPage) {
-  const apps = await loadApps(page.apps);
+  const loaded = await loadApps(page.apps);
+  const apps = requiresFree(page) ? loaded.filter((a) => verifiedFree(a.summary)) : loaded;
   return { apps, indexable: bestIndexable(apps) };
 }

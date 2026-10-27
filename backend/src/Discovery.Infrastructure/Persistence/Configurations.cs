@@ -390,7 +390,11 @@ internal sealed class PageViewConfiguration : IEntityTypeConfiguration<PageView>
         b.Property(x => x.ReferrerHost).HasMaxLength(200);
         b.Property(x => x.VisitorId).HasMaxLength(32).IsRequired();
         b.Property(x => x.Device).HasMaxLength(20).IsRequired();
+        b.Property(x => x.UtmSource).HasMaxLength(100);
+        b.Property(x => x.UtmMedium).HasMaxLength(100);
+        b.Property(x => x.UtmCampaign).HasMaxLength(100);
         b.HasIndex(x => x.CreatedAt);
+        b.HasIndex(x => new { x.VisitorId, x.CreatedAt });
     }
 }
 

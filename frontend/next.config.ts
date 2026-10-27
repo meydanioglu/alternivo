@@ -1,8 +1,12 @@
+import { MERGED_BEST } from "./src/content/best-pages";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
+  async redirects() {
+    return Object.entries(MERGED_BEST).map(([from, to]) => ({ source: `/best/${from}`, destination: `/best/${to}`, permanent: true }));
+  },
   reactStrictMode: true,
   experimental: { serverActions: { bodySizeLimit: "2mb" } },
   images: {

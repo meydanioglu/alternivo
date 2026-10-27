@@ -26,7 +26,7 @@ export default function PrivacyPage() {
         <h2>Cookies and analytics</h2>
         <p>
           We use strictly necessary cookies to keep you signed in (httpOnly session cookies) and to remember your theme. We measure page
-          views with our own anonymous, cookie-free counter and with Tiny Analytics, a privacy-friendly analytics service, which also
+          views with our own anonymous, cookie-free counter (including the campaign tags in a landing link, such as utm_source) and with Tiny Analytics, a privacy-friendly analytics service, which also
           collects performance and error data. We do not use advertising cookies or sell personal data.
         </p>
       </section>

@@ -5,7 +5,7 @@ import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { BreadcrumbNavigation, Container } from "@/components/layout/page-parts";
 import { JsonLd } from "@/components/seo/json-ld";
 import { absoluteUrl, site } from "@/config/site";
-import { bestPage } from "@/content/best-pages";
+import { bestPage, resolveBestSlugs } from "@/content/best-pages";
 import { GUIDES, guide } from "@/content/guides";
 import { loadApps } from "@/lib/keyword-pages";
 import { pageMetadata } from "@/lib/seo";
@@ -30,7 +30,7 @@ export default async function GuidePage({ params }: Props) {
   const g = guide(slug);
   if (!g) notFound();
   const tools = await loadApps(g.tools ?? []);
-  const lists = g.bestLinks.map(bestPage).filter((p) => p !== undefined);
+  const lists = resolveBestSlugs(g.bestLinks).map(bestPage).filter((p) => p !== undefined);
   const others = GUIDES.filter((x) => x.slug !== g.slug).slice(0, 6);
 
   return (

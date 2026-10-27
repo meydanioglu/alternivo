@@ -294,12 +294,30 @@ public sealed class AdminUsersController(UserManager<AppUser> users) : Controlle
 [Authorize(Policy = Policies.Staff)]
 public sealed class AdminPanelController(PanelService panel, HttpCurrentUser current, IConfiguration config) : ControllerBase
 {
+    /// <summary>Traffic for ?from=yyyy-MM-dd&amp;to=yyyy-MM-dd&amp;grain=day|week|month, or the last ?days.</summary>
     [HttpGet("analytics")]
-    public Task<AnalyticsDto> Analytics([FromQuery] int? days, CancellationToken ct)
+    public Task<AnalyticsDto> Analytics([FromQuery] int? days, [FromQuery] string? from, [FromQuery] string? to, [FromQuery] string? grain,
+        CancellationToken ct)
     {
-        var siteUrl = config["Site:Url"];
-        var host = Uri.TryCreate(siteUrl, UriKind.Absolute, out var u) ? u.Host : null;
-        return panel.AnalyticsAsync(days ?? 30, host, ct);
+        if (TrafficSource.TryDate(from, out var f) && TrafficSource.TryDate(to, out var t))
+            return panel.AnalyticsAsync(f, t, grain ?? "day", OwnHost(), ct);
+        return panel.AnalyticsAsync(days ?? 30, OwnHost(), ct);
+    }
+
+    /// <summary>Maker funnel (pricing → checkout → payment) and where submitters came from, for a date range.</summary>
+    [HttpGet("analytics/growth")]
+    public Task<GrowthDto> Growth([FromQuery] string? from, [FromQuery] string? to, [FromServices] GrowthService growth, CancellationToken ct)
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var t = TrafficSource.TryDate(to, out var tt) ? tt : today;
+        var f = TrafficSource.TryDate(from, out var ff) ? ff : t.AddDays(-29);
+        return growth.GetAsync(f, t, OwnHost(), ct);
+    }
+
+    private string? OwnHost()
+    {
+        var host = Uri.TryCreate(config["Site:Url"], UriKind.Absolute, out var u) ? u.Host : null;
+        return host is not null && host.StartsWith("www.", StringComparison.Ordinal) ? host[4..] : host;
     }
 
     [HttpGet("applications/{id:guid}")]

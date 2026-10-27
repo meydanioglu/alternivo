@@ -29,7 +29,11 @@ public sealed record AnalyticsDto(
     IReadOnlyList<CountRow> TopPages,
     IReadOnlyList<CountRow> TopReferrers,
     IReadOnlyList<CountRow> Devices,
-    IReadOnlyList<RecentView> Recent);
+    IReadOnlyList<RecentView> Recent,
+    DateOnly From = default,
+    DateOnly To = default,
+    string Grain = "day",
+    IReadOnlyList<CountRow>? Campaigns = null);
 
 public sealed record AdminApplicationDetail(
     Guid Id,
@@ -105,9 +109,13 @@ public sealed class PanelService(IAppDbContext db, ICacheService cache, TimeProv
             referrer = refUri.Host.StartsWith("www.") ? refUri.Host[4..] : refUri.Host;
         }
 
+        var utm = TrafficSource.Utm(path);
         db.PageViews.Add(new PageView
         {
             Path = path.Split('?')[0],
+            UtmSource = utm.Source,
+            UtmMedium = utm.Medium,
+            UtmCampaign = utm.Campaign,
             ReferrerHost = referrer?.Length > 200 ? referrer[..200] : referrer,
             VisitorId = visitor,
             Device = DeviceOf(ua),
@@ -123,13 +131,23 @@ public sealed class PanelService(IAppDbContext db, ICacheService cache, TimeProv
         : ua.Contains("Mobi", StringComparison.OrdinalIgnoreCase) || ua.Contains("Android", StringComparison.OrdinalIgnoreCase) ? "mobile"
         : "desktop";
 
-    public async Task<AnalyticsDto> AnalyticsAsync(int days, string? ownHost, CancellationToken ct)
+    public Task<AnalyticsDto> AnalyticsAsync(int days, string? ownHost, CancellationToken ct)
     {
-        days = Math.Clamp(days, 1, 365);
+        var today = DateOnly.FromDateTime(clock.GetUtcNow().UtcDateTime);
+        days = Math.Clamp(days, 1, 366);
+        return AnalyticsAsync(today.AddDays(-(days - 1)), today, "day", ownHost, ct);
+    }
+
+    /// <summary>Traffic for a date range (inclusive, UTC), bucketed by day, week (Monday start) or month.</summary>
+    public async Task<AnalyticsDto> AnalyticsAsync(DateOnly fromDate, DateOnly toDate, string grain, string? ownHost, CancellationToken ct)
+    {
+        if (toDate < fromDate) (fromDate, toDate) = (toDate, fromDate);
+        if (toDate.DayNumber - fromDate.DayNumber > 730) fromDate = toDate.AddDays(-730);
+        var days = toDate.DayNumber - fromDate.DayNumber + 1;
         var now = clock.GetUtcNow();
-        var today = new DateTimeOffset(now.UtcDateTime.Date, TimeSpan.Zero);
-        var from = today.AddDays(-(days - 1));
-        var range = db.PageViews.Where(v => v.CreatedAt >= from);
+        var from = new DateTimeOffset(fromDate.ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+        var until = new DateTimeOffset(toDate.AddDays(1).ToDateTime(TimeOnly.MinValue), TimeSpan.Zero);
+        var range = db.PageViews.Where(v => v.CreatedAt >= from && v.CreatedAt < until);
 
         var daily = await range
             .GroupBy(v => v.CreatedAt.Date)
@@ -142,6 +160,7 @@ public sealed class PanelService(IAppDbContext db, ICacheService cache, TimeProv
             .ToList();
 
         var todayRow = series[^1];
+        var buckets = TrafficSource.Bucket(series, grain);
         var visitors = await range.Select(v => v.VisitorId).Distinct().CountAsync(ct);
         var activeNow = await db.PageViews.Where(v => v.CreatedAt >= now.AddMinutes(-5)).Select(v => v.VisitorId).Distinct().CountAsync(ct);
 
@@ -159,8 +178,14 @@ public sealed class PanelService(IAppDbContext db, ICacheService cache, TimeProv
         var recent = await db.PageViews.OrderByDescending(v => v.Id).Take(30)
             .Select(v => new RecentView(v.Path, v.ReferrerHost, v.Device, v.UserId != null, v.CreatedAt)).ToListAsync(ct);
 
+        var campaigns = (await range.Where(v => v.UtmSource != null)
+                .GroupBy(v => new { v.UtmSource, v.UtmMedium, v.UtmCampaign })
+                .Select(g => new { g.Key.UtmSource, g.Key.UtmMedium, g.Key.UtmCampaign, Count = g.Count() })
+                .OrderByDescending(x => x.Count).Take(15).ToListAsync(ct))
+            .Select(x => new CountRow(string.Join(" / ", new[] { x.UtmSource, x.UtmMedium, x.UtmCampaign }.Where(s => !string.IsNullOrEmpty(s))), x.Count)).ToList();
+
         return new AnalyticsDto(days, series.Sum(d => d.Views), visitors, todayRow.Views, todayRow.Visitors, activeNow,
-            series, topPages, topReferrers, devices, recent);
+            buckets, topPages, topReferrers, devices, recent, fromDate, toDate, TrafficSource.NormalizeGrain(grain), campaigns);
     }
 
     // ---------- Applications ----------

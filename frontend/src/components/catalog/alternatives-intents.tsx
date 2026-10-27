@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/json-ld";
-import { bestPage } from "@/content/best-pages";
+import { bestPage, resolveBestSlugs } from "@/content/best-pages";
 import { guide } from "@/content/guides";
 import { ALTERNATIVE_TARGETS } from "@/content/keyword-targets";
 import type { AlternativeItem } from "@/lib/api/types";
@@ -17,8 +17,8 @@ export function AlternativesIntents({ sourceSlug, sourceName, items }: { sourceS
   const free = items.filter(isFree).slice(0, 6);
   const open = items.filter((i) => i.application.isOpenSource).slice(0, 6);
   const top = items.slice(0, 5).map((i) => i.application.name);
-  const related = (ALTERNATIVE_TARGETS[sourceSlug] ?? [])
-    .map((s) => (bestPage(s) ? { href: `/best/${s}`, label: bestPage(s)!.title } : guide(s) ? { href: `/guides/${s}`, label: guide(s)!.title } : null))
+  const related = resolveBestSlugs(ALTERNATIVE_TARGETS[sourceSlug] ?? [])
+    .map((s) => (bestPage(s) ? { href: `/best/${bestPage(s)!.slug}`, label: bestPage(s)!.title } : guide(s) ? { href: `/guides/${s}`, label: guide(s)!.title } : null))
     .filter((x): x is { href: string; label: string } => x !== null);
 
   const faq = [
