@@ -64,6 +64,11 @@ export async function saveIntegrationsAction(_: FormState, form: FormData): Prom
     lemonApiKey: value("lemonApiKey") || null,
     lemonWebhookSecret: value("lemonWebhookSecret") || null,
     lemonTestMode: form.get("lemonTestMode") === "on",
+    smtpHost: value("smtpHost"),
+    smtpPort: value("smtpPort"),
+    smtpUsername: value("smtpUsername"),
+    smtpPassword: value("smtpPassword") || null,
+    smtpFrom: value("smtpFrom"),
   };
   try {
     await userApi("/api/v1/admin/settings/integrations", { method: "PUT", body });

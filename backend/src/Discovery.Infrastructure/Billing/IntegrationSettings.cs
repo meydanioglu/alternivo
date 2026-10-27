@@ -39,7 +39,12 @@ public sealed record IntegrationSettingsView(
     string? LemonStoreId,
     bool LemonApiKeySet,
     bool LemonWebhookSecretSet,
-    bool LemonTestMode);
+    bool LemonTestMode,
+    string? SmtpHost,
+    int? SmtpPort,
+    string? SmtpUsername,
+    bool SmtpPasswordSet,
+    string? SmtpFrom);
 
 public sealed record SaveIntegrationSettingsRequest(
     string? PayTrMerchantId,
@@ -56,7 +61,12 @@ public sealed record SaveIntegrationSettingsRequest(
     string? LemonStoreId = null,
     string? LemonApiKey = null,
     string? LemonWebhookSecret = null,
-    bool? LemonTestMode = null);
+    bool? LemonTestMode = null,
+    string? SmtpHost = null,
+    string? SmtpPort = null,
+    string? SmtpUsername = null,
+    string? SmtpPassword = null,
+    string? SmtpFrom = null);
 
 /// <summary>
 /// Payment (PayTR) and Google sign-in settings stored in AppSettings. Secret values are encrypted with
@@ -66,14 +76,14 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
 {
     private readonly IDataProtector _protector = protection.CreateProtector("Discovery.Settings.v1");
 
-    private static readonly string[] Secrets = ["paytr.merchantKey", "paytr.merchantSalt", "google.clientSecret", "lemon.apiKey", "lemon.webhookSecret"];
+    private static readonly string[] Secrets = ["paytr.merchantKey", "paytr.merchantSalt", "google.clientSecret", "lemon.apiKey", "lemon.webhookSecret", "smtp.password"];
     private static readonly string[] Currencies = ["TL", "USD", "EUR", "GBP"];
     private const string PricePrefix = "paytr.price.";
 
     private async Task<Dictionary<string, string>> LoadAsync(CancellationToken ct)
     {
         var rows = await db.AppSettings.AsNoTracking()
-            .Where(s => s.Key.StartsWith("paytr.") || s.Key.StartsWith("google.") || s.Key.StartsWith("lemon.") || s.Key.StartsWith("payments."))
+            .Where(s => s.Key.StartsWith("paytr.") || s.Key.StartsWith("google.") || s.Key.StartsWith("lemon.") || s.Key.StartsWith("payments.") || s.Key.StartsWith("smtp."))
             .ToListAsync(ct);
         var result = new Dictionary<string, string>();
         foreach (var row in rows)
@@ -137,6 +147,23 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         return p is null ? null : new ActivePayments("paytr", p.Prices, p.Currency, p.TestMode);
     }
 
+    /// <summary>SMTP settings entered in admin; null until host, username and password are all set.</summary>
+    public async Task<Identity.SmtpOptions?> SmtpAsync(CancellationToken ct)
+    {
+        var s = await LoadAsync(ct);
+        if (!s.TryGetValue("smtp.host", out var host) || !s.TryGetValue("smtp.username", out var user) || !s.TryGetValue("smtp.password", out var password))
+        {
+            return null;
+        }
+
+        return new Identity.SmtpOptions
+        {
+            Host = host, Username = user, Password = password,
+            Port = int.TryParse(s.GetValueOrDefault("smtp.port"), CultureInfo.InvariantCulture, out var port) ? port : 587,
+            From = s.GetValueOrDefault("smtp.from") ?? "no-reply@alternivo.com",
+        };
+    }
+
     public async Task<GoogleConfig?> GoogleAsync(CancellationToken ct)
     {
         var s = await LoadAsync(ct);
@@ -151,7 +178,9 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
             s.GetValueOrDefault("paytr.testMode") == "1", s.GetValueOrDefault("paytr.currency") ?? "TL", PricesOf(s),
             s.GetValueOrDefault("google.clientId"), s.ContainsKey("google.clientSecret"),
             s.GetValueOrDefault("payments.provider") ?? "paytr", s.GetValueOrDefault("lemon.storeId"), s.ContainsKey("lemon.apiKey"),
-            s.ContainsKey("lemon.webhookSecret"), s.GetValueOrDefault("lemon.testMode") == "1");
+            s.ContainsKey("lemon.webhookSecret"), s.GetValueOrDefault("lemon.testMode") == "1",
+            s.GetValueOrDefault("smtp.host"), int.TryParse(s.GetValueOrDefault("smtp.port"), CultureInfo.InvariantCulture, out var port) ? port : null,
+            s.GetValueOrDefault("smtp.username"), s.ContainsKey("smtp.password"), s.GetValueOrDefault("smtp.from"));
     }
 
     /// <summary>null leaves a value unchanged; "" removes it.</summary>
@@ -180,6 +209,12 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         await SetAsync("lemon.apiKey", r.LemonApiKey, true, userId, v => v.Length is >= 20 and <= 4000 && !v.Any(char.IsWhiteSpace), ct);
         await SetAsync("lemon.webhookSecret", r.LemonWebhookSecret, true, userId, v => v.Length is >= 6 and <= 200 && !v.Any(char.IsWhiteSpace), ct);
         if (r.LemonTestMode is { } lemonTest) await SetAsync("lemon.testMode", lemonTest ? "1" : "0", false, userId, _ => true, ct);
+
+        await SetAsync("smtp.host", r.SmtpHost, false, userId, v => v.Length <= 200 && Uri.CheckHostName(v) != UriHostNameType.Unknown, ct);
+        await SetAsync("smtp.port", r.SmtpPort, false, userId, v => int.TryParse(v, CultureInfo.InvariantCulture, out var n) && n is > 0 and < 65536, ct);
+        await SetAsync("smtp.username", r.SmtpUsername, false, userId, v => v.Length <= 200 && !v.Any(char.IsWhiteSpace), ct);
+        await SetAsync("smtp.password", r.SmtpPassword, true, userId, v => v.Length is >= 8 and <= 500 && !v.Any(char.IsWhiteSpace), ct);
+        await SetAsync("smtp.from", r.SmtpFrom, false, userId, v => v.Length <= 200 && System.Net.Mail.MailAddress.TryCreate(v, out _), ct);
 
         // Old payment-provider settings are no longer used.
         db.AppSettings.RemoveRange(db.AppSettings.Where(x => x.Key.StartsWith("freemius.")));

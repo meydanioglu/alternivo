@@ -40,10 +40,11 @@ public sealed class SmtpOptions
 }
 
 /// <summary>
-/// Sends Identity e-mails (confirmation, password reset). When SMTP is not configured the
-/// message is written to the log so local development still works.
+/// Sends Identity e-mails (confirmation, password reset). SMTP settings entered in admin take precedence over the
+/// Smtp section of the configuration. When neither is set the message is written to the log so local development still works.
 /// </summary>
-public sealed class EmailSender(IOptions<SmtpOptions> options, IConfiguration config, ILogger<EmailSender> logger) : IEmailSender<AppUser>
+public sealed class EmailSender(IOptions<SmtpOptions> options, Billing.IntegrationSettings settings, IConfiguration config,
+    ILogger<EmailSender> logger) : IEmailSender<AppUser>
 {
     public Task SendConfirmationLinkAsync(AppUser user, string email, string confirmationLink)
     {
@@ -75,7 +76,7 @@ public sealed class EmailSender(IOptions<SmtpOptions> options, IConfiguration co
 
     private async Task SendAsync(string to, string subject, string html)
     {
-        var o = options.Value;
+        var o = await settings.SmtpAsync(CancellationToken.None) ?? options.Value;
         if (string.IsNullOrWhiteSpace(o.Host))
         {
             logger.LogWarning("SMTP not configured. E-mail to {To} with subject {Subject}: {Body}", to, subject, html);
@@ -89,6 +90,14 @@ public sealed class EmailSender(IOptions<SmtpOptions> options, IConfiguration co
             client.Credentials = new NetworkCredential(o.Username, o.Password);
         }
 
-        await client.SendMailAsync(message);
+        try
+        {
+            await client.SendMailAsync(message);
+        }
+        catch (Exception ex) when (ex is SmtpException or InvalidOperationException or IOException)
+        {
+            // A mail failure must not fail registration; the user can request a new link from their account page.
+            logger.LogError(ex, "Could not send e-mail {Subject} to {To} via {Host}", subject, to, o.Host);
+        }
     }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import type { FormState } from "@/app/actions";
 import { saveIntegrationsAction } from "@/app/admin/settings/actions";
 import { Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
@@ -19,6 +19,11 @@ export interface IntegrationSettingsView {
   lemonApiKeySet: boolean;
   lemonWebhookSecretSet: boolean;
   lemonTestMode: boolean;
+  smtpHost: string | null;
+  smtpPort: number | null;
+  smtpUsername: string | null;
+  smtpPasswordSet: boolean;
+  smtpFrom: string | null;
 }
 
 const secretHint = (set: boolean) =>
@@ -39,7 +44,15 @@ const select = "h-10 w-full rounded-md border border-border bg-background px-3 t
 export function IntegrationsForm({ view, siteUrl }: { view: IntegrationSettingsView; siteUrl: string }) {
   const [state, action] = useActionState(saveIntegrationsAction, {} as FormState);
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <form
+      // Submitted manually: a form action would reset every field afterwards, losing the choices and typed secrets when a save fails.
+      onSubmit={(e) => {
+        e.preventDefault();
+        const data = new FormData(e.currentTarget);
+        startTransition(() => action(data));
+      }}
+      className="flex flex-col gap-4"
+    >
       <FormMessage state={state} />
       <h3 className="font-semibold">Ödeme sağlayıcısı</h3>
       <Field label="Yeni ödemelerde kullanılacak sağlayıcı" name="paymentProvider" hint="Seçilen sağlayıcının bilgileri eksikse ödemeler kapalı görünür.">
@@ -117,6 +130,29 @@ export function IntegrationsForm({ view, siteUrl }: { view: IntegrationSettingsV
             />
           </Field>
         ))}
+      </div>
+
+      <h3 className="mt-2 font-semibold">E-posta (SMTP)</h3>
+      <p className="-mt-2 text-sm text-muted">
+        Doğrulama ve şifre sıfırlama e-postaları buradan gider. Brevo: SMTP &amp; API → SMTP sekmesindeki sunucu, port ve login; şifre
+        olarak &quot;Generate SMTP key&quot; ile oluşturulan anahtar. Gönderen adresin alan adı Brevo&apos;da doğrulanmış olmalı.
+      </p>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Sunucu" name="smtpHost" optional>
+          <TextInput name="smtpHost" defaultValue={view.smtpHost ?? ""} placeholder="smtp-relay.brevo.com" spellCheck={false} />
+        </Field>
+        <Field label="Port" name="smtpPort" optional>
+          <TextInput name="smtpPort" defaultValue={view.smtpPort ? String(view.smtpPort) : ""} placeholder="587" inputMode="numeric" />
+        </Field>
+        <Field label="Kullanıcı adı (login)" name="smtpUsername" optional>
+          <TextInput name="smtpUsername" defaultValue={view.smtpUsername ?? ""} spellCheck={false} autoComplete="off" />
+        </Field>
+        <Field label="Şifre / SMTP anahtarı" name="smtpPassword" optional hint={secretHint(view.smtpPasswordSet)}>
+          <TextInput name="smtpPassword" type="password" autoComplete="off" spellCheck={false} />
+        </Field>
+        <Field label="Gönderen adresi" name="smtpFrom" optional>
+          <TextInput name="smtpFrom" defaultValue={view.smtpFrom ?? ""} placeholder="no-reply@alternivo.com" spellCheck={false} />
+        </Field>
       </div>
 
       <h3 className="mt-2 font-semibold">Google ile giriş</h3>
