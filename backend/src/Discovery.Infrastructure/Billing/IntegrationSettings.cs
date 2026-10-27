@@ -174,7 +174,8 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         await SetAsync("google.clientSecret", r.GoogleClientSecret, true, userId, IsKey, ct);
 
         await SetAsync("payments.provider", r.PaymentProvider, false, userId, v => v is "paytr" or "lemonsqueezy", ct);
-        await SetAsync("lemon.storeId", r.LemonStoreId, false, userId, v => v.Length <= 20 && v.All(char.IsDigit), ct);
+        // The store list shows the ID as "#508477".
+        await SetAsync("lemon.storeId", r.LemonStoreId?.Trim().TrimStart('#'), false, userId, v => v.Length <= 20 && v.All(char.IsDigit), ct);
         // API keys are long JWTs.
         await SetAsync("lemon.apiKey", r.LemonApiKey, true, userId, v => v.Length is >= 20 and <= 4000 && !v.Any(char.IsWhiteSpace), ct);
         await SetAsync("lemon.webhookSecret", r.LemonWebhookSecret, true, userId, v => v.Length is >= 6 and <= 200 && !v.Any(char.IsWhiteSpace), ct);
