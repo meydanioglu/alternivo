@@ -65,7 +65,7 @@ function ReviewSpeed({ fastReviewAvailable, fastReviewPrice }: { fastReviewAvail
       {fastReviewAvailable && (
         <p className="text-xs text-muted">
           Fast Review is a one-time fee for priority evaluation, not guaranteed publication. You can also upgrade later from your Maker
-          dashboard. Paid by card via PayTR; if we miss the 24-hour window you can ask for a full refund.
+          dashboard. Paid by card; if we miss the 24-hour window you can ask for a full refund.
         </p>
       )}
     </fieldset>

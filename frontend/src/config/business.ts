@@ -19,7 +19,12 @@ export const business = {
   phone: env(process.env.SUPPORT_PHONE),
   /** How prices relate to tax, e.g. "Prices include 20% VAT (KDV)." Not shown until set. */
   taxNote: env(process.env.PRICE_TAX_NOTE),
+  /** Legal name of the card payment provider, e.g. "İyzi Ödeme ve Elektronik Para Hizmetleri A.Ş. (iyzico)". */
+  paymentProvider: env(process.env.PAYMENT_PROVIDER_NAME),
 } as const;
+
+/** The payment provider as named on legal pages; a neutral description until one is configured. */
+export const paymentProvider = business.paymentProvider ?? "our licensed payment provider";
 
 /** Version of the pre-contract information and distance sales agreement; stored with every order the buyer accepts. */
 export const AGREEMENT_VERSION = "2026-10-26";

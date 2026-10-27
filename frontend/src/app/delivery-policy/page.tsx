@@ -33,7 +33,7 @@ export default function DeliveryPolicyPage() {
       <section>
         <h2>2. When a service starts</h2>
         <p>
-          A service is activated automatically once our payment provider PayTR confirms the payment to us. You can see the status of every
+          A service is activated automatically once our payment provider confirms the payment to us. You can see the status of every
           purchase in your <Link href="/maker">Maker dashboard</Link>, and we send no separate goods or licence keys.
         </p>
         <ul>

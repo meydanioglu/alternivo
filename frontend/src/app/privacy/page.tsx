@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/layout/legal-page";
 import { site } from "@/config/site";
+import { paymentProvider } from "@/config/business";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
@@ -18,7 +19,7 @@ export default function PrivacyPage() {
           <li><strong>Account data:</strong> e-mail, display name, password hash, and the optional profile fields you fill in (username, bio, avatar, links).</li>
           <li><strong>Google sign-in:</strong> if you use it, we receive your Google account ID, e-mail, name and whether the e-mail is verified. We never see your Google password.</li>
           <li><strong>Your activity:</strong> likes, votes, bookmarks, reviews and product submissions.</li>
-          <li><strong>Purchases:</strong> for paid maker services we store the order, amount and payment result reported by PayTR. Card details are entered on PayTR&apos;s secure page and never reach us. We also record when you accepted the distance sales agreement for an order, which version you accepted, and any refund made.</li>
+          <li><strong>Purchases:</strong> for paid maker services we store the order, amount and payment result reported by our payment provider. Card details are entered on the payment provider&apos;s secure page and never reach us. We also record when you accepted the distance sales agreement for an order, which version you accepted, and any refund made.</li>
           <li><strong>Technical data:</strong> IP address and user agent in server logs, kept for security and abuse prevention.</li>
         </ul>
       </section>
@@ -33,7 +34,7 @@ export default function PrivacyPage() {
       <section>
         <h2>Service providers</h2>
         <ul>
-          <li><strong>PayTR</strong> — card payment processing (we share your e-mail, name, IP address and the order amount).</li>
+          <li><strong>{paymentProvider}</strong> — card payment processing (we share your e-mail, name, IP address and the order amount).</li>
           <li><strong>Google</strong> — optional sign-in.</li>
           <li><strong>Tiny Analytics</strong> — website analytics.</li>
           <li><strong>OpenAI</strong> — helps draft product descriptions from vendors&apos; public websites. No member data is sent.</li>

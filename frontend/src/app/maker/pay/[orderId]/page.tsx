@@ -56,7 +56,7 @@ export default async function PayPage({ params }: Props) {
                 <span className="mt-0.5 block text-xs text-muted">{business.taxNote ?? "This is the total amount charged to your card."} No automatic renewal.</span>
               </dd>
             </div>
-            <div className={row}><dt className="text-muted">Payment</dt><dd>Card payment processed by PayTR. Your card details go directly to PayTR.</dd></div>
+            <div className={row}><dt className="text-muted">Payment</dt><dd>Card payment processed by our licensed payment provider. Your card details go directly to the provider.</dd></div>
           </dl>
           <details className="mt-4 rounded-[10px] border border-border px-4 py-3 text-sm">
             <summary className="cursor-pointer font-medium">Seller details</summary>
@@ -78,14 +78,14 @@ export default async function PayPage({ params }: Props) {
       <div className="mx-auto max-w-2xl">
         <h1 className="text-2xl font-semibold">Secure payment</h1>
         <p className="mt-1 text-sm text-muted">
-          Total: <strong className="text-foreground">{total}</strong> ({order.currency}). Payments are processed by PayTR;
-          your card details go directly to PayTR.
+          Total: <strong className="text-foreground">{total}</strong> ({order.currency}). Payments are processed by our licensed payment provider;
+          your card details go directly to the provider.
         </p>
         <div className="mt-6 overflow-hidden rounded-[10px] border border-border bg-white">
           <iframe
             src={`https://www.paytr.com/odeme/guvenli/${token}`}
             id="paytriframe"
-            title="PayTR secure payment"
+            title="Secure payment"
             className="w-full"
             style={{ minHeight: 600, border: 0 }}
             allow="payment"
@@ -94,7 +94,7 @@ export default async function PayPage({ params }: Props) {
         <Script src="https://www.paytr.com/js/iframeResizer.min.js" strategy="afterInteractive" />
         <Script id="paytr-resize" strategy="afterInteractive">{`(function r(){if(window.iFrameResize){window.iFrameResize({},'#paytriframe')}else{setTimeout(r,200)}})();`}</Script>
         <p className="mt-4 text-xs text-muted">
-          Your purchase is applied automatically once PayTR confirms the payment. <Link href="/maker" className="underline">Cancel and go back</Link>
+          Your purchase is applied automatically once the payment is confirmed. <Link href="/maker" className="underline">Cancel and go back</Link>
         </p>
       </div>
     </Container>

@@ -67,7 +67,7 @@ export default function RefundPolicyPage() {
         <h2>5. How to ask for a refund</h2>
         <p>
           Contact <SupportContact /> with your account e-mail and order number (shown in your Maker dashboard). We reply to refund requests
-          within 3 business days. Approved refunds are made to the card used for payment through our payment provider PayTR, within 14 days
+          within 3 business days. Approved refunds are made to the card used for payment through our payment provider, within 14 days
           of approval; when the money appears on your statement depends on your bank.
         </p>
       </section>

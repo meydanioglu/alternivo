@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/layout/legal-page";
 import { SellerDetails, ServicesTable, SupportContact } from "@/components/legal/legal-parts";
-import { AGREEMENT_UPDATED, AGREEMENT_VERSION } from "@/config/business";
+import { AGREEMENT_UPDATED, AGREEMENT_VERSION , paymentProvider } from "@/config/business";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -40,12 +40,12 @@ export default function DistanceSalesAgreementPage() {
         <h3 className="mt-5 font-semibold text-foreground">A4. Price and payment</h3>
         <p>
           The total price, including any taxes, and the currency are shown on the checkout page before payment and are the amounts charged.
-          Payment is a one-time card payment processed by PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş.; card details are entered on PayTR&apos;s
+          Payment is a one-time card payment processed by {paymentProvider}; card details are entered on the payment provider&apos;s
           page and are not seen or stored by the Seller. No instalments and no automatic renewals are offered. There are no delivery costs.
         </p>
         <h3 className="mt-5 font-semibold text-foreground">A5. Performance (delivery)</h3>
         <p>
-          The service is performed electronically and starts when PayTR confirms the payment, as described in the{" "}
+          The service is performed electronically and starts when the payment provider confirms the payment, as described in the{" "}
           <Link href="/delivery-policy">delivery policy</Link>. Fast Review is completed within 24 hours of payment confirmation; Featured and
           Growth run for 30 days; sponsored placements run for the booked period after editorial approval.
         </p>
@@ -72,7 +72,7 @@ export default function DistanceSalesAgreementPage() {
         <div className="flex flex-col gap-3">
           <p><strong>B1. Parties.</strong> This agreement is made between the Seller (Part A1) and the Buyer (Part A2) electronically when the Buyer confirms it at checkout and completes the payment.</p>
           <p><strong>B2. Subject.</strong> The provision of the service selected at checkout, with the features, price and duration shown there and in Part A3.</p>
-          <p><strong>B3. Formation.</strong> The contract is formed when PayTR confirms the payment. If the payment fails, no contract is formed and nothing is charged.</p>
+          <p><strong>B3. Formation.</strong> The contract is formed when the payment provider confirms the payment. If the payment fails, no contract is formed and nothing is charged.</p>
           <p><strong>B4. Seller&apos;s obligations.</strong> To perform the service as described, to label all paid placements as such, to keep organic rankings, votes and reviews independent of payments, and to refund the Buyer in the cases listed in the <Link href="/refund-policy">refund policy</Link>.</p>
           <p><strong>B5. Buyer&apos;s obligations.</strong> To give accurate information, to promote only products the Buyer is entitled to promote and to follow the <Link href="/terms">terms of service</Link>. Content that is unlawful or misleading may be refused or removed.</p>
           <p><strong>B6. No guaranteed results.</strong> Paid services do not guarantee approval, rankings, traffic, clicks, sign-ups or sales.</p>

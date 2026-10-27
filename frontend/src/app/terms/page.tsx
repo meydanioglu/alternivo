@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/layout/legal-page";
 import { site } from "@/config/site";
+import { paymentProvider } from "@/config/business";
 
 export const metadata: Metadata = {
   title: "Terms of service",
@@ -52,7 +53,7 @@ export default function TermsPage() {
             <Link href="/refund-policy">refund policy</Link>.
           </li>
           <li>
-            Card payments are processed by PayTR Ödeme ve Elektronik Para Kuruluşu A.Ş. Prices are shown before payment, in the currency
+            Card payments are processed by {paymentProvider}. Prices are shown before payment, in the currency
             charged.
           </li>
           <li>

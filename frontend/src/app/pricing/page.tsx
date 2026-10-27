@@ -4,6 +4,8 @@ import Link from "next/link";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Container } from "@/components/layout/page-parts";
 import { buttonClass, cx } from "@/components/ui/styles";
+import { SellerDetails } from "@/components/legal/legal-parts";
+import { business, paymentProvider } from "@/config/business";
 import { site } from "@/config/site";
 import { formatPrice, pricing } from "@/lib/auth/integrations";
 import { faqJsonLd } from "@/lib/seo";
@@ -169,11 +171,30 @@ export default async function PricingPage() {
             </div>
           ))}
         </div>
-        <p className="mt-6 text-xs text-muted">
-          Card payments are processed securely by PayTR. Before paying you see the total amount and confirm the{" "}
-          <Link href="/distance-sales-agreement" className="underline">distance sales agreement</Link>. See also our{" "}
-          <Link href="/refund-policy" className="underline">refund policy</Link>, <Link href="/delivery-policy" className="underline">delivery policy</Link> and{" "}
-          <Link href="/terms#paid-services" className="underline">terms</Link>.
+      </section>
+
+      <section className="mx-auto mt-14 max-w-3xl text-sm leading-relaxed">
+        <h2 className="mb-3 text-lg font-semibold tracking-tight">Payment, delivery and seller information</h2>
+        <ul className="list-disc space-y-1.5 pl-5 text-foreground/80">
+          <li>All services are digital and delivered online through your Maker dashboard. Nothing is shipped.</li>
+          <li>Prices are in {data.currency}. {business.taxNote ?? "The total amount charged is shown before you pay."}</li>
+          <li>
+            Payments are one-time card payments processed by {paymentProvider}. Card details are entered on the provider&apos;s secure page
+            and never reach us. Nothing renews automatically.
+          </li>
+          <li>Before paying you review the order and accept the pre-contract information and the distance sales agreement.</li>
+        </ul>
+        <div className="mt-5 rounded-[10px] border border-border p-4">
+          <h3 className="mb-2 font-medium">Seller</h3>
+          <SellerDetails />
+        </div>
+        <p className="mt-4 text-xs text-muted">
+          <Link href="/distance-sales-agreement" className="underline">Distance sales agreement</Link> ·{" "}
+          <Link href="/refund-policy" className="underline">Refund policy</Link> ·{" "}
+          <Link href="/delivery-policy" className="underline">Delivery policy</Link> ·{" "}
+          <Link href="/terms#paid-services" className="underline">Terms</Link> ·{" "}
+          <Link href="/privacy" className="underline">Privacy</Link> ·{" "}
+          <Link href="/contact" className="underline">Contact</Link>
         </p>
       </section>
     </Container>

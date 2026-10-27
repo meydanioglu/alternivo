@@ -153,7 +153,7 @@ export default async function MakerPage({ searchParams }: Props) {
       )}
       {params.purchase && (
         <Notice tone="success">
-          Payment received. It is applied as soon as PayTR confirms it (usually within seconds) — refresh if you don't see it yet.
+          Payment received. It is applied as soon as the payment is confirmed (usually within seconds) — refresh if you don't see it yet.
         </Notice>
       )}
       {params.canceled && <Notice tone="warning">Checkout was canceled. You have not been charged.</Notice>}
@@ -361,7 +361,7 @@ export default async function MakerPage({ searchParams }: Props) {
                 : "Free"}
             </p>
             <p className="mt-2 text-muted">
-              Card payments are processed by PayTR. Featured and Growth are prepaid 30-day periods: they never renew automatically —
+              Card payments are processed by our licensed payment provider. Featured and Growth are prepaid 30-day periods: they never renew automatically —
               buy another period from My products to extend. For invoices or refunds, see the{" "}
               <Link href="/help" className="text-accent underline">Help center</Link>.
             </p>

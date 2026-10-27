@@ -7,7 +7,7 @@ import { formatPrice, pricing, type PlanInfo } from "@/lib/auth/integrations";
 export const SERVICE_TERMS: Record<string, { what: string; delivery: string }> = {
   fastReview: {
     what: "One-time priority review of one product submission. Approval is never guaranteed.",
-    delivery: "Starts when PayTR confirms the payment; the submission is reviewed (approved, rejected or returned for changes) within 24 hours.",
+    delivery: "Starts when the payment is confirmed; the submission is reviewed (approved, rejected or returned for changes) within 24 hours.",
   },
   featured: {
     what: "“Featured” badge and rotation in labelled sponsored spots for one of your listed products.",
