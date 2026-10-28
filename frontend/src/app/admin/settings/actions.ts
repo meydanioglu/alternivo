@@ -40,7 +40,10 @@ export async function testAiAction(): Promise<{ ok: boolean; message: string }> 
 
 export async function saveIntegrationsAction(_: FormState, form: FormData): Promise<FormState> {
   const value = (name: string) => String(form.get(name) ?? "").trim();
-  // Plain fields are saved as typed (empty clears them); empty secret fields keep the stored secret.
+  // Plain fields are saved as typed (empty clears them); empty secret fields keep the stored secret. A field that is
+  // not in the form at all (a page loaded before the field existed) is sent as null and left unchanged.
+  const field = (name: string) => (form.has(name) ? value(name) : null);
+  const flag = (name: string, section: string) => (form.has(section) ? form.get(name) === "on" : null);
   const keys = ["fastReview", "featured", "growth", "homepageSpotlight", "categorySponsorship", "competitorSponsorship", "alternativeCard"];
   const prices: Record<string, number> = {};
   for (const k of keys) {
@@ -51,28 +54,28 @@ export async function saveIntegrationsAction(_: FormState, form: FormData): Prom
     prices[k] = Math.round(amount * 100);
   }
   const body = {
-    payTrMerchantId: value("payTrMerchantId"),
+    payTrMerchantId: field("payTrMerchantId"),
     payTrMerchantKey: value("payTrMerchantKey") || null,
     payTrMerchantSalt: value("payTrMerchantSalt") || null,
-    payTrTestMode: form.get("payTrTestMode") === "on",
+    payTrTestMode: flag("payTrTestMode", "payTrMerchantId"),
     payTrCurrency: value("payTrCurrency") || "TL",
     prices,
-    googleClientId: value("googleClientId"),
+    googleClientId: field("googleClientId"),
     googleClientSecret: value("googleClientSecret") || null,
-    paymentProvider: value("paymentProvider") || "paytr",
-    lemonStoreId: value("lemonStoreId"),
+    paymentProvider: value("paymentProvider") || null,
+    lemonStoreId: field("lemonStoreId"),
     lemonApiKey: value("lemonApiKey") || null,
     lemonWebhookSecret: value("lemonWebhookSecret") || null,
-    lemonTestMode: form.get("lemonTestMode") === "on",
-    freemiusProductId: value("freemiusProductId"),
-    freemiusPublicKey: value("freemiusPublicKey"),
+    lemonTestMode: flag("lemonTestMode", "lemonStoreId"),
+    freemiusProductId: field("freemiusProductId"),
+    freemiusPublicKey: field("freemiusPublicKey"),
     freemiusSecretKey: value("freemiusSecretKey") || null,
-    freemiusTestMode: form.get("freemiusTestMode") === "on",
-    smtpHost: value("smtpHost"),
-    smtpPort: value("smtpPort"),
-    smtpUsername: value("smtpUsername"),
+    freemiusTestMode: flag("freemiusTestMode", "freemiusProductId"),
+    smtpHost: field("smtpHost"),
+    smtpPort: field("smtpPort"),
+    smtpUsername: field("smtpUsername"),
     smtpPassword: value("smtpPassword") || null,
-    smtpFrom: value("smtpFrom"),
+    smtpFrom: field("smtpFrom"),
   };
   try {
     await userApi("/api/v1/admin/settings/integrations", { method: "PUT", body });
