@@ -38,7 +38,7 @@ export default async function AdminPaymentsPage() {
     <>
       <AdminHeader
         title="Ödemeler"
-        description="PayTR siparişleri. İade PayTR Mağaza Panelinden yapılır; ardından burada “İade edildi” olarak işaretleyin (satın alınan etki kaldırılır)."
+        description="Freemius siparişleri. İade Freemius panelinden yapılır (webhook ile otomatik de işlenir); ardından burada “İade edildi” olarak işaretleyin (satın alınan etki kaldırılır)."
       />
       {!rows ? (
         <EmptyState title="Yetkiniz yok">Ödemeleri yalnızca Admin ve Süper admin görebilir.</EmptyState>
@@ -66,7 +66,7 @@ export default async function AdminPaymentsPage() {
                     action={markRefundedAction.bind(null, p.entitlementId)}
                     variant="ghost"
                     className="text-danger"
-                    confirm="PayTR panelinden iadeyi yaptınız mı? Satın alınan etki (öne çıkarma, kampanya vb.) kaldırılacak."
+                    confirm="Freemius panelinden iadeyi yaptınız mı? Satın alınan etki (öne çıkarma, kampanya vb.) kaldırılacak."
                   >
                     İade edildi
                   </ActionButton>

@@ -28,7 +28,12 @@ public sealed class FreemiusGateway(
     public enum Result { Ok, BadSignature, NotConfigured, UnknownOrder }
 
     /// <summary>x-signature = hex(HMAC-SHA256(raw body, product secret key)).</summary>
-    public static bool SignatureValid(string secret, byte[] body, string? signature) => LemonSqueezyGateway.SignatureValid(secret, body, signature);
+    public static bool SignatureValid(string secret, byte[] body, string? signature)
+    {
+        if (string.IsNullOrEmpty(signature)) return false;
+        var expected = Encoding.ASCII.GetBytes(Convert.ToHexStringLower(HMACSHA256.HashData(Encoding.UTF8.GetBytes(secret), body)));
+        return CryptographicOperations.FixedTimeEquals(expected, Encoding.ASCII.GetBytes(signature.Trim().ToLowerInvariant()));
+    }
 
     /// <summary>Sandbox token for the hosted checkout: md5(timestamp + product ID + secret key + public key + "checkout").</summary>
     public static string SandboxToken(string timestamp, string productId, string secretKey, string publicKey) =>
@@ -134,13 +139,13 @@ public sealed class FreemiusGateway(
         var currency = payment["currency"]?.ToString() ?? "usd";
         var paid = currency.Equals(order.Currency, StringComparison.OrdinalIgnoreCase) ? Cents(payment["gross"]) : 0;
         // Freemius does not mark sandbox payments in the payload; the order's own mode is used on both sides.
-        var outcome = PayTrGateway.Classify(order.Status, order.TestMode, "success", paid, order.AmountMinor, order.TestMode);
-        if (outcome is PayTrGateway.Outcome.Ignore or PayTrGateway.Outcome.AlreadyPaid) return Result.Ok;
+        var outcome = PaymentState.Classify(order.Status, order.TestMode, "success", paid, order.AmountMinor, order.TestMode);
+        if (outcome is PaymentState.Outcome.Ignore or PaymentState.Outcome.AlreadyPaid) return Result.Ok;
 
         var now = clock.GetUtcNow();
         order.ProviderPaymentId = paymentId;
         order.PaymentType = "freemius";
-        if (outcome is PayTrGateway.Outcome.MarkPaid or PayTrGateway.Outcome.LatePaid)
+        if (outcome is PaymentState.Outcome.MarkPaid or PaymentState.Outcome.LatePaid)
         {
             order.Status = PaymentOrderStatus.Paid;
             order.PaidAmountMinor = paid;
@@ -149,7 +154,7 @@ public sealed class FreemiusGateway(
         else
         {
             order.Status = PaymentOrderStatus.Failed;
-            order.FailedReason = outcome == PayTrGateway.Outcome.AmountMismatch
+            order.FailedReason = outcome == PaymentState.Outcome.AmountMismatch
                 ? $"Amount mismatch: paid {paid} {currency}, expected {order.AmountMinor} {order.Currency} (needs reconciliation)"
                 : $"Freemius outcome: {outcome}";
             logger.LogError("Freemius payment {Payment} not applied to {Order}: {Outcome}", paymentId, order.MerchantOid, outcome);

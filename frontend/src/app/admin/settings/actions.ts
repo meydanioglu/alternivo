@@ -44,29 +44,9 @@ export async function saveIntegrationsAction(_: FormState, form: FormData): Prom
   // not in the form at all (a page loaded before the field existed) is sent as null and left unchanged.
   const field = (name: string) => (form.has(name) ? value(name) : null);
   const flag = (name: string, section: string) => (form.has(section) ? form.get(name) === "on" : null);
-  const keys = ["fastReview", "featured", "growth", "homepageSpotlight", "categorySponsorship", "competitorSponsorship", "alternativeCard"];
-  const prices: Record<string, number> = {};
-  for (const k of keys) {
-    const raw = value(`price_${k}`).replace(",", ".");
-    // Empty disables the plan (0); otherwise convert the typed amount to minor units.
-    const amount = raw === "" ? 0 : Number(raw);
-    if (!Number.isFinite(amount) || amount < 0) return { error: `Geçersiz fiyat: ${k}` };
-    prices[k] = Math.round(amount * 100);
-  }
   const body = {
-    payTrMerchantId: field("payTrMerchantId"),
-    payTrMerchantKey: value("payTrMerchantKey") || null,
-    payTrMerchantSalt: value("payTrMerchantSalt") || null,
-    payTrTestMode: flag("payTrTestMode", "payTrMerchantId"),
-    payTrCurrency: value("payTrCurrency") || "TL",
-    prices,
     googleClientId: field("googleClientId"),
     googleClientSecret: value("googleClientSecret") || null,
-    paymentProvider: value("paymentProvider") || null,
-    lemonStoreId: field("lemonStoreId"),
-    lemonApiKey: value("lemonApiKey") || null,
-    lemonWebhookSecret: value("lemonWebhookSecret") || null,
-    lemonTestMode: flag("lemonTestMode", "lemonStoreId"),
     freemiusProductId: field("freemiusProductId"),
     freemiusPublicKey: field("freemiusPublicKey"),
     freemiusSecretKey: value("freemiusSecretKey") || null,

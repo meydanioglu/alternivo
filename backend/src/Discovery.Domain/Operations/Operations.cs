@@ -144,7 +144,7 @@ public enum EntitlementKind
 }
 
 /// <summary>
-/// What a member has paid for: created when a PayTR payment notification confirms an order. Featured / Growth are
+/// What a member has paid for: created when a signed payment notification confirms an order. Featured / Growth are
 /// prepaid 30-day periods (buying again extends them); one-time purchases have no expiration.
 /// </summary>
 public class BillingEntitlement

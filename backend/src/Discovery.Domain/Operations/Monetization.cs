@@ -19,7 +19,7 @@ public enum CampaignStatus
     Canceled = 4,
 }
 
-/// <summary>One sellable product. Default prices (USD cents); admins can set the charged price and currency for PayTR.</summary>
+/// <summary>One sellable product. Default prices (USD cents); Freemius plans are priced the same.</summary>
 public sealed record PlanDefinition(
     string Key,
     EntitlementKind Kind,
@@ -83,7 +83,7 @@ public enum PaymentOrderStatus
 }
 
 /// <summary>
-/// One PayTR checkout. The order id (merchant_oid) is sent to PayTR; the signed payment notification for that id is
+/// One checkout. The signed payment notification matched to this order is
 /// the only thing that marks it paid. Amount and target are fixed server-side when the order is created.
 /// </summary>
 public class PaymentOrder
@@ -96,7 +96,7 @@ public class PaymentOrder
     public EntitlementKind Kind { get; set; }
     /// <summary>Submission (Fast Review), application (Featured / Growth) or campaign (placements).</summary>
     public Guid? TargetId { get; set; }
-    /// <summary>Minor units (kuruş / cents), as sent to PayTR.</summary>
+    /// <summary>Minor units (cents).</summary>
     public int AmountMinor { get; set; }
     public required string Currency { get; set; }
     public bool TestMode { get; set; }

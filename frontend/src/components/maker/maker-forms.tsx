@@ -5,7 +5,7 @@ import type { FormState } from "@/app/actions";
 import { checkoutAction, createCampaignAction } from "@/app/maker/actions";
 import { Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
 
-/** A single "Pay" button: the server validates the purchase, then opens the PayTR payment page. */
+/** A single "Pay" button: the server validates the purchase, then opens the Freemius payment page. */
 export function CheckoutButton({ plan, targetId, label, variant = "outline" }: {
   plan: string;
   targetId?: string;

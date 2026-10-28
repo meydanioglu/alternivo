@@ -344,7 +344,7 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
     // ---------- Checkout ----------
 
     /// <summary>
-    /// Validates a purchase and creates the order that will be sent to PayTR. The price comes from the server-side
+    /// Validates a purchase and creates the order that will be paid through Freemius. The price comes from the server-side
     /// settings, never from the client.
     /// </summary>
     public async Task<PaymentOrder> CreateOrderAsync(Guid userId, string planKey, Guid? targetId, int amountMinor, string currency, bool testMode,
@@ -453,7 +453,7 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
         await ReapplyAsync(e.Id, ct);
     }
 
-    /// <summary>Admin: marks a purchase refunded (after refunding it in the PayTR panel); its effect is removed.</summary>
+    /// <summary>Admin: marks a purchase refunded (after refunding it in the Freemius dashboard); its effect is removed.</summary>
     public async Task CancelEntitlementAsync(Guid actorId, Guid entitlementId, CancellationToken ct)
     {
         var e = await db.BillingEntitlements.FirstOrDefaultAsync(x => x.Id == entitlementId, ct)
@@ -483,7 +483,7 @@ public sealed class MakerService(IAppDbContext db, ICacheService cache, CatalogS
     }
 
     /// <summary>
-    /// Records a refund made in the PayTR panel (or via its refund API) and ends the purchase's effect.
+    /// Records a refund made in the Freemius dashboard (or reported by its webhook) and ends the purchase's effect.
     /// A partial refund (e.g. unused prepaid days) also ends the purchase.
     /// </summary>
     public async Task RecordRefundAsync(Guid actorId, Guid orderId, int amountMinor, string reason, CancellationToken ct)

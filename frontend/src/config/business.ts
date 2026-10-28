@@ -2,7 +2,7 @@
  * Seller (legal entity) details shown on legal pages and at checkout (server components only, read at runtime so
  * they can be set in the server's .env without a rebuild). They come only from environment variables:
  * nothing here is a default or a placeholder, so an unset field is simply not shown. Fill these in before
- * live payments are enabled (see docs/paytr-readiness.md).
+ * live payments are enabled.
  */
 const env = (v: string | undefined) => (v && v.trim() ? v.trim() : null);
 

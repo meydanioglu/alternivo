@@ -35,7 +35,7 @@ export default async function AdminCampaignsPage({ searchParams }: Props) {
   const rows = await userApi<Row[]>(`/api/v1/admin/campaigns?state=${encodeURIComponent(state)}`, { persist: false });
   return (
     <>
-      <AdminHeader title="Sponsorluklar" description="Ödenmiş kampanyalar yayına girmeden önce onayınızı bekler. Reddedilenlerin iadesini PayTR mağaza panelinden yapın, sonra Ödemeler sayfasında “iade edildi” olarak işaretleyin." />
+      <AdminHeader title="Sponsorluklar" description="Ödenmiş kampanyalar yayına girmeden önce onayınızı bekler. Reddedilenlerin iadesini Freemius panelinden yapın, sonra Ödemeler sayfasında “iade edildi” olarak işaretleyin." />
       <Tabs
         items={[
           { value: "pending", label: "Onay bekleyen", href: "/admin/campaigns?state=pending" },

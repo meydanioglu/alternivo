@@ -1,22 +1,22 @@
 using Discovery.Domain.Operations;
 using Discovery.Infrastructure.Billing;
 using Xunit;
-using O = Discovery.Infrastructure.Billing.PayTrGateway.Outcome;
+using O = Discovery.Infrastructure.Billing.PaymentState.Outcome;
 using S = Discovery.Domain.Operations.PaymentOrderStatus;
 
 namespace Discovery.UnitTests;
 
-/// <summary>Transitions of a payment order when a correctly signed PayTR notification arrives.</summary>
+/// <summary>Transitions of a payment order when a correctly signed payment notification arrives.</summary>
 public class PaymentStateTests
 {
     private static O Classify(S current, string status = "success", int paid = 900, bool orderTest = false, bool notificationTest = false) =>
-        PayTrGateway.Classify(current, orderTest, status, paid, 900, notificationTest);
+        PaymentState.Classify(current, orderTest, status, paid, 900, notificationTest);
 
     [Fact]
     public void Pending_order_with_success_and_full_amount_is_paid() => Assert.Equal(O.MarkPaid, Classify(S.Pending));
 
     [Fact]
-    public void Installment_surcharge_above_the_price_is_accepted() => Assert.Equal(O.MarkPaid, Classify(S.Pending, paid: 950));
+    public void Overpayment_is_accepted() => Assert.Equal(O.MarkPaid, Classify(S.Pending, paid: 950));
 
     [Fact]
     public void Pending_order_with_failed_status_fails() => Assert.Equal(O.MarkFailed, Classify(S.Pending, "failed"));

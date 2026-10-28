@@ -52,38 +52,20 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
     }
 
     /// <summary>
-    /// Validates the purchase server-side, creates an order at the configured price and returns either a PayTR iframe
-    /// token or a Lemon Squeezy checkout URL, depending on the active provider. Nothing is granted here: the effect is
-    /// applied only when the provider's signed notification arrives.
+    /// Validates the purchase server-side, creates an order at the catalogue price and returns the Freemius checkout URL
+    /// for its plan. Nothing is granted here: the effect is applied only when Freemius's signed webhook arrives.
     /// </summary>
     [HttpPost("checkout")]
     [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
-    public async Task<object> Checkout(CheckoutRequest request, [FromServices] PayTrGateway paytr, [FromServices] LemonSqueezyGateway lemon,
-        [FromServices] FreemiusGateway freemius, [FromServices] IntegrationSettings settings, [FromServices] UserManager<AppUser> users, [FromServices] IConfiguration config, CancellationToken ct)
+    public async Task<object> Checkout(CheckoutRequest request, [FromServices] FreemiusGateway freemius,
+        [FromServices] UserManager<AppUser> users, [FromServices] IConfiguration config, CancellationToken ct)
     {
         var user = await users.FindByIdAsync(current.RequireUserId().ToString())
             ?? throw new Discovery.Application.Common.ForbiddenException("Please sign in again.");
         var site = (config["Site:Url"] ?? "https://alternivo.com").TrimEnd('/');
-        var name = string.IsNullOrWhiteSpace(user.DisplayName) ? user.Email! : user.DisplayName;
-        var provider = (await settings.ActiveAsync(ct))?.Provider;
-        if (provider == "freemius")
-        {
-            var (fsOrder, fsUrl) = await freemius.StartAsync(user.Id, request.Plan, request.TargetId, user.Email!, $"{site}/maker?canceled=1", ct);
-            return new { orderId = fsOrder.Id, provider = "freemius", url = fsUrl, amountMinor = fsOrder.AmountMinor, currency = fsOrder.Currency };
-        }
-
-        if (provider == "lemonsqueezy")
-        {
-            var (lemonOrder, url) = await lemon.StartAsync(user.Id, request.Plan, request.TargetId, user.Email!, name,
-                $"{site}/maker?purchase={request.Plan}", ct);
-            return new { orderId = lemonOrder.Id, provider = "lemonsqueezy", url, amountMinor = lemonOrder.AmountMinor, currency = lemonOrder.Currency };
-        }
-
-        var (order, token) = await paytr.StartAsync(user.Id, request.Plan, request.TargetId,
-            new PayTrBuyer(user.Email!, string.IsNullOrWhiteSpace(user.DisplayName) ? user.Email! : user.DisplayName, ClientIp.Resolve(HttpContext)),
-            $"{site}/maker?purchase={request.Plan}", $"{site}/maker?canceled=1", ct);
-        return new { orderId = order.Id, provider = "paytr", token, amountMinor = order.AmountMinor, currency = order.Currency };
+        var (order, url) = await freemius.StartAsync(user.Id, request.Plan, request.TargetId, user.Email!, $"{site}/maker?canceled=1", ct);
+        return new { orderId = order.Id, provider = "freemius", url, amountMinor = order.AmountMinor, currency = order.Currency };
     }
 
     /// <summary>Order status for the payment page (polls after the iframe finishes).</summary>
@@ -173,45 +155,7 @@ public sealed class BillingController(IntegrationSettings settings) : Controller
         var p = await settings.ActiveAsync(ct);
         return new
         {
-            enabled = p is not null, provider = p?.Provider, plans = p?.Prices.Keys.ToArray() ?? [], currency = p?.Currency ?? "TL", testMode = p?.TestMode ?? false,
-        };
-    }
-
-    /// <summary>
-    /// PayTR payment notification ("Bildirim URL"), forwarded by the web app. Must answer the plain text "OK";
-    /// anything else makes PayTR retry. Invalid hashes are rejected.
-    /// </summary>
-    [HttpPost("paytr/notify")]
-    [AllowAnonymous]
-    [Consumes("application/x-www-form-urlencoded")]
-    public async Task<IActionResult> PayTrNotify([FromServices] PayTrGateway paytr, CancellationToken ct)
-    {
-        var form = await Request.ReadFormAsync(ct);
-        var fields = form.ToDictionary(x => x.Key, x => x.Value.ToString());
-        var result = await paytr.HandleNotificationAsync(fields, ct);
-        return result switch
-        {
-            PayTrGateway.Result.BadHash => BadRequest("PAYTR notification failed: bad hash"),
-            PayTrGateway.Result.NotConfigured => StatusCode(StatusCodes.Status503ServiceUnavailable),
-            // Unknown orders are logged and acknowledged so PayTR does not retry forever.
-            _ => Content("OK", "text/plain"),
-        };
-    }
-
-    /// <summary>Lemon Squeezy webhook (order_created, order_refunded), forwarded by the web app with its X-Signature header.</summary>
-    [HttpPost("lemonsqueezy/webhook")]
-    [AllowAnonymous]
-    public async Task<IActionResult> LemonWebhook([FromServices] LemonSqueezyGateway lemon, CancellationToken ct)
-    {
-        using var buffer = new MemoryStream();
-        await Request.Body.CopyToAsync(buffer, ct);
-        if (buffer.Length > 256 * 1024) return StatusCode(StatusCodes.Status413PayloadTooLarge);
-        var result = await lemon.HandleWebhookAsync(buffer.ToArray(), Request.Headers["X-Signature"].ToString(), ct);
-        return result switch
-        {
-            LemonSqueezyGateway.Result.BadSignature => Unauthorized(),
-            LemonSqueezyGateway.Result.NotConfigured => StatusCode(StatusCodes.Status503ServiceUnavailable),
-            _ => Ok(),
+            enabled = p is not null, provider = p?.Provider, plans = p?.Prices.Keys.ToArray() ?? [], currency = p?.Currency ?? "USD", testMode = p?.TestMode ?? false,
         };
     }
 

@@ -150,7 +150,7 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         });
     }
 
-    /// <summary>Marks a paid order refunded (do the actual refund in the PayTR panel first); removes its effect.</summary>
+    /// <summary>Marks a paid order refunded (do the actual refund in the Freemius dashboard first); removes its effect.</summary>
     [HttpPost("payments/entitlements/{id:guid}/refunded")]
     [Authorize(Policy = Policies.Administration)]
     public async Task<IActionResult> MarkRefunded(Guid id, [FromServices] Discovery.Application.Community.MakerService maker, CancellationToken ct)
@@ -159,7 +159,7 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         return NoContent();
     }
 
-    /// <summary>Records a refund made in the PayTR panel against the order (full or partial) and ends the purchase.</summary>
+    /// <summary>Records a refund made in the Freemius dashboard against the order (full or partial) and ends the purchase.</summary>
     [HttpPost("payments/{id:guid}/refund")]
     [Authorize(Policy = Policies.Administration)]
     public async Task<IActionResult> RecordRefund(Guid id, RecordRefundRequest request,

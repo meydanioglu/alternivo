@@ -6,7 +6,7 @@ import type { FormState } from "@/app/actions";
 import { acceptTermsAction } from "@/app/maker/actions";
 import { SubmitButton } from "@/components/forms/form-kit";
 
-/** Required acknowledgements before the PayTR form opens. Both are recorded with the order server-side. */
+/** Required acknowledgements before the Freemius checkout opens. Both are recorded with the order server-side. */
 export function AcceptTermsForm({ orderId, amount }: { orderId: string; amount: string }) {
   const [state, action] = useActionState(acceptTermsAction, {} as FormState);
   const box = "mt-0.5 size-4 shrink-0 accent-[var(--accent)]";

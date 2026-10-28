@@ -22,7 +22,7 @@ export async function assignEntitlementAction(_: FormState, form: FormData): Pro
   return { ok: "Purchase applied." };
 }
 
-/** Server-validated checkout: the API checks ownership/eligibility and price, then we open the PayTR payment page. */
+/** Server-validated checkout: the API checks ownership/eligibility and price, then we open the Freemius payment page. */
 export async function checkoutAction(_: FormState, form: FormData): Promise<FormState> {
   const plan = String(form.get("plan") ?? "");
   const targetId = String(form.get("targetId") ?? "") || null;
