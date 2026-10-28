@@ -13,6 +13,10 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     website: "https://www.paypal.com",
     kind: "Payment account",
     facts: {
+      seller_pk: { value: "unknown", detail: "PayPal's Pakistan page could not be checked from an official source.", verified: CHECKED },
+      payout_pk_bank: { value: "unknown", verified: CHECKED },
+      seller_ng: { value: "unknown", detail: "PayPal's Nigeria page does not describe receiving payments.", source: "https://www.paypal.com/ng/webapps/mpp/home", verified: CHECKED },
+      payout_ng_bank: { value: "unknown", source: "https://www.paypal.com/ng/webapps/mpp/home", verified: CHECKED },
       seller_tr: {
         value: false,
         detail: "PayPal stopped operating in Turkey in June 2016; Turkish accounts cannot send or receive payments.",
@@ -31,6 +35,14 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     catalogSlug: "stripe-billing",
     kind: "Payment processor",
     facts: {
+      seller_pk: { value: false, detail: "Pakistan is not on Stripe's supported country list.", source: "https://stripe.com/global", verified: CHECKED },
+      payout_pk_bank: { value: false, source: "https://stripe.com/global", verified: CHECKED },
+      seller_ng: { value: false, detail: "Nigeria is served through Paystack (Stripe's extended network), not a Stripe account.", source: "https://stripe.com/global", verified: CHECKED },
+      payout_ng_bank: { value: false, source: "https://stripe.com/global", verified: CHECKED },
+      non_us_seller: { value: true, detail: "Available to businesses in 51 countries and regions, not only the US.", source: "https://stripe.com/global", verified: CHECKED },
+      subscriptions: { value: true, source: "https://stripe.com/global", verified: CHECKED },
+      international_cards: { value: true, source: "https://stripe.com/global", verified: CHECKED },
+      merchant_of_record: { value: false, detail: "You remain the seller and handle sales tax yourself.", source: "https://stripe.com/global", verified: CHECKED },
       seller_tr: {
         value: false,
         detail: "Turkey is not on Stripe's list of supported business countries.",
@@ -39,7 +51,11 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
       },
       payout_tr_bank: { value: false, detail: "No Stripe account for Turkish businesses.", source: "https://stripe.com/global", verified: CHECKED },
     },
-    pricing: { summary: "Not available for Turkish businesses", source: "https://stripe.com/global", verified: CHECKED },
+    pricing: {
+      summary: "2.9% + 30¢ per domestic card payment, +1.5% for international cards, +1% for currency conversion (US pricing; varies by country)",
+      source: "https://stripe.com/pricing",
+      verified: CHECKED,
+    },
     pros: ["Developer-friendly APIs, used by many merchant-of-record platforms behind the scenes"],
     cons: ["Cannot be opened directly by a business registered in Turkey"],
   },
@@ -49,6 +65,11 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     website: "https://www.lemonsqueezy.com",
     kind: "Merchant of record",
     facts: {
+      seller_pk: { value: true, detail: "Pakistan is on the bank payout list.", source: "https://docs.lemonsqueezy.com/help/getting-started/supported-countries", verified: CHECKED },
+      payout_pk_bank: { value: true, source: "https://docs.lemonsqueezy.com/help/getting-started/supported-countries", verified: CHECKED },
+      seller_ng: { value: true, detail: "Nigeria is on the bank payout list.", source: "https://docs.lemonsqueezy.com/help/getting-started/supported-countries", verified: CHECKED },
+      payout_ng_bank: { value: true, source: "https://docs.lemonsqueezy.com/help/getting-started/supported-countries", verified: CHECKED },
+      non_us_seller: { value: true, detail: "Bank payouts to 119 countries.", source: "https://docs.lemonsqueezy.com/help/getting-started/supported-countries", verified: CHECKED },
       seller_tr: {
         value: true,
         detail: "Turkey is on the list of countries eligible for bank payouts.",
@@ -77,6 +98,11 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     website: "https://www.paddle.com",
     kind: "Merchant of record",
     facts: {
+      seller_pk: { value: true, detail: "Not on Paddle's unsupported-country list.", source: "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle", verified: CHECKED },
+      payout_pk_bank: { value: "unknown", detail: "Payout methods per country are not published.", source: "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle", verified: CHECKED },
+      seller_ng: { value: true, detail: "Not on Paddle's unsupported-country list.", source: "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle", verified: CHECKED },
+      payout_ng_bank: { value: "unknown", detail: "Payout methods per country are not published.", source: "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle", verified: CHECKED },
+      non_us_seller: { value: true, detail: "Works with software businesses worldwide except listed sanctioned countries.", source: "https://www.paddle.com/help/start/intro-to-paddle/which-countries-are-supported-by-paddle", verified: CHECKED },
       seller_tr: {
         value: true,
         detail: "Paddle works with software businesses worldwide; Turkey is not on its unsupported-country list.",
@@ -105,6 +131,11 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     website: "https://polar.sh",
     kind: "Merchant of record",
     facts: {
+      seller_pk: { value: true, detail: "Pakistan is on the payout country list.", source: "https://polar.sh/docs/merchant-of-record/supported-countries", verified: CHECKED },
+      payout_pk_bank: { value: true, detail: "Payouts through Stripe Connect Express.", source: "https://polar.sh/docs/merchant-of-record/supported-countries", verified: CHECKED },
+      seller_ng: { value: true, detail: "Nigeria is on the payout country list.", source: "https://polar.sh/docs/merchant-of-record/supported-countries", verified: CHECKED },
+      payout_ng_bank: { value: true, detail: "Payouts through Stripe Connect Express.", source: "https://polar.sh/docs/merchant-of-record/supported-countries", verified: CHECKED },
+      non_us_seller: { value: true, detail: "Payouts to residents and businesses in the listed countries.", source: "https://polar.sh/docs/merchant-of-record/supported-countries", verified: CHECKED },
       seller_tr: {
         value: true,
         detail: "Turkey is on Polar's payout country list.",
@@ -137,6 +168,11 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     website: "https://www.creem.io",
     kind: "Merchant of record",
     facts: {
+      seller_pk: { value: true, detail: "Supported, but marked as possibly restricted for payouts (for example personal accounts only).", source: "https://docs.creem.io/merchant-of-record/supported-countries", verified: CHECKED },
+      payout_pk_bank: { value: "unknown", detail: "Creem flags Pakistan payouts as possibly restricted.", source: "https://docs.creem.io/merchant-of-record/supported-countries", verified: CHECKED },
+      seller_ng: { value: true, detail: "Supported with no restriction marker.", source: "https://docs.creem.io/merchant-of-record/supported-countries", verified: CHECKED },
+      payout_ng_bank: { value: true, detail: "Local bank transfer.", source: "https://docs.creem.io/merchant-of-record/supported-countries", verified: CHECKED },
+      non_us_seller: { value: true, detail: "87 supported countries.", source: "https://docs.creem.io/merchant-of-record/supported-countries", verified: CHECKED },
       seller_tr: {
         value: true,
         detail: "Turkey is on Creem's supported country list.",
@@ -168,6 +204,10 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     website: "https://www.payoneer.com",
     kind: "Cross-border receiving account",
     facts: {
+      seller_pk: { value: "unknown", detail: "Not confirmed on an official Pakistan page.", verified: CHECKED },
+      payout_pk_bank: { value: "unknown", verified: CHECKED },
+      seller_ng: { value: "unknown", detail: "Not confirmed on an official Nigeria page.", verified: CHECKED },
+      payout_ng_bank: { value: "unknown", verified: CHECKED },
       seller_tr: { value: "unknown", detail: "Not confirmed on an official Turkey page we could access.", source: "https://www.payoneer.com/receiving-accounts/", verified: CHECKED },
       payout_tr_bank: { value: "unknown", detail: "TRY withdrawals are reported by users but not confirmed on Payoneer's pricing page.", source: "https://www.payoneer.com/pricing/", verified: CHECKED },
       international_cards: { value: "unknown", source: "https://www.payoneer.com/receiving-accounts/", verified: CHECKED },
@@ -193,6 +233,24 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     },
     pros: ["Low-cost transfers into Turkish lira"],
     cons: ["Whether people or businesses in Turkey can open an account to receive money is not confirmed"],
+  },
+  {
+    id: "paystack",
+    name: "Paystack",
+    website: "https://paystack.com",
+    kind: "Payment gateway (Stripe extended network)",
+    facts: {
+      seller_ng: { value: true, detail: "Available to businesses registered in Nigeria, Ghana, South Africa and Kenya.", source: "https://support.paystack.com/en/articles/2130562", verified: CHECKED },
+      payout_ng_bank: { value: true, detail: "Settles to Nigerian bank accounts; USD settlement needs a USD domiciliary account.", source: "https://support.paystack.com/en/articles/2130690", verified: CHECKED },
+      international_cards: { value: true, detail: "Visa, Mastercard and Verve from abroad once international payments are approved.", source: "https://support2.paystack.com/hc/en-us/articles/360010744840-Is-my-business-eligible-for-international-payments", verified: CHECKED },
+      merchant_of_record: { value: false, detail: "You remain the seller.", source: "https://support.paystack.com/en/articles/2130562", verified: CHECKED },
+      seller_pk: { value: false, detail: "Only businesses registered in Nigeria, Ghana, South Africa and Kenya.", source: "https://support.paystack.com/en/articles/2130562", verified: CHECKED },
+      payout_pk_bank: { value: false, source: "https://support.paystack.com/en/articles/2130562", verified: CHECKED },
+    },
+    pricing: { summary: "3.9% on USD card payments; 3.9% + NGN 100 on NGN cards", source: "https://support2.paystack.com/hc/en-us/articles/360009973799-Can-I-accept-payments-in-US-Dollars-USD", verified: CHECKED },
+    pros: ["Built for Nigerian businesses, with naira and USD settlement", "Accepts local payment methods as well as cards"],
+    cons: ["You handle tax yourself (not a merchant of record)", "International payments need compliance approval; some business types are excluded"],
+    bestFor: "Registered Nigerian businesses selling to local and foreign customers",
   },
 ];
 
