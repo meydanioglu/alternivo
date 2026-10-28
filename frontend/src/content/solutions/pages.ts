@@ -252,6 +252,101 @@ export const SOLUTION_PAGES: SolutionPage[] = [
     updated: "2026-10-28",
     status: "published",
   },
+  {
+    slug: "github-copilot-alternatives-for-jetbrains-users",
+    topicId: "ai-coding-02",
+    title: "GitHub Copilot alternatives for JetBrains users",
+    description:
+      "Looking beyond GitHub Copilot in IntelliJ, PyCharm or WebStorm? Compare AI coding assistants that run inside JetBrains IDEs, are still maintained and have a free option, with sources.",
+    intro:
+      "Many AI coding tools are VS Code forks or VS Code-only extensions, which is no help if you work in IntelliJ IDEA, PyCharm, WebStorm or another JetBrains IDE. A replacement for Copilot has to run inside the IDE you already use, and it should still be maintained: two well-known options have recently stopped development or announced an end of support.",
+    answer:
+      "JetBrains AI Assistant is built into JetBrains IDEs, has a free tier and can use local models. Cline offers a free JetBrains plugin where you bring your own model key or a local model. Amazon Q Developer still has a JetBrains plugin, but AWS ends support for it on April 30, 2027, and Continue is no longer maintained.",
+    requirements: [
+      { fact: "jetbrains_plugin", label: "Runs inside JetBrains IDEs", hard: true },
+      { fact: "maintained", label: "Actively maintained, with no announced end of support", hard: true },
+      { fact: "free_plan", label: "Can be used for free", hard: false },
+    ],
+    columns: [
+      { fact: "jetbrains_plugin", label: "JetBrains IDEs" },
+      { fact: "maintained", label: "Maintained" },
+      { fact: "free_plan", label: "Free option" },
+      { fact: "local_models", label: "Local models" },
+    ],
+    products: ["jetbrains-ai", "cline", "github-copilot", "amazon-q-developer", "continue", "cursor", "zed"],
+    limitations: [
+      "We checked plugin availability and plans, not the quality of suggestions; try two tools on your own codebase before switching.",
+      "Free tiers are small and change often; JetBrains AI Free and Copilot Free both cap cloud usage.",
+      "With Cline, your cost is the model provider's API bill, which depends on how much you use the agent.",
+      "Feature parity between a tool's VS Code and JetBrains versions is not guaranteed.",
+    ],
+    faqs: [
+      {
+        question: "Does GitHub Copilot work in JetBrains IDEs?",
+        answer: "Yes. GitHub lists JetBrains IDEs among supported editors on every plan, including Free (2,000 inline completions a month).",
+      },
+      {
+        question: "Is there a free Copilot alternative for IntelliJ or PyCharm?",
+        answer: "JetBrains AI has an AI Free tier, and Cline's JetBrains plugin is free; with Cline you pay only the model provider, or nothing if you run a local model through Ollama or LM Studio.",
+      },
+      {
+        question: "Why is Amazon Q Developer not recommended?",
+        answer: "Its JetBrains plugin works today, but AWS has announced that support for the Amazon Q Developer IDE plugins ends on April 30, 2027.",
+      },
+      {
+        question: "Why is Continue not recommended?",
+        answer: "Its GitHub repository states that it is no longer actively maintained and is read-only.",
+      },
+    ],
+    related: ["ai-code-editors-with-local-llm-support"],
+    updated: "2026-10-28",
+    status: "published",
+  },
+  {
+    slug: "ai-code-editors-with-local-llm-support",
+    topicId: "ai-coding-04",
+    title: "AI code editors with local LLM support",
+    description:
+      "Compare AI code editors and assistants that can use local models through Ollama or LM Studio, so your code does not have to go to a cloud model. Sources and limits included.",
+    intro:
+      "Running a model on your own machine keeps code off third-party servers and removes per-request costs, but only some AI coding tools let you point them at a local runtime such as Ollama or LM Studio. Others only work with their own cloud models, or do not say either way.",
+    answer:
+      "Zed, Cline and JetBrains AI Assistant all document connecting Ollama or LM Studio. Zed is a free standalone editor, Cline is a free extension for VS Code and JetBrains, and JetBrains AI works inside JetBrains IDEs, though its agents and MCP tools do not work with local models. Continue also supports Ollama but is no longer maintained.",
+    requirements: [
+      { fact: "local_models", label: "Can use a local model (Ollama or LM Studio)", hard: true },
+      { fact: "maintained", label: "Actively maintained", hard: true },
+      { fact: "free_plan", label: "Can be used for free", hard: false },
+    ],
+    columns: [
+      { fact: "local_models", label: "Local models" },
+      { fact: "maintained", label: "Maintained" },
+      { fact: "free_plan", label: "Free option" },
+      { fact: "jetbrains_plugin", label: "JetBrains IDEs" },
+    ],
+    products: ["zed", "cline", "jetbrains-ai", "continue", "github-copilot", "cursor"],
+    limitations: [
+      "Local models are usually much weaker than frontier cloud models for agent-style tasks, and need a capable GPU or Apple Silicon machine.",
+      "Supporting local models does not make a tool fully offline: sign-in, updates and some features may still need the internet.",
+      "Some features are cloud-only even when a local model is connected (for example JetBrains AI agents and MCP tool calling).",
+    ],
+    faqs: [
+      {
+        question: "Which AI code editor works with Ollama?",
+        answer: "Zed, Cline and JetBrains AI Assistant document Ollama as a provider. Continue does too, but is no longer maintained.",
+      },
+      {
+        question: "Does GitHub Copilot or Cursor support local models?",
+        answer: "Their pricing pages do not say, so we mark it as not verified rather than supported.",
+      },
+      {
+        question: "Is using a local model free?",
+        answer: "The model itself runs on your hardware, so there is no per-request fee. Zed's Personal plan and Cline's extension are free; JetBrains AI's paid plans only matter for its cloud features.",
+      },
+    ],
+    related: ["github-copilot-alternatives-for-jetbrains-users"],
+    updated: "2026-10-28",
+    status: "published",
+  },
 ];
 
 export const solutionPage = (slug: string) => SOLUTION_PAGES.find((p) => p.slug === slug && p.status === "published");
