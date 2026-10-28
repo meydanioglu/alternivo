@@ -78,6 +78,12 @@ public sealed class FreemiusGateway(
         value is null ? 0
         : (int)Math.Round(Math.Abs(decimal.Parse(value.ToString(), NumberStyles.Number | NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture)) * 100m);
 
+    /// <summary>True for the refund side of a payment: type "refund", a negative amount, or a link to another payment.</summary>
+    public static bool IsRefundPayment(JsonNode payment) =>
+        string.Equals(payment["type"]?.ToString(), "refund", StringComparison.OrdinalIgnoreCase)
+        || (payment["gross"]?.ToString() ?? "").TrimStart().StartsWith('-')
+        || payment["bound_payment_id"] is JsonValue bound && bound.ToString() is { Length: > 0 } b && b != "0" && b != "null";
+
     /// <summary>Handles a signed webhook (payment.created, payment.refund). Idempotent: a payment is applied to one order once.</summary>
     public async Task<Result> HandleWebhookAsync(byte[] body, string? signature, CancellationToken ct)
     {
@@ -94,14 +100,20 @@ public sealed class FreemiusGateway(
         var payment = doc["objects"]?["payment"];
         if (type is not ("payment.created" or "payment.refund") || payment is null) return Result.Ok;
         var paymentId = payment["id"]?.ToString() ?? "";
+        var boundId = payment["bound_payment_id"]?.ToString() ?? "";
+        logger.LogInformation("Freemius {Type}: payment {Payment}, bound {Bound}, gross {Gross}, type {PaymentType}",
+            type, paymentId, boundId, payment["gross"]?.ToString(), payment["type"]?.ToString());
 
         if (type == "payment.refund")
         {
-            var original = payment["bound_payment_id"]?.ToString() ?? "";
-            var refunded = await db.PaymentOrders.FirstOrDefaultAsync(o => o.ProviderPaymentId == original && o.PaymentType == "freemius", ct);
+            // The refund and the original payment are linked through bound_payment_id; which side the payload carries is not
+            // documented, so both IDs are tried. Refund payments are never stored on an order, so only the original matches.
+            var ids = new[] { paymentId, boundId }.Where(i => i.Length > 0).ToArray();
+            var refunded = await db.PaymentOrders.FirstOrDefaultAsync(
+                o => o.PaymentType == "freemius" && o.ProviderPaymentId != null && ids.Contains(o.ProviderPaymentId), ct);
             if (refunded is null)
             {
-                logger.LogWarning("Freemius refund {Payment} for unknown payment {Original}", paymentId, original);
+                logger.LogWarning("Freemius refund {Payment} for unknown payment {Original}", paymentId, boundId);
                 return Result.UnknownOrder;
             }
 
@@ -113,6 +125,9 @@ public sealed class FreemiusGateway(
 
             return Result.Ok;
         }
+
+        // A refund is also announced as payment.created (negative gross, bound to the original); it never pays an order.
+        if (IsRefundPayment(payment)) return Result.Ok;
 
         var existing = await db.PaymentOrders.FirstOrDefaultAsync(o => o.ProviderPaymentId == paymentId && o.PaymentType == "freemius", ct);
         if (existing is not null)

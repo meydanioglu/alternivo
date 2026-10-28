@@ -47,6 +47,15 @@ public class FreemiusTests
     public void Amounts_are_converted_to_positive_cents(string json, int cents) =>
         Assert.Equal(cents, FreemiusGateway.Cents(JsonNode.Parse(json)));
 
+    [Theory]
+    [InlineData("{\"id\":1,\"gross\":5,\"type\":\"payment\",\"bound_payment_id\":null}", false)]
+    [InlineData("{\"id\":1,\"gross\":\"5.00\"}", false)]
+    [InlineData("{\"id\":2,\"gross\":-5,\"type\":\"refund\",\"bound_payment_id\":1}", true)]
+    [InlineData("{\"id\":2,\"gross\":\"-5.00\"}", true)]
+    [InlineData("{\"id\":2,\"gross\":5,\"bound_payment_id\":\"1\"}", true)]
+    public void Refund_payments_are_recognised(string json, bool refund) =>
+        Assert.Equal(refund, FreemiusGateway.IsRefundPayment(JsonNode.Parse(json)!));
+
     [Fact]
     public void Every_catalogue_plan_has_a_freemius_plan() =>
         Assert.All(Discovery.Domain.Operations.PricingCatalog.Plans, p => Assert.True(FreemiusConfig.DefaultPlanIds.ContainsKey(p.Key), p.Key));
