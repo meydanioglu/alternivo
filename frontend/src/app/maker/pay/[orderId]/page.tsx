@@ -76,6 +76,25 @@ export default async function PayPage({ params }: Props) {
     );
   }
 
+  if (target.provider === "freemius") {
+    return (
+      <Container className="py-8">
+        <div className="mx-auto max-w-2xl">
+          <h1 className="text-2xl font-semibold">Secure payment</h1>
+          <p className="mt-1 text-sm text-muted">
+            Total: <strong className="text-foreground">{total}</strong> ({order.currency}), plus any sales tax shown at checkout. You pay on the
+            secure checkout of our payment provider, Freemius, which acts as the merchant of record for this purchase. Your account e-mail is
+            prefilled so the payment is matched to your order.
+          </p>
+          <a href={target.url} className={buttonClass("primary", "md", "mt-6")}>Continue to secure payment</a>
+          <p className="mt-4 text-xs text-muted">
+            Your purchase is applied automatically once the payment is confirmed. <Link href="/maker" className="underline">Cancel and go back</Link>
+          </p>
+        </div>
+      </Container>
+    );
+  }
+
   if (target.provider === "lemonsqueezy") {
     return (
       <Container className="py-8">

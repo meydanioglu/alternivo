@@ -19,6 +19,10 @@ export interface IntegrationSettingsView {
   lemonApiKeySet: boolean;
   lemonWebhookSecretSet: boolean;
   lemonTestMode: boolean;
+  freemiusProductId?: string | null;
+  freemiusPublicKey?: string | null;
+  freemiusSecretKeySet?: boolean;
+  freemiusTestMode?: boolean;
   smtpHost: string | null;
   smtpPort: number | null;
   smtpUsername: string | null;
@@ -57,10 +61,33 @@ export function IntegrationsForm({ view, siteUrl }: { view: IntegrationSettingsV
       <h3 className="font-semibold">Ödeme sağlayıcısı</h3>
       <Field label="Yeni ödemelerde kullanılacak sağlayıcı" name="paymentProvider" hint="Seçilen sağlayıcının bilgileri eksikse ödemeler kapalı görünür.">
         <select id="paymentProvider" name="paymentProvider" defaultValue={view.paymentProvider} className={select}>
+          <option value="freemius">Freemius</option>
           <option value="lemonsqueezy">Lemon Squeezy</option>
           <option value="paytr">PayTR</option>
         </select>
       </Field>
+
+      <h3 className="mt-2 font-semibold">Freemius</h3>
+      <p className="-mt-2 text-sm text-muted">
+        Freemius → ürün → Settings → Keys: Product ID, Public Key (pk_…) ve Secret Key (sk_…). Webhooks → Listeners: URL{" "}
+        <span className="font-mono">{siteUrl}/bff/billing/freemius</span>, olaylar <span className="font-mono">payment.created</span> ve{" "}
+        <span className="font-mono">payment.refund</span>. Planlar Freemius&apos;ta katalog fiyatlarıyla tanımlı; ödeme alıcının hesap e-postasıyla eşleşir.
+      </p>
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Field label="Product ID" name="freemiusProductId" optional>
+          <TextInput name="freemiusProductId" defaultValue={view.freemiusProductId ?? ""} spellCheck={false} inputMode="numeric" />
+        </Field>
+        <Field label="Public key" name="freemiusPublicKey" optional>
+          <TextInput name="freemiusPublicKey" defaultValue={view.freemiusPublicKey ?? ""} spellCheck={false} />
+        </Field>
+        <Field label="Secret key" name="freemiusSecretKey" optional hint={secretHint(view.freemiusSecretKeySet ?? false)}>
+          <TextInput name="freemiusSecretKey" type="password" autoComplete="off" spellCheck={false} />
+        </Field>
+      </div>
+      <label className="flex items-center gap-2 text-sm">
+        <input type="checkbox" name="freemiusTestMode" defaultChecked={view.freemiusTestMode ?? false} />
+        Test modu (Freemius sandbox checkout; gerçek para çekilmez)
+      </label>
 
       <h3 className="mt-2 font-semibold">Lemon Squeezy</h3>
       <p className="-mt-2 text-sm text-muted">

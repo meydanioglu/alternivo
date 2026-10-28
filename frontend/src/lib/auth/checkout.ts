@@ -4,8 +4,8 @@ import { userApi } from "@/lib/auth/session";
 
 const PAY_COOKIE = "alt_pay";
 
-/** Where the buyer pays: a PayTR iframe token, or a Lemon Squeezy hosted checkout URL. */
-export type PaymentTarget = { provider: "paytr"; token: string } | { provider: "lemonsqueezy"; url: string };
+/** Where the buyer pays: a PayTR iframe token, or a Lemon Squeezy or Freemius hosted checkout URL. */
+export type PaymentTarget = { provider: "paytr"; token: string } | { provider: "lemonsqueezy"; url: string } | { provider: "freemius"; url: string };
 
 /**
  * Asks the API to create an order (price and eligibility are decided server-side) and keeps the PayTR token or the
@@ -17,7 +17,8 @@ export async function startCheckout(plan: string, targetId: string | null): Prom
     method: "POST",
     body: { plan, targetId },
   });
-  const target: PaymentTarget = res.provider === "lemonsqueezy" ? { provider: "lemonsqueezy", url: res.url ?? "" } : { provider: "paytr", token: res.token ?? "" };
+  const target: PaymentTarget =
+    res.provider === "lemonsqueezy" || res.provider === "freemius" ? ({ provider: res.provider, url: res.url ?? "" } as PaymentTarget) : { provider: "paytr", token: res.token ?? "" };
   const secure = (await headers()).get("x-forwarded-proto") === "https";
   (await cookies()).set(PAY_COOKIE, JSON.stringify({ orderId: res.orderId, ...target }), {
     httpOnly: true,
@@ -38,12 +39,22 @@ const isLemonUrl = (url: string) => {
   }
 };
 
+const isFreemiusUrl = (url: string) => {
+  try {
+    const u = new URL(url);
+    return u.protocol === "https:" && u.hostname === "checkout.freemius.com";
+  } catch {
+    return false;
+  }
+};
+
 export async function paymentTarget(orderId: string): Promise<PaymentTarget | null> {
   try {
     const saved = JSON.parse((await cookies()).get(PAY_COOKIE)?.value ?? "null") as
       | { orderId: string; provider?: string; token?: string; url?: string }
       | null;
     if (saved?.orderId !== orderId) return null;
+    if (saved.provider === "freemius") return saved.url && isFreemiusUrl(saved.url) ? { provider: "freemius", url: saved.url } : null;
     if (saved.provider === "lemonsqueezy") return saved.url && isLemonUrl(saved.url) ? { provider: "lemonsqueezy", url: saved.url } : null;
     return saved.token && /^[A-Za-z0-9]+$/.test(saved.token) ? { provider: "paytr", token: saved.token } : null;
   } catch {

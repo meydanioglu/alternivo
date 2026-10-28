@@ -1207,6 +1207,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .HasMaxLength(40)
                         .HasColumnType("character varying(40)");
 
+                    b.Property<string>("ProviderPaymentId")
+                        .HasColumnType("text");
+
                     b.Property<string>("RefundReason")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");

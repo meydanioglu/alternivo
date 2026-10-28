@@ -103,6 +103,8 @@ public class PaymentOrder
     public PaymentOrderStatus Status { get; set; } = PaymentOrderStatus.Pending;
     public int? PaidAmountMinor { get; set; }
     public string? PaymentType { get; set; }
+    /// <summary>The payment's ID at the provider when it does not echo our order ID back (Freemius); used to match refunds.</summary>
+    public string? ProviderPaymentId { get; set; }
     public string? FailedReason { get; set; }
     public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
     public DateTimeOffset? CompletedAt { get; set; }

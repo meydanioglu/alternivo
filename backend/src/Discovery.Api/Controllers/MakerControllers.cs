@@ -60,13 +60,20 @@ public sealed class MakerController(MakerService maker, HttpCurrentUser current)
     [RequireConfirmedEmail]
     [EnableRateLimiting(Policies.WritesRateLimit)]
     public async Task<object> Checkout(CheckoutRequest request, [FromServices] PayTrGateway paytr, [FromServices] LemonSqueezyGateway lemon,
-        [FromServices] IntegrationSettings settings, [FromServices] UserManager<AppUser> users, [FromServices] IConfiguration config, CancellationToken ct)
+        [FromServices] FreemiusGateway freemius, [FromServices] IntegrationSettings settings, [FromServices] UserManager<AppUser> users, [FromServices] IConfiguration config, CancellationToken ct)
     {
         var user = await users.FindByIdAsync(current.RequireUserId().ToString())
             ?? throw new Discovery.Application.Common.ForbiddenException("Please sign in again.");
         var site = (config["Site:Url"] ?? "https://alternivo.com").TrimEnd('/');
         var name = string.IsNullOrWhiteSpace(user.DisplayName) ? user.Email! : user.DisplayName;
-        if ((await settings.ActiveAsync(ct))?.Provider == "lemonsqueezy")
+        var provider = (await settings.ActiveAsync(ct))?.Provider;
+        if (provider == "freemius")
+        {
+            var (fsOrder, fsUrl) = await freemius.StartAsync(user.Id, request.Plan, request.TargetId, user.Email!, $"{site}/maker?canceled=1", ct);
+            return new { orderId = fsOrder.Id, provider = "freemius", url = fsUrl, amountMinor = fsOrder.AmountMinor, currency = fsOrder.Currency };
+        }
+
+        if (provider == "lemonsqueezy")
         {
             var (lemonOrder, url) = await lemon.StartAsync(user.Id, request.Plan, request.TargetId, user.Email!, name,
                 $"{site}/maker?purchase={request.Plan}", ct);
@@ -204,6 +211,23 @@ public sealed class BillingController(IntegrationSettings settings) : Controller
         {
             LemonSqueezyGateway.Result.BadSignature => Unauthorized(),
             LemonSqueezyGateway.Result.NotConfigured => StatusCode(StatusCodes.Status503ServiceUnavailable),
+            _ => Ok(),
+        };
+    }
+
+    /// <summary>Freemius webhook (payment.created, payment.refund), forwarded by the web app with its x-signature header.</summary>
+    [HttpPost("freemius/webhook")]
+    [AllowAnonymous]
+    public async Task<IActionResult> FreemiusWebhook([FromServices] FreemiusGateway freemius, CancellationToken ct)
+    {
+        using var buffer = new MemoryStream();
+        await Request.Body.CopyToAsync(buffer, ct);
+        if (buffer.Length > 256 * 1024) return StatusCode(StatusCodes.Status413PayloadTooLarge);
+        var result = await freemius.HandleWebhookAsync(buffer.ToArray(), Request.Headers["x-signature"].ToString(), ct);
+        return result switch
+        {
+            FreemiusGateway.Result.BadSignature => Unauthorized(),
+            FreemiusGateway.Result.NotConfigured => StatusCode(StatusCodes.Status503ServiceUnavailable),
             _ => Ok(),
         };
     }
