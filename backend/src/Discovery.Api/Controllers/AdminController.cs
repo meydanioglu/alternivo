@@ -193,6 +193,12 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         return NoContent();
     }
 
+    /// <summary>E-mails makers whose open free submissions still lack a verified badge (each submission once).</summary>
+    [HttpPost("submissions/badge-notice")]
+    [Authorize(Policy = Policies.Moderation)]
+    public async Task<object> SendBadgeNotice([FromServices] Discovery.Infrastructure.Community.BadgeNotice notice, CancellationToken ct) =>
+        new { recipients = await notice.StartAsync(current.RequireUserId(), ct) };
+
     [HttpPost("submissions/{id:guid}/decision")]
     [Authorize(Policy = Policies.Moderation)]
     public async Task<IActionResult> DecideSubmission(Guid id, ModerationDecisionRequest request, CancellationToken ct)

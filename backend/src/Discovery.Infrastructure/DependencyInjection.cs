@@ -68,6 +68,7 @@ public static class DependencyInjection
         services.AddHostedService<Content.ContentWorker>();
         services.AddHostedService<Seo.SeoSnapshotWorker>();
         services.AddHostedService<Community.BadgeRecheckWorker>();
+        services.AddSingleton<Community.BadgeNotice>();
         if (configuration.GetValue("Import:WorkerEnabled", true))
         {
             services.AddHostedService<ImportWorker>();

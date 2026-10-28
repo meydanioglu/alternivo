@@ -25,6 +25,17 @@ public class ConfirmEmailTests
 public class EmailTemplateTests
 {
     [Fact]
+    public void Badge_notice_lists_every_product_and_links_to_the_dashboard()
+    {
+        var mail = EmailTemplate.BadgeRequired("https://alternivo.com", "Harris", ["Motion Transfer", "Genjutsu AI", "Reference to Video"]);
+        Assert.Equal("Your Alternivo submission: one step left for 3 products", mail.Subject);
+        Assert.Contains("Motion Transfer, Genjutsu AI and Reference to Video", mail.Text);
+        Assert.Contains("https://alternivo.com/maker", mail.Html);
+        Assert.Equal("Your Alternivo submission: one step left for Roxi",
+            EmailTemplate.BadgeRequired("https://alternivo.com", "there", ["Roxi"]).Subject);
+    }
+
+    [Fact]
     public void Confirmation_contains_the_link_as_button_and_plain_text()
     {
         const string link = "https://alternivo.com/confirm-email?userId=abc&code=x%2By";

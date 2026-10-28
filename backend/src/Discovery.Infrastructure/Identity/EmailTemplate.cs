@@ -67,6 +67,27 @@ public static class EmailTemplate
         link: link,
         note: "You received this because you submitted this product to Alternivo for a free listing.");
 
+    public static EmailContent BadgeRequired(string siteUrl, string name, IReadOnlyList<string> products)
+    {
+        var list = products.Count == 1 ? products[0] : string.Join(", ", products.Take(products.Count - 1)) + " and " + products[^1];
+        var each = products.Count == 1 ? "your product" : "each product";
+        return Build(siteUrl,
+            subject: $"Your Alternivo submission: one step left for {(products.Count == 1 ? products[0] : $"{products.Count} products")}",
+            preheader: "Add the Alternivo badge, or choose Fast Review, to get your listing reviewed.",
+            heading: "One step left for your listing",
+            paragraphs:
+            [
+                $"Hi {name},",
+                $"Thanks for submitting {list} to Alternivo. Your submission is in our review queue.",
+                "Since you submitted, we changed how free listings work: a free listing is approved once the Alternivo badge is on your homepage. The badge links back to Alternivo so visitors can read reviews and compare alternatives.",
+                $"Option 1, add the badge (free): open your Maker dashboard, copy the badge code under {each}, paste it into your homepage HTML and click \"Verify badge\". Once it is verified, your review time drops from 15 to 7 days.",
+                "Option 2, Fast Review ($5, one-time): no badge needed. Your submission is reviewed within 24 hours of payment. Approval is not guaranteed, and a rejected submission is not a reason for a refund.",
+            ],
+            button: "Open my Maker dashboard",
+            link: $"{siteUrl.TrimEnd('/')}/maker",
+            note: "If you have already added the badge, you only need to click \"Verify badge\" on your dashboard.");
+    }
+
     public static EmailContent PasswordResetCode(string siteUrl, string code)
     {
         var c = WebUtility.HtmlEncode(code);

@@ -49,6 +49,17 @@ export async function reviewSubmissionAction(_: FormState, form: FormData): Prom
   redirect(`/admin/submissions?done=${decision}`);
 }
 
+/** Starts the one-off "badge required" e-mail to makers whose free submissions lack a verified badge. */
+export async function sendBadgeNoticeAction() {
+  let count = 0;
+  try {
+    count = (await userApi<{ recipients: number }>("/api/v1/admin/submissions/badge-notice", { method: "POST", body: {} })).recipients;
+  } catch {
+    redirect("/admin/submissions?done=notice-failed");
+  }
+  redirect(`/admin/submissions?done=notice&sent=${count}`);
+}
+
 export async function startReviewAction(id: string): Promise<{ error?: string }> {
   try {
     await userApi(`/api/v1/admin/submissions/${encodeURIComponent(id)}/decision`, { method: "POST", body: { decision: "start-review", note: null } });

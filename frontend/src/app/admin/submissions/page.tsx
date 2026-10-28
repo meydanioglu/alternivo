@@ -4,6 +4,7 @@ import { AdminHeader, StatCard, Table, Tabs, dateTime } from "@/components/admin
 import { Pagination } from "@/components/layout/page-parts";
 import { buttonClass, chipClass } from "@/components/ui/styles";
 import { userApi } from "@/lib/auth/session";
+import { sendBadgeNoticeAction } from "./actions";
 
 interface Item {
   submission: {
@@ -47,12 +48,13 @@ const DONE: Record<string, string> = {
   approve: "Ürün onaylandı ve yayına alındı. Yapay zekâ içerik taslağı İçerik sayfasında onayınızı bekleyecek.",
   "needs-changes": "Gönderene değişiklik istendiği bildirildi; hesabındaki gönderim listesinde notunuzu görecek.",
   reject: "Gönderim reddedildi.",
+  "notice-failed": "Rozet bildirimi başlatılamadı.",
 };
 
-type Props = { searchParams: Promise<{ status?: string; q?: string; page?: string; done?: string; queue?: string }> };
+type Props = { searchParams: Promise<{ status?: string; q?: string; page?: string; done?: string; queue?: string; sent?: string }> };
 
 export default async function AdminSubmissionsPage({ searchParams }: Props) {
-  const { status = "pending", q = "", page = "1", done, queue = "" } = await searchParams;
+  const { status = "pending", q = "", page = "1", done, queue = "", sent } = await searchParams;
   const qs = new URLSearchParams({ page, status });
   if (q) qs.set("q", q);
   if (queue) qs.set("queue", queue);
@@ -77,6 +79,15 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
         title="Ürün gönderimleri"
         description="Üyelerin gönderdiği ürünler. Açılışa özel gönderim ücretsiz; hiçbir ürün sizin onayınız olmadan yayına girmez."
       />
+      <form action={sendBadgeNoticeAction} className="mb-4 flex flex-wrap items-center gap-3 text-sm">
+        <button type="submit" className={buttonClass("outline", "sm")}>Rozet bildirimi gönder</button>
+        <span className="text-muted">Rozeti doğrulanmamış açık ücretsiz gönderimlerin sahiplerine rozet / Fast Review e-postası; her gönderim bir kez.</span>
+      </form>
+      {done === "notice" && (
+        <p role="status" className="mb-4 rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
+          Rozet bildirimi {sent ?? 0} kişiye gönderiliyor (5 saniye arayla).
+        </p>
+      )}
       {done && DONE[done] && (
         <p role="status" className="mb-4 rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
           {DONE[done]}
