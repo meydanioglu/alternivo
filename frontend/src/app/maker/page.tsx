@@ -159,7 +159,7 @@ export default async function MakerPage({ searchParams }: Props) {
       )}
       {params.purchase && (
         <Notice tone="success">
-          Payment received. It is applied as soon as the payment is confirmed (usually within seconds) — refresh if you don't see it yet.
+          Payment received. It is applied as soon as the payment is confirmed, usually within seconds; this page updates by itself.
         </Notice>
       )}
       {params.canceled && <Notice tone="warning">Checkout was canceled. You have not been charged.</Notice>}
@@ -193,7 +193,7 @@ export default async function MakerPage({ searchParams }: Props) {
               </>
             )}
           </dl>
-          <Submissions data={data} can={can} priceOf={priceOf} />
+          <Submissions data={data} can={can} priceOf={priceOf} justPaid={Boolean(params.purchase)} />
           <section className="rounded-[10px] border border-border bg-surface p-4">
             <h2 className="mb-1 flex items-center gap-2 font-semibold">
               <Rocket className="size-4 text-accent" aria-hidden="true" /> Buildboard
@@ -256,7 +256,7 @@ export default async function MakerPage({ searchParams }: Props) {
               </div>
             </section>
           )}
-          <Submissions data={data} can={can} priceOf={priceOf} />
+          <Submissions data={data} can={can} priceOf={priceOf} justPaid={Boolean(params.purchase)} />
           <p className="text-sm text-muted">
             Your product is already listed but was added by someone else? Claiming listings is not self-serve yet — see the{" "}
             <Link href="/help" className="text-accent underline">Help center</Link>.
@@ -433,7 +433,12 @@ function Stat({ label, value }: { label: string; value: number | string }) {
   );
 }
 
-function Submissions({ data, can, priceOf }: { data: MakerDashboard; can: (p: string) => boolean; priceOf: (p: string) => string }) {
+/**
+ * Right after returning from checkout the payment webhook may not have arrived yet, so a submission with a pending
+ * Fast Review order is shown as being confirmed (no upgrade offers) and the page refreshes itself until it is applied.
+ */
+function Submissions({ data, can, priceOf, justPaid = false }: { data: MakerDashboard; can: (p: string) => boolean; priceOf: (p: string) => string; justPaid?: boolean }) {
+  const confirming = (s: MakerDashboard["submissions"][number]) => justPaid && s.paymentStatus === "awaiting";
   return (
     <section aria-labelledby="submissions">
       <h2 id="submissions" className="mb-3 text-lg font-semibold">Submissions</h2>
@@ -443,6 +448,7 @@ function Submissions({ data, can, priceOf }: { data: MakerDashboard; can: (p: st
         </EmptyState>
       ) : (
         <ul className="divide-y divide-border overflow-hidden rounded-[10px] border border-border bg-surface">
+          {data.submissions.some(confirming) && <meta httpEquiv="refresh" content="5" />}
           {data.submissions.map((s) => {
             const status = STATUS[s.status] ?? { label: s.status, className: "bg-surface-secondary text-muted" };
             const open = ["Pending", "InReview", "NeedsChanges"].includes(s.status);
@@ -452,7 +458,9 @@ function Submissions({ data, can, priceOf }: { data: MakerDashboard; can: (p: st
                   <span className="font-medium">{s.name}</span>
                   <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${status.className}`}>{status.label}</span>
                   {s.isPriority && <SponsoredLabel>Fast Review</SponsoredLabel>}
-                  {s.paymentStatus === "awaiting" && <span className="text-xs text-warning">Awaiting payment confirmation</span>}
+                  {s.paymentStatus === "awaiting" && (
+                    <span className="text-xs text-warning">{confirming(s) ? "Payment received, confirming…" : "Awaiting payment confirmation"}</span>
+                  )}
                   <span className="ml-auto text-xs text-muted">Submitted {date(s.createdAt)}</span>
                 </div>
                 <p className="text-xs text-muted">
@@ -461,8 +469,8 @@ function Submissions({ data, can, priceOf }: { data: MakerDashboard; can: (p: st
                 </p>
                 {s.moderatorNote && <p className="text-muted">Note from the team: {s.moderatorNote}</p>}
                 {s.applicationSlug && <Link href={`/software/${s.applicationSlug}`} className="text-accent hover:underline">View listing</Link>}
-                {s.canUpgrade && s.shareProof !== "badge" && <ShareBoost submissionId={s.id} siteUrl={site.url} />}
-                {s.canUpgrade && can("fastReview") && (
+                {s.canUpgrade && !confirming(s) && s.shareProof !== "badge" && <ShareBoost submissionId={s.id} siteUrl={site.url} />}
+                {s.canUpgrade && !confirming(s) && can("fastReview") && (
                   <div className="self-start">
                     <CheckoutButton plan="fastReview" targetId={s.id} label={`Speed up your review — ${priceOf("fastReview")}`} />
                   </div>
