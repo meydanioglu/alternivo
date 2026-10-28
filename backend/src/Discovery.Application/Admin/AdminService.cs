@@ -288,6 +288,12 @@ public sealed class AdminService(
                 break;
             case "approve":
             {
+                // Free listings are exchanged for a backlink: the badge must be verified on the product's homepage.
+                if (!submission.IsPriority && submission.ShareProof != ShareProofKind.Badge)
+                {
+                    throw new ConflictException("Free submissions can be approved only after the Alternivo badge is verified on the product's homepage.");
+                }
+
                 var tagSlugs = submission.Tags.Select(Slugs.Create).Where(Slugs.IsValid).ToArray();
                 var appId = await UpsertApplicationAsync(actorId, null, new UpsertApplicationRequest(
                     submission.Name, null, Truncate(submission.Description, 200), submission.Description, submission.WebsiteUrl,

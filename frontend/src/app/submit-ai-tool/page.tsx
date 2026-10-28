@@ -21,7 +21,7 @@ const PLACES = [
 
 const FAQ = [
   ["Is it free to submit an AI tool?", `Yes. Submitting an AI tool or SaaS product to ${site.name} is free. You only need a free account.`],
-  ["How long does review take?", "Standard review takes up to 15 days. Optional Fast Review gets your submission reviewed within 24 hours of payment — it does not guarantee approval."],
+  ["How long does review take?", "Free listings need the Alternivo badge on your homepage and are reviewed within 15 days (7 once the badge is verified). Optional Fast Review gets your submission reviewed within 24 hours of payment — it does not guarantee approval."],
   ["Is the link to my website dofollow?", "Yes. The website link on an approved product page is a normal, followed link."],
   ["What gets accepted?", "Real, working AI tools and software with a public website. We do not list spam, clones or unfinished landing pages."],
   ["Where will my tool appear?", "On its own product page, in relevant categories, on alternatives pages of related tools and in comparisons where there is a real overlap."],

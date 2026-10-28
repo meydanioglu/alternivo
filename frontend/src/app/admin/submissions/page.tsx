@@ -141,6 +141,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
                 <span className={chipClass(st.color, "soft", "sm")}>{st.label}</span>
                 {s.isPriority && <span className={chipClass("accent", "soft", "sm", "ml-1")}>Fast Review · ödendi</span>}
                 {s.shareProof === "badge" && <span className={chipClass("success", "soft", "sm", "ml-1")}>Rozet doğrulandı · 7 gün</span>}
+                {!s.isPriority && s.shareProof !== "badge" && <span className={chipClass("warning", "soft", "sm", "ml-1")}>Rozet yok · onaylanamaz</span>}
                 {s.shareProof === "post" && s.shareProofUrl && (
                   <a href={s.shareProofUrl} target="_blank" rel="noopener nofollow" className={chipClass("warning", "soft", "sm", "ml-1")}>Paylaşım · kontrol et ↗</a>
                 )}

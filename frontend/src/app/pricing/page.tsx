@@ -20,7 +20,7 @@ export const revalidate = 300;
 
 const FAQ = [
   { question: "Is submitting a product free?", answer: "Yes. Submitting is free and always will be. Every product is reviewed against the same editorial guidelines." },
-  { question: "How long does standard review take?", answer: "Up to 15 days from submission. Most submissions are reviewed sooner." },
+  { question: "How long does standard review take?", answer: "Up to 15 days from submission, or 7 days once the Alternivo badge is verified on your homepage. Free listings need the badge to be approved; Fast Review does not." },
   { question: "Can I get a faster review without paying?", answer: "Yes. After submitting, add our badge to your homepage or post about your listing on X or Substack from your Maker dashboard, and your submission is reviewed within 7 days instead of 15. It is optional; free listing never depends on it." },
   { question: "What do I get with Fast Review?", answer: "Your submission moves to the priority queue and is reviewed within 24 hours of a confirmed payment. It is a one-time fee per submission, not a subscription." },
   { question: "Does Fast Review guarantee approval?", answer: "No. Fast Review only changes how quickly we review. The same approval standards apply, and approval is never guaranteed. If we miss the 24-hour window you can ask for a full refund." },
@@ -38,7 +38,7 @@ const TIERS = [
     price: "$0",
     period: "forever",
     cta: { label: "Submit for Free", href: "/submit/new" },
-    features: ["Submit any software or AI product", "Standard review queue (up to 15 days)", "Listed in relevant categories and alternatives pages once approved", "Basic product profile"],
+    features: ["Submit any software or AI product", "Requires the Alternivo badge on your homepage", "Standard review queue (up to 15 days, 7 with the badge verified)", "Listed in relevant categories and alternatives pages once approved", "Basic product profile"],
   },
   {
     key: "fastReview",

@@ -47,7 +47,7 @@ function ReviewSpeed({ fastReviewAvailable, fastReviewPrice }: { fastReviewAvail
             Standard Review <span className="ml-auto text-sm font-medium text-muted">Free</span>
           </span>
           <span className="text-sm text-muted">
-            Your submission enters our standard review queue. Reviews may take up to 15 days. No payment required.
+            No payment required. Add the Alternivo badge to your homepage to get approved; reviews take up to 15 days, or 7 once the badge is verified.
           </span>
         </label>
         {fastReviewAvailable && (

@@ -456,12 +456,12 @@ function Submissions({ data, can, priceOf }: { data: MakerDashboard; can: (p: st
                   <span className="ml-auto text-xs text-muted">Submitted {date(s.createdAt)}</span>
                 </div>
                 <p className="text-xs text-muted">
-                  {s.reviewMethod === "fast" ? "Fast Review (paid)" : s.shareProof !== "none" ? `Shared review (free, ${s.shareProof === "badge" ? "badge" : "post"})` : "Standard review (free)"}
+                  {s.reviewMethod === "fast" ? "Fast Review (paid)" : s.shareProof === "badge" ? "Free review · badge verified" : "Free review · waiting for the badge"}
                   {open && s.reviewDeadline && ` · review by ${date(s.reviewDeadline)}`}
                 </p>
                 {s.moderatorNote && <p className="text-muted">Note from the team: {s.moderatorNote}</p>}
                 {s.applicationSlug && <Link href={`/software/${s.applicationSlug}`} className="text-accent hover:underline">View listing</Link>}
-                {s.canUpgrade && s.shareProof === "none" && <ShareBoost submissionId={s.id} productName={s.name} siteUrl={site.url} />}
+                {s.canUpgrade && s.shareProof !== "badge" && <ShareBoost submissionId={s.id} siteUrl={site.url} />}
                 {s.canUpgrade && can("fastReview") && (
                   <div className="self-start">
                     <CheckoutButton plan="fastReview" targetId={s.id} label={`Speed up your review — ${priceOf("fastReview")}`} />
