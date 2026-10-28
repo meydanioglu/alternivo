@@ -724,6 +724,15 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTimeOffset?>("BadgeCheckedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("BadgeHiddenAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("BadgeMissingSince")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("CategorySlug")
                         .HasMaxLength(120)
                         .HasColumnType("character varying(120)");

@@ -41,6 +41,32 @@ public static class EmailTemplate
         link: link,
         note: "If you did not ask for this, ignore this e-mail; your password stays the same.");
 
+    public static EmailContent BadgeMissing(string siteUrl, string product, string home, string link) => Build(siteUrl,
+        subject: $"Action needed: the Alternivo badge is missing from {product}",
+        preheader: $"Add the badge back within {Discovery.Application.Community.ShareProof.BadgeGraceDays} days to keep your free listing.",
+        heading: "We could not find your Alternivo badge",
+        paragraphs:
+        [
+            $"Free listings on Alternivo stay published while the Alternivo badge links to us from your homepage. Our latest check of {home} did not find it, or the page could not be loaded.",
+            $"Please add the badge back within {Discovery.Application.Community.ShareProof.BadgeGraceDays} days. If it is still missing after that, the listing for {product} will be hidden until the badge is back.",
+        ],
+        button: "Get the badge code",
+        link: link,
+        note: "If the badge is already on your homepage, make sure the page loads without a login and that the link points to alternivo.com.");
+
+    public static EmailContent BadgeHidden(string siteUrl, string product, string link) => Build(siteUrl,
+        subject: $"Your free listing for {product} is hidden",
+        preheader: "Add the Alternivo badge back and the listing is published again automatically.",
+        heading: "Your listing is hidden for now",
+        paragraphs:
+        [
+            $"The Alternivo badge has been missing from the homepage of {product} for {Discovery.Application.Community.ShareProof.BadgeGraceDays} days, so its free listing is no longer shown.",
+            "Add the badge back and the listing is published again at our next check. Paid plans do not need the badge.",
+        ],
+        button: "Get the badge code",
+        link: link,
+        note: "You received this because you submitted this product to Alternivo for a free listing.");
+
     public static EmailContent PasswordResetCode(string siteUrl, string code)
     {
         var c = WebUtility.HtmlEncode(code);

@@ -67,7 +67,7 @@ public sealed class EmailSender(IOptions<SmtpOptions> options, Billing.Integrati
     public Task SendPasswordResetCodeAsync(AppUser user, string email, string resetCode) =>
         SendAsync(email, EmailTemplate.PasswordResetCode(Site, resetCode));
 
-    private async Task SendAsync(string to, EmailContent content)
+    public async Task SendAsync(string to, EmailContent content)
     {
         var (subject, html) = (content.Subject, content.Html);
         var o = await settings.SmtpAsync(CancellationToken.None) ?? options.Value;

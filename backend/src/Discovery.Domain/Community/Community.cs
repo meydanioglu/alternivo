@@ -93,6 +93,12 @@ public class Submission : Entity
     public ShareProofKind ShareProof { get; set; }
     public string? ShareProofUrl { get; set; }
     public DateTimeOffset? ShareProofAt { get; set; }
+    /// <summary>Last periodic check that the badge is still on the homepage of an approved free listing.</summary>
+    public DateTimeOffset? BadgeCheckedAt { get; set; }
+    /// <summary>When a recheck first found the badge missing; cleared when it is back.</summary>
+    public DateTimeOffset? BadgeMissingSince { get; set; }
+    /// <summary>When the listing was unpublished because the badge stayed missing past the grace period.</summary>
+    public DateTimeOffset? BadgeHiddenAt { get; set; }
     public DateTimeOffset? ReviewStartedAt { get; set; }
     /// <summary>Moderators only; never shown to the submitter.</summary>
     public string? InternalNote { get; set; }

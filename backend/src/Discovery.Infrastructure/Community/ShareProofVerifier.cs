@@ -17,7 +17,17 @@ public sealed class ShareProofVerifier(MakerService maker, IHttpClientFactory ht
     public async Task VerifyBadgeAsync(Guid userId, Guid submissionId, CancellationToken ct)
     {
         var s = await maker.OpenFreeSubmissionAsync(userId, submissionId, ct);
-        if (!Uri.TryCreate(s.WebsiteUrl, UriKind.Absolute, out var site)) throw new BadRequestException("The submission has no valid website.");
+        var (home, html) = await FetchHomeAsync(s.WebsiteUrl, ct);
+        if (html is null) throw new ConflictException($"We could not load {home}. Make sure it is online and try again.");
+        if (!ShareProof.BadgeLinked(html))
+            throw new ConflictException($"We could not find a link to alternivo.com on {home}. Paste the badge code into your homepage HTML, then try again.");
+        await maker.ApplyShareProofAsync(userId, submissionId, ShareProofKind.Badge, home, ct);
+    }
+
+    /// <summary>Loads the product's homepage; html is null when it cannot be loaded.</summary>
+    public async Task<(string Home, string? Html)> FetchHomeAsync(string websiteUrl, CancellationToken ct)
+    {
+        if (!Uri.TryCreate(websiteUrl, UriKind.Absolute, out var site)) throw new BadRequestException("The submission has no valid website.");
         var home = $"{site.Scheme}://{site.Authority}/";
         if (!UrlSafety.IsSafePublicWebUrl(home)) throw new BadRequestException("The website cannot be checked.");
 
@@ -33,10 +43,7 @@ public sealed class ShareProofVerifier(MakerService maker, IHttpClientFactory ht
             logger.LogInformation(ex, "Badge check could not load {Url}", home);
         }
 
-        if (html is null) throw new ConflictException($"We could not load {home}. Make sure it is online and try again.");
-        if (!ShareProof.BadgeLinked(html))
-            throw new ConflictException($"We could not find a link to alternivo.com on {home}. Paste the badge code into your homepage HTML, then try again.");
-        await maker.ApplyShareProofAsync(userId, submissionId, ShareProofKind.Badge, home, ct);
+        return (home, html);
     }
 
     public async Task SubmitPostAsync(Guid userId, Guid submissionId, string? url, CancellationToken ct)

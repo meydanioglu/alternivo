@@ -45,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped<IUserDirectory, UserDirectory>();
         services.Configure<SmtpOptions>(configuration.GetSection(SmtpOptions.SectionName));
         services.AddTransient<IEmailSender<AppUser>, EmailSender>();
+        services.AddTransient<EmailSender>();
         services.AddScoped<CatalogSeeder>();
 
         services.AddHttpClient(ProductImporter.HttpClientName, c =>
@@ -69,6 +70,7 @@ public static class DependencyInjection
         services.AddScoped<Content.ContentGenerator>();
         services.AddHostedService<Content.ContentWorker>();
         services.AddHostedService<Seo.SeoSnapshotWorker>();
+        services.AddHostedService<Community.BadgeRecheckWorker>();
         if (configuration.GetValue("Import:WorkerEnabled", true))
         {
             services.AddHostedService<ImportWorker>();
