@@ -358,6 +358,90 @@ export const SOLUTION_PRODUCTS: SolutionProduct[] = [
     pros: ["Full AI editor with several usage tiers"],
     cons: ["Usage limits are published only as multipliers, not numbers"],
   },
+
+  // Web analytics
+  {
+    id: "plausible",
+    name: "Plausible Analytics",
+    website: "https://plausible.io",
+    kind: "Privacy-first web analytics",
+    facts: {
+      cookieless: { value: true, detail: "No cookies and no personal data collected.", source: "https://plausible.io/self-hosted-web-analytics", verified: CHECKED },
+      self_hosted: { value: true, detail: "Community Edition, AGPLv3, free to self-host; some premium features are cloud-only.", source: "https://plausible.io/self-hosted-web-analytics", verified: CHECKED },
+      free_plan: { value: true, detail: "Free only when self-hosted; the cloud service is paid.", source: "https://plausible.io/self-hosted-web-analytics", verified: CHECKED },
+    },
+    pricing: { summary: "Cloud from $9/month for up to 10k monthly pageviews; Community Edition free to self-host", source: "https://plausible.io/#pricing", verified: CHECKED },
+    pros: ["No cookies, simple one-page dashboard", "Open-source self-hosted edition"],
+    cons: ["Cheapest cloud plan covers only 10k pageviews a month", "SSO, funnels and the Sites API are cloud-only"],
+  },
+  {
+    id: "fathom",
+    name: "Fathom Analytics",
+    website: "https://usefathom.com",
+    kind: "Privacy-first web analytics",
+    facts: {
+      cookieless: { value: true, detail: "No cookies, so no consent banner for analytics.", source: "https://usefathom.com/pricing", verified: CHECKED },
+      self_hosted: { value: "unknown", detail: "The pricing page describes only the hosted service.", source: "https://usefathom.com/pricing", verified: CHECKED },
+      free_plan: { value: false, detail: "Paid plans only.", source: "https://usefathom.com/pricing", verified: CHECKED },
+    },
+    pricing: { summary: "From $15/month for up to 100,000 monthly pageviews, 50 sites", source: "https://usefathom.com/pricing", verified: CHECKED },
+    pros: ["100k pageviews and 50 sites on the entry plan"],
+    cons: ["No free plan"],
+  },
+  {
+    id: "umami",
+    name: "Umami",
+    website: "https://umami.is",
+    kind: "Open-source web analytics",
+    facts: {
+      cookieless: { value: true, detail: "Umami does not use cookies.", source: "https://umami.is/pricing", verified: CHECKED },
+      self_hosted: { value: true, detail: "Open source and free to self-host.", source: "https://umami.is/pricing", verified: CHECKED },
+      free_plan: { value: true, detail: "Hobby cloud plan: 100K events/month, 1 website, 6-month retention.", source: "https://umami.is/pricing", verified: CHECKED },
+    },
+    pricing: { summary: "Hobby free (100K events/month); Pro $20/month (1M events); Business $200/month; self-hosting free", source: "https://umami.is/pricing", verified: CHECKED },
+    pros: ["Free cloud tier and free self-hosting", "Data collection continues when you exceed a paid plan's events"],
+    cons: ["Free cloud tier is limited to one website"],
+  },
+  {
+    id: "simple-analytics",
+    name: "Simple Analytics",
+    website: "https://www.simpleanalytics.com",
+    kind: "Privacy-first web analytics",
+    facts: {
+      cookieless: { value: true, detail: "Does not use cookies or fingerprint visitors.", source: "https://www.simpleanalytics.com/pricing", verified: CHECKED },
+      self_hosted: { value: "unknown", detail: "The pricing page does not mention self-hosting.", source: "https://www.simpleanalytics.com/pricing", verified: CHECKED },
+      free_plan: { value: true, detail: "Free forever for hobby sites: 5 websites, 1 month of history, badge required.", source: "https://www.simpleanalytics.com/pricing", verified: CHECKED },
+    },
+    pricing: { summary: "Free for hobby sites; Self-serve from $20/month (from 100k pageviews); Enterprise custom", source: "https://www.simpleanalytics.com/pricing", verified: CHECKED },
+    pros: ["Free plan with unlimited pageviews under fair use"],
+    cons: ["Free plan keeps only 1 month of history and needs a badge"],
+  },
+  {
+    id: "matomo",
+    name: "Matomo",
+    website: "https://matomo.org",
+    kind: "Web analytics platform",
+    facts: {
+      cookieless: { value: true, detail: "Cookies can be disabled in settings; on by default.", source: "https://matomo.org/faq/new-to-piwik/how-do-i-use-matomo-analytics-without-consent-or-cookie-banner/", verified: CHECKED },
+      self_hosted: { value: true, detail: "On-Premise Community edition is free forever with unlimited hits.", source: "https://matomo.org/pricing/", verified: CHECKED },
+      free_plan: { value: true, detail: "Free when self-hosted; cloud is paid.", source: "https://matomo.org/pricing/", verified: CHECKED },
+    },
+    pricing: { summary: "Cloud from 29/month (excl. tax) for 50,000 hits; On-Premise free", source: "https://matomo.org/pricing/", verified: CHECKED },
+    pros: ["Full Google Analytics-style feature set", "Free self-hosted edition with unlimited hits"],
+    cons: ["Cookieless mode must be configured", "Heavier dashboard than the simple tools"],
+  },
+  {
+    id: "google-analytics",
+    name: "Google Analytics 4",
+    website: "https://marketingplatform.google.com/about/analytics/",
+    kind: "Web analytics",
+    facts: {
+      cookieless: { value: false, detail: "The GA4 tag sets first-party cookies such as _ga (2-year expiry) to distinguish users.", source: "https://support.google.com/analytics/answer/11397207", verified: CHECKED },
+      self_hosted: { value: false, detail: "Hosted by Google only.", source: "https://support.google.com/analytics/answer/11397207", verified: CHECKED },
+    },
+    pros: ["Free and deeply integrated with Google Ads"],
+    cons: ["Uses cookies, so most EU sites need consent first"],
+  },
 ];
 
 export const solutionProduct = (id: string) => SOLUTION_PRODUCTS.find((p) => p.id === id);

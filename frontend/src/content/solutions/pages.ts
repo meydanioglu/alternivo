@@ -347,6 +347,92 @@ export const SOLUTION_PAGES: SolutionPage[] = [
     updated: "2026-10-28",
     status: "published",
   },
+  {
+    slug: "google-analytics-alternatives-without-cookies",
+    topicId: "analytics-01",
+    title: "Google Analytics alternatives without cookies",
+    description:
+      "Google Analytics 4 sets cookies on every visitor. Compare web analytics tools that work without cookies: free plans, pageview limits and prices, with sources.",
+    intro:
+      "Google Analytics 4 identifies visitors with first-party cookies such as _ga, which is why most EU websites must ask for consent before loading it. Cookieless analytics tools count visits without storing an identifier on the visitor's device, so you can see traffic for everyone, not only for those who click Accept.",
+    answer:
+      "Plausible, Fathom, Umami and Simple Analytics all work without cookies out of the box. Umami and Simple Analytics have free cloud plans, Plausible is free when self-hosted, and Fathom starts at $15/month for 100,000 pageviews. Matomo can also run without cookies, but you have to turn cookies off yourself.",
+    requirements: [
+      { fact: "cookieless", label: "Can track visits without cookies", hard: true },
+      { fact: "free_plan", label: "Has a free way to use it", hard: false },
+    ],
+    columns: [
+      { fact: "cookieless", label: "No cookies" },
+      { fact: "free_plan", label: "Free option" },
+      { fact: "self_hosted", label: "Self-hosted" },
+    ],
+    products: ["plausible", "umami", "simple-analytics", "fathom", "matomo", "google-analytics"],
+    limitations: [
+      "Not using cookies is not the same as needing no consent at all; whether a banner is required depends on your local law and on what else your site loads. Matomo itself advises treating cookieless JavaScript tracking as needing consent.",
+      "Cookieless tools count unique visitors less precisely over long periods than cookie-based tracking.",
+      "None of these replace Google Ads conversion tracking or GA4's audience features.",
+    ],
+    faqs: [
+      {
+        question: "Does Google Analytics 4 use cookies?",
+        answer: "Yes. Google's documentation says GA4 tags use first-party cookies, such as _ga with a two-year expiry, to distinguish users and sessions.",
+      },
+      {
+        question: "Which cookieless analytics tool is free?",
+        answer: "Umami's Hobby plan (100K events a month, one site) and Simple Analytics' free plan are free in the cloud. Plausible and Umami are also free to self-host.",
+      },
+      {
+        question: "Do I still need a cookie banner?",
+        answer: "The tools say no banner is needed for their analytics, but the legal answer depends on your jurisdiction and on other scripts on your site. Ask a lawyer if you are unsure.",
+      },
+    ],
+    related: ["analytics-tools-that-can-be-self-hosted"],
+    updated: "2026-10-28",
+    status: "published",
+  },
+  {
+    slug: "analytics-tools-that-can-be-self-hosted",
+    topicId: "analytics-03",
+    title: "Analytics tools that can be self-hosted",
+    description:
+      "Keep analytics data on your own server. Compare web analytics tools you can self-host for free, what the self-hosted editions leave out, and how they handle cookies.",
+    intro:
+      "Self-hosting analytics keeps every visit in your own database, removes per-pageview pricing and avoids sending visitor data to a third party. The trade-off is that you install, update, back up and secure the server yourself, and some vendors keep premium features for their paid cloud.",
+    answer:
+      "Plausible Community Edition, Umami and Matomo On-Premise can all be self-hosted for free. Plausible and Umami do not use cookies; Matomo is the most complete but uses cookies until you disable them. Fathom and Simple Analytics do not mention a self-hosted option, and Google Analytics cannot be self-hosted.",
+    requirements: [
+      { fact: "self_hosted", label: "Can run on your own server", hard: true },
+      { fact: "cookieless", label: "Can track without cookies", hard: false },
+    ],
+    columns: [
+      { fact: "self_hosted", label: "Self-hosted" },
+      { fact: "cookieless", label: "No cookies" },
+      { fact: "free_plan", label: "Free option" },
+    ],
+    products: ["plausible", "umami", "matomo", "fathom", "simple-analytics", "google-analytics"],
+    limitations: [
+      "Self-hosted editions get community support only; you are responsible for upgrades, backups and security.",
+      "Some features are cloud-only: Plausible keeps SSO, funnels and the Sites API for its paid service, and Umami's cloud adds email reports and a streaming API.",
+      "Server costs are yours, and high-traffic sites need a database sized for the event volume.",
+    ],
+    faqs: [
+      {
+        question: "Is self-hosted Plausible free?",
+        answer: "Yes. Plausible Community Edition is AGPLv3 licensed and free to self-host, with community support only.",
+      },
+      {
+        question: "Which self-hosted analytics tool is most like Google Analytics?",
+        answer: "Matomo has the broadest feature set, and its On-Premise Community edition is free with unlimited hits.",
+      },
+      {
+        question: "Can I self-host Fathom or Simple Analytics?",
+        answer: "Their pricing pages describe only hosted plans, so we mark self-hosting as not verified.",
+      },
+    ],
+    related: ["google-analytics-alternatives-without-cookies"],
+    updated: "2026-10-28",
+    status: "published",
+  },
 ];
 
 export const solutionPage = (slug: string) => SOLUTION_PAGES.find((p) => p.slug === slug && p.status === "published");
