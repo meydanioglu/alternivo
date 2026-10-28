@@ -264,8 +264,6 @@ public sealed class IntegrationSettings(AppDbContext db, IDataProtectionProvider
         await SetAsync("smtp.password", r.SmtpPassword, true, userId, v => v.Length is >= 8 and <= 500 && !v.Any(char.IsWhiteSpace), ct);
         await SetAsync("smtp.from", r.SmtpFrom, false, userId, v => v.Length <= 200 && System.Net.Mail.MailAddress.TryCreate(v, out _), ct);
 
-        // Old payment-provider settings are no longer used.
-        db.AppSettings.RemoveRange(db.AppSettings.Where(x => x.Key.StartsWith("freemius.")));
         await db.SaveChangesAsync(ct);
     }
 
