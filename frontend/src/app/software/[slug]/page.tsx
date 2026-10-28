@@ -20,6 +20,7 @@ import { BreadcrumbNavigation, Container } from "@/components/layout/page-parts"
 import { SectionNav } from "@/components/layout/section-nav";
 import { JsonLd } from "@/components/seo/json-ld";
 import { outboundUrl } from "@/lib/outbound";
+import { solutionsForCatalogSlug } from "@/lib/solutions";
 import { buttonClass } from "@/components/ui/styles";
 
 export const dynamic = "force-dynamic";
@@ -301,6 +302,17 @@ export default async function SoftwarePage({ params }: Props) {
                 </p>
               )}
             </section>
+
+            {solutionsForCatalogSlug(s.slug).length > 0 && (
+              <section aria-labelledby="solutions-heading">
+                <h2 id="solutions-heading" className="text-lg font-semibold tracking-tight">Problems {s.name} is checked for</h2>
+                <ul className="mt-2 space-y-1 text-sm">
+                  {solutionsForCatalogSlug(s.slug).map((p) => (
+                    <li key={p.slug}><Link href={`/solutions/${p.slug}`} className="text-accent hover:underline">{p.title}</Link></li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             <AppFaq name={s.name} items={faq} />
 

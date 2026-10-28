@@ -1,9 +1,11 @@
 import { BEST_PAGES } from "@/content/best-pages";
 import { GUIDES } from "@/content/guides";
+import { publishedSolutions } from "@/content/solutions/pages";
 import { COMPARE_TARGETS, canonicalPair } from "@/content/keyword-targets";
 import { api } from "@/lib/api/client";
 import { loadBest } from "@/lib/keyword-pages";
 import { urlsetXml, xmlResponse } from "@/lib/sitemap";
+import { solutionIndexable } from "@/lib/solutions";
 
 export const dynamic = "force-dynamic";
 
@@ -17,6 +19,9 @@ async function keywordEntries() {
   for (const g of GUIDES) entries.push({ path: `/guides/${g.slug}`, lastModified: g.updated });
   // Sequential on purpose: each list loads several products, and fanning out 80 lists at once floods the API.
   for (const p of BEST_PAGES) if ((await loadBest(p)).indexable) entries.push({ path: `/best/${p.slug}` });
+  const solutions = publishedSolutions().filter((p) => solutionIndexable(p));
+  if (publishedSolutions().length >= 3) entries.push({ path: "/solutions" });
+  for (const p of solutions) entries.push({ path: `/solutions/${p.slug}`, lastModified: p.updated });
 
   const listed = new Set((await api.sitemap("comparisons").catch(() => [])).map((e) => e.path));
   const pairs = [...new Set(COMPARE_TARGETS.map(([a, b]) => canonicalPair(a, b)))];
