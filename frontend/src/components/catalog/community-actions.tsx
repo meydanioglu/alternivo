@@ -163,7 +163,7 @@ export function ReviewForm({ applicationId, slug, name, signedIn }: {
     return (
       <div className="rounded-lg border border-dashed border-border p-5 text-center text-sm text-muted">
         Used {name}?{" "}
-        <Link href={`/login?next=/software/${slug}`} className="font-medium text-accent hover:underline">
+        <Link href={`/login?next=/software/${slug}`} rel="nofollow" className="font-medium text-accent hover:underline">
           Sign in to write a review
         </Link>
       </div>
@@ -203,7 +203,7 @@ export function SuggestAlternativeForm({ slug, name, signedIn }: { slug: string;
   const [state, action] = useActionState(suggestAlternativeAction, {} as FormState);
   if (!signedIn) {
     return (
-      <Link href={`/login?next=/software/${slug}/alternatives`} className={buttonClass("outline", "sm")}>
+      <Link href={`/login?next=/software/${slug}/alternatives`} rel="nofollow" className={buttonClass("outline", "sm")}>
         Suggest an alternative
       </Link>
     );

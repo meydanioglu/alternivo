@@ -22,7 +22,7 @@ export function LoginForm({ next }: { next: string }) {
       <SubmitButton className="w-full">Sign in</SubmitButton>
       <p className="text-center text-sm text-muted">
         New here?{" "}
-        <Link href={`/register?next=${encodeURIComponent(next)}`} className="font-medium text-accent hover:underline">
+        <Link href={`/register?next=${encodeURIComponent(next)}`} rel="nofollow" className="font-medium text-accent hover:underline">
           Create a free account
         </Link>
       </p>
@@ -54,7 +54,7 @@ export function RegisterForm({ next }: { next: string }) {
       <SubmitButton className="w-full">Create account</SubmitButton>
       <p className="text-center text-sm text-muted">
         Already have an account?{" "}
-        <Link href={`/login?next=${encodeURIComponent(next)}`} className="font-medium text-accent hover:underline">
+        <Link href={`/login?next=${encodeURIComponent(next)}`} rel="nofollow" className="font-medium text-accent hover:underline">
           Sign in
         </Link>
       </p>
