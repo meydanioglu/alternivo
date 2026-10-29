@@ -75,7 +75,8 @@ public static class AlternativeRanker
                     new RankingSignalDto("featureOverlap", Round(Coverage(source.FeatureIds, c.Profile.FeatureIds)), options.FeatureOverlapWeight),
                     new RankingSignalDto("platformCompatibility", Round(Coverage(source.PlatformIds, c.Profile.PlatformIds)), options.PlatformWeight),
                     new RankingSignalDto("categoryRelevance", Round(Coverage(source.CategoryIds, c.Profile.CategoryIds)), options.CategoryWeight),
-                    new RankingSignalDto("rating", Round(RatingSignal(c, options)), options.RatingWeight),
+                    // Without reviews the value is the neutral prior, not a user rating; the name says so (score unchanged).
+                    new RankingSignalDto(c.ReviewCount > 0 ? "rating" : "ratingDefault", Round(RatingSignal(c, options)), options.RatingWeight),
                     new RankingSignalDto("freshness", Round(Freshness(c.FreshnessDate, now, options.FreshnessHalfLifeDays)), options.FreshnessWeight),
                     new RankingSignalDto("editorial", Round(Math.Clamp(c.EditorialScore, 0, 100) / 100.0), options.EditorialWeight),
                 };

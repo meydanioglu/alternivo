@@ -1,7 +1,6 @@
 import { ArrowRight, LayoutGrid, Rocket, Sparkles, Trophy } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { site } from "@/config/site";
 import { ApplicationLogo } from "@/components/catalog/application-logo";
 import { CategoryDirectory } from "@/components/catalog/category-directory";
 import { Container } from "@/components/layout/page-parts";
@@ -19,7 +18,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = pageMetadata({
-  title: `AI Tools — One place for all things AI | ${site.name}`,
+  title: "AI Tools — One place for all things AI",
   description: "Find the best AI tools, agents and models: weekly launches, an upvote leaderboard and every AI category in one place.",
   path: "/ais",
 });

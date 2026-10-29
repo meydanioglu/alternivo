@@ -36,6 +36,7 @@ export const SIGNAL_LABELS: Record<string, string> = {
   platformCompatibility: "Platform compatibility",
   categoryRelevance: "Category relevance",
   rating: "Review rating",
+  ratingDefault: "Review rating (no reviews yet: neutral default)",
   freshness: "Data freshness",
   editorial: "Editorial score",
 };

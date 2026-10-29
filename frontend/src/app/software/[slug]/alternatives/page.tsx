@@ -55,14 +55,16 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const filtered = hasActiveFilters(filters);
   const page = filters.page ?? 1;
   const category = data.source.primaryCategory?.name.toLowerCase();
+  // A page number past the last page renders an empty list; keep it out of the index (soft 404) and point to page 1.
+  const outOfRange = page > Math.max(1, data.results.totalPages);
 
   return pageMetadata({
     title: page > 1 ? `${titleFor(data)} – Page ${page}` : titleFor(data),
     description: `Compare ${plural(data.totalAlternatives, "alternative")} to ${data.source.name}${category ? ` for ${category}` : ""}, including free and open-source apps like ${data.source.name}. See features, pricing, platforms and license side by side, ranked transparently.`,
     path: base,
     // Filtered/sorted views consolidate to the base URL; paginated pages keep a self-canonical.
-    canonical: filtered ? base : page > 1 ? `${base}?page=${page}` : base,
-    noindex: filtered || !data.isIndexable,
+    canonical: filtered || outOfRange ? base : page > 1 ? `${base}?page=${page}` : base,
+    noindex: filtered || outOfRange || !data.isIndexable,
   });
 }
 
