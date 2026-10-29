@@ -433,6 +433,101 @@ export const SOLUTION_PAGES: SolutionPage[] = [
     updated: "2026-10-28",
     status: "published",
   },
+  {
+    slug: "hubspot-alternatives-without-contact-limits",
+    topicId: "support-crm-07",
+    title: "HubSpot alternatives without contact limits",
+    description:
+      "HubSpot's free CRM stops at 1,000 contacts and 2 users. Compare CRMs without contact or record caps, what they cost and which can be self-hosted, with sources.",
+    intro:
+      "HubSpot CRM is free to start, but the free plan holds 1,000 contacts and 1,000 records per other object type, for up to 2 users. Once a contact list grows past that, the cost question changes. The CRMs below were checked for one thing first: whether contacts and records are capped.",
+    answer:
+      "Twenty has no record or seat caps on its paid cloud plans and its open-source core is free to self-host. EspoCRM is open source (AGPLv3) and self-hostable, and its Ultimate cloud plan has unlimited records. Zoho CRM is free for 3 users, but it does not publish the contact limits of its free edition.",
+    requirements: [
+      { fact: "no_contact_cap", label: "No cap on contacts or records", hard: true },
+      { fact: "free_plan", label: "Can be used for free", hard: false },
+    ],
+    columns: [
+      { fact: "no_contact_cap", label: "No contact cap" },
+      { fact: "free_plan", label: "Free option" },
+      { fact: "self_hosted", label: "Self-hosted" },
+    ],
+    products: ["twenty", "espocrm", "zoho-crm", "pipedrive", "hubspot-crm"],
+    limitations: [
+      "We checked contact and record limits and list prices, not features such as e-mail marketing, which HubSpot bundles and most CRMs here do not.",
+      "Self-hosting removes per-record limits but you run, update and back up the server yourself.",
+      "EspoCRM's Basic and Enterprise cloud plans do cap records (100,000 and 10,000,000); only Ultimate is unlimited.",
+      "Moving data out of HubSpot means exporting contacts, companies and deals and re-creating pipelines and automations.",
+    ],
+    faqs: [
+      {
+        question: "How many contacts does the free HubSpot CRM allow?",
+        answer: "HubSpot's pricing page says the free CRM allows 1,000 contacts and 1,000 records for other standard objects, for up to 2 users, with no time limit.",
+      },
+      {
+        question: "How much does HubSpot CRM cost?",
+        answer: "The free plan costs nothing. The Starter tier is listed from $7 per seat per month, with a higher figure shown for the other billing option.",
+      },
+      {
+        question: "Which CRM has unlimited contacts?",
+        answer: "Of the CRMs checked here, Twenty lists unlimited records on all paid plans and is free to self-host, and EspoCRM's Ultimate cloud plan has unlimited records.",
+      },
+      {
+        question: "Is there a free open-source alternative to HubSpot?",
+        answer: "Twenty and EspoCRM are both open source and can be self-hosted at no licence cost.",
+      },
+    ],
+    related: ["asana-alternatives-for-small-teams"],
+    updated: "2026-10-30",
+    status: "published",
+  },
+  {
+    slug: "asana-alternatives-for-small-teams",
+    topicId: "productivity-05",
+    title: "Asana alternatives for small teams",
+    description:
+      "Asana's free plan covers only 2 users. Compare project management tools that a team of 5 or more can use for free, with paid prices per user, checked against official pricing pages.",
+    intro:
+      "Asana's free Personal plan is limited to 2 users, and Starter costs $10.99 per user per month on annual billing. For a small team of five to ten people, the practical question is which tool the whole team can use for free, and what it costs per person once you outgrow the free plan.",
+    answer:
+      "Trello is free for up to 10 collaborators per workspace, ClickUp's free plan has no member limit, and Plane is free for up to 12 users and can be self-hosted. Vikunja is open source and free to self-host for any team size. monday.com, like Asana, limits its free plan to 2 seats.",
+    requirements: [
+      { fact: "free_team_5", label: "Free for a team of 5 or more", hard: true },
+      { fact: "free_plan", label: "Has a free plan", hard: false },
+    ],
+    columns: [
+      { fact: "free_team_5", label: "Free for 5+ people" },
+      { fact: "paid_under_10", label: "Paid under $10/user" },
+      { fact: "self_hosted", label: "Self-hosted" },
+    ],
+    products: ["trello", "clickup", "plane", "vikunja", "monday", "asana"],
+    limitations: [
+      "Free plans come with other limits: Trello allows 10 boards per workspace and ClickUp 60 MB of storage.",
+      "Prices are list prices per user per month; annual billing is cheaper than monthly for most tools.",
+      "We compared team size and price, not every feature; Asana's timelines, goals and reporting may matter more than price for some teams.",
+    ],
+    faqs: [
+      {
+        question: "How many users can use Asana for free?",
+        answer: "Asana's free Personal plan allows 2 users. Starter costs $10.99 per user per month billed annually, or $13.49 billed monthly.",
+      },
+      {
+        question: "Which project management tool is free for a team of 10?",
+        answer: "Trello's free plan covers up to 10 collaborators per workspace, Plane is free for up to 12 users and ClickUp's free plan has no member limit.",
+      },
+      {
+        question: "Is Trello or Notion better than Asana for small teams?",
+        answer: "Trello is free for more people (10 collaborators) than Asana (2 users) and its Standard plan costs $5 per user per month. We did not check Notion on this page.",
+      },
+      {
+        question: "Is there an open-source alternative to Asana?",
+        answer: "Plane and Vikunja are open source and can be self-hosted. Vikunja is licensed under AGPLv3 and is free to self-host.",
+      },
+    ],
+    related: ["hubspot-alternatives-without-contact-limits"],
+    updated: "2026-10-30",
+    status: "published",
+  },
 ];
 
 export const solutionPage = (slug: string) => SOLUTION_PAGES.find((p) => p.slug === slug && p.status === "published");
