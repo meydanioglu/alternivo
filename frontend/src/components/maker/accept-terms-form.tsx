@@ -4,14 +4,14 @@ import Link from "next/link";
 import { useActionState } from "react";
 import type { FormState } from "@/app/actions";
 import { acceptTermsAction } from "@/app/maker/actions";
-import { SubmitButton } from "@/components/forms/form-kit";
+import { ActionForm, SubmitButton } from "@/components/forms/form-kit";
 
 /** Required acknowledgements before the Freemius checkout opens. Both are recorded with the order server-side. */
 export function AcceptTermsForm({ orderId, amount }: { orderId: string; amount: string }) {
   const [state, action] = useActionState(acceptTermsAction, {} as FormState);
   const box = "mt-0.5 size-4 shrink-0 accent-[var(--accent)]";
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4">
       <input type="hidden" name="orderId" value={orderId} />
       <label className="flex gap-3 text-sm leading-relaxed">
         <input type="checkbox" name="agreement" required className={box} />
@@ -33,6 +33,6 @@ export function AcceptTermsForm({ orderId, amount }: { orderId: string; amount: 
       <div>
         <SubmitButton>Confirm and continue to payment ({amount})</SubmitButton>
       </div>
-    </form>
+    </ActionForm>
   );
 }

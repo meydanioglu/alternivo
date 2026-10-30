@@ -1,7 +1,8 @@
 "use client";
 
 import { CircleAlert, CircleCheck, Loader2 } from "lucide-react";
-import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { createContext, useContext, useEffect, useRef, useTransition } from "react";
+import type { FormEvent, FormHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { useFormStatus } from "react-dom";
 import type { FormState } from "@/app/actions";
 import { buttonClass, cx } from "@/components/ui/styles";
@@ -103,7 +104,8 @@ export function SubmitButton({ children, className, variant = "primary", pending
   pending?: boolean;
 }) {
   const status = useFormStatus();
-  const pending = pendingProp ?? status.pending;
+  const formPending = useContext(ActionFormPending);
+  const pending = pendingProp ?? (formPending || status.pending);
   return (
     <button type="submit" disabled={pending} className={buttonClass(variant, "md", cx("disabled:opacity-60", className))}>
       {pending && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}
@@ -128,4 +130,35 @@ export function FormMessage({ state }: { state: FormState }) {
     );
   }
   return null;
+}
+
+const ActionFormPending = createContext(false);
+
+/**
+ * A form for a useActionState action that keeps what the user typed when the action returns an error. A plain
+ * `<form action>` resets every field once the action finishes, which wipes the input on a validation error; here the
+ * form is submitted in a transition instead (the clicked submit button's name/value is kept) and reset only on success.
+ */
+export function ActionForm({ action, state, children, ...rest }: Omit<FormHTMLAttributes<HTMLFormElement>, "action" | "onSubmit"> & {
+  action: (data: FormData) => void;
+  state?: FormState;
+}) {
+  const [pending, start] = useTransition();
+  const ref = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (state?.ok && !state.error && !state.fieldErrors) ref.current?.reset();
+  }, [state]);
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLElement | null;
+    const data = new FormData(e.currentTarget, submitter);
+    start(() => action(data));
+  };
+  return (
+    <ActionFormPending.Provider value={pending}>
+      <form ref={ref} onSubmit={onSubmit} {...rest}>
+        {children}
+      </form>
+    </ActionFormPending.Provider>
+  );
 }

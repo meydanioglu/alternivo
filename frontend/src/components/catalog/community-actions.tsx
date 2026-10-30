@@ -12,7 +12,7 @@ import {
   setLikeAction,
   suggestAlternativeAction,
 } from "@/app/actions";
-import { Field, FormMessage, SubmitButton, TextArea, TextInput } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextArea, TextInput } from "@/components/forms/form-kit";
 import { buttonClass, cx } from "@/components/ui/styles";
 
 function useSignInRedirect(path: string) {
@@ -174,7 +174,7 @@ export function ReviewForm({ applicationId, slug, name, signedIn }: {
   return (
     <div id="write-review" className="scroll-mt-24 rounded-lg border border-border bg-surface">
       <h3 className="border-b border-border px-5 py-4 font-semibold">Write a review of {name}</h3>
-      <form action={action} className="flex flex-col gap-4 p-5">
+      <ActionForm action={action} state={state} className="flex flex-col gap-4 p-5">
         <input type="hidden" name="applicationId" value={applicationId} />
         <input type="hidden" name="slug" value={slug} />
         <FormMessage state={state} />
@@ -194,7 +194,7 @@ export function ReviewForm({ applicationId, slug, name, signedIn }: {
           </Field>
         </div>
         <SubmitButton className="self-start">Post review</SubmitButton>
-      </form>
+      </ActionForm>
     </div>
   );
 }
@@ -214,7 +214,7 @@ export function SuggestAlternativeForm({ slug, name, signedIn }: { slug: string;
       <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium">
         <span className="text-accent">+</span> Suggest an alternative to {name}
       </summary>
-      <form action={action} className="flex flex-col gap-3 border-t border-border p-4">
+      <ActionForm action={action} state={state} className="flex flex-col gap-3 border-t border-border p-4">
         <input type="hidden" name="slug" value={slug} />
         <FormMessage state={state} />
         <Field label="Alternative (app URL name)" name="alternativeSlug" error={state.fieldErrors?.alternativeSlug} hint="e.g. obsidian">
@@ -224,7 +224,7 @@ export function SuggestAlternativeForm({ slug, name, signedIn }: { slug: string;
           <TextArea name="note" maxLength={500} className="min-h-20" />
         </Field>
         <SubmitButton className="self-start">Send suggestion</SubmitButton>
-      </form>
+      </ActionForm>
     </details>
   );
 }

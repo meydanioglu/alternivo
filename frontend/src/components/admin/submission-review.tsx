@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import type { FormState } from "@/app/actions";
 import { reviewSubmissionAction } from "@/app/admin/submissions/actions";
-import { Field, FormMessage, TextArea, TextInput, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, TextArea, TextInput, inputClass } from "@/components/forms/form-kit";
 import { buttonClass, cx } from "@/components/ui/styles";
 
 export interface SubmissionData {
@@ -67,7 +67,7 @@ export function SubmissionReviewForm({ submission: s, categories, platforms, lic
   const locked = s.status === "Approved";
 
   return (
-    <form action={action} className="flex flex-col gap-5">
+    <ActionForm action={action} state={state} className="flex flex-col gap-5">
       <input type="hidden" name="id" value={s.id} />
       <input type="hidden" name="editable" value={locked ? "0" : "1"} />
       <FormMessage state={state} />
@@ -150,6 +150,6 @@ export function SubmissionReviewForm({ submission: s, categories, platforms, lic
           <p className="text-xs text-muted">Onayladığınızda ürün yayına girer, alternatif ilişkileri kurulur ve ürün haftalık lansman panosuna eklenir.</p>
         </section>
       )}
-    </form>
+    </ActionForm>
   );
 }

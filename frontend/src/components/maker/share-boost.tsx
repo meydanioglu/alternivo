@@ -4,7 +4,7 @@ import { Check, Copy } from "lucide-react";
 import { useActionState, useState } from "react";
 import type { FormState } from "@/app/actions";
 import { verifyBadgeAction } from "@/app/maker/actions";
-import { FormMessage, SubmitButton } from "@/components/forms/form-kit";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/forms/form-kit";
 import { buttonClass, cx } from "@/components/ui/styles";
 
 function CopyButton({ text, label }: { text: string; label: string }) {
@@ -41,7 +41,7 @@ export function ShareBoost({ submissionId, siteUrl }: { submissionId: string; si
         Free listings are approved only after our badge is live on your homepage. Once verified, your review time drops from 15 to 7 days.
         Prefer not to? Fast Review does not need the badge.
       </p>
-      <form action={badgeAction} className="mt-4 flex flex-col gap-3">
+      <ActionForm action={badgeAction} state={badgeState} className="mt-4 flex flex-col gap-3">
         <input type="hidden" name="submissionId" value={submissionId} />
         <div className="flex flex-wrap items-center gap-3">
           <div className={cx("rounded-md p-3", variant === "dark" ? "bg-[#0e0f13]" : "bg-[#f8f9fc]")}>
@@ -76,7 +76,7 @@ export function ShareBoost({ submissionId, siteUrl }: { submissionId: string; si
           <CopyButton text={code} label="Copy code" />
           <SubmitButton>Verify badge</SubmitButton>
         </div>
-      </form>
+      </ActionForm>
     </div>
   );
 }

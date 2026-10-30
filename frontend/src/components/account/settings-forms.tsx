@@ -14,7 +14,7 @@ import {
   uploadAvatarAction,
 } from "@/app/settings/actions";
 import { UserAvatar } from "@/components/account/user-avatar";
-import { Field, FormMessage, SubmitButton, TextArea, TextInput, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextArea, TextInput, inputClass } from "@/components/forms/form-kit";
 import { buttonClass, cx } from "@/components/ui/styles";
 import type { UserProfile } from "@/lib/auth/session";
 
@@ -157,7 +157,7 @@ export function ProfileSettings({ user }: { user: UserProfile }) {
   return (
     <div className="flex flex-col gap-5">
       <AvatarField user={user} />
-      <form action={action} className="flex flex-col gap-4">
+      <ActionForm action={action} state={state} className="flex flex-col gap-4">
         <FormMessage state={state} />
         <Field label="Name" name="displayName">
           <TextInput name="displayName" defaultValue={user.displayName} required minLength={2} maxLength={60} />
@@ -167,7 +167,7 @@ export function ProfileSettings({ user }: { user: UserProfile }) {
           <TextArea name="bio" defaultValue={user.bio ?? ""} maxLength={500} placeholder="A short bio" className="min-h-24" />
         </Field>
         <SubmitButton className="self-start">Save</SubmitButton>
-      </form>
+      </ActionForm>
     </div>
   );
 }
@@ -182,7 +182,7 @@ const LINKS = [
 export function LinksSettings({ user }: { user: UserProfile }) {
   const [state, action] = useActionState(saveLinksAction, {} as FormState);
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4">
       <FormMessage state={state} />
       {LINKS.map(({ name, label, icon: Icon, placeholder, key }) => (
         <Field key={name} label={label} name={name} optional>
@@ -193,7 +193,7 @@ export function LinksSettings({ user }: { user: UserProfile }) {
         </Field>
       ))}
       <SubmitButton className="self-start">Save links</SubmitButton>
-    </form>
+    </ActionForm>
   );
 }
 
@@ -213,7 +213,7 @@ function Toggle({ name, label, description, defaultChecked }: { name: string; la
 export function PrivacySettings({ user }: { user: UserProfile }) {
   const [state, action] = useActionState(savePrivacyAction, {} as FormState);
   return (
-    <form action={action} className="flex flex-col gap-3">
+    <ActionForm action={action} state={state} className="flex flex-col gap-3">
       <FormMessage state={state} />
       <Toggle
         name="isProfilePublic"
@@ -223,7 +223,7 @@ export function PrivacySettings({ user }: { user: UserProfile }) {
       />
       <Toggle name="showLikes" label="Show liked apps" description="List the apps you liked on your public profile." defaultChecked={user.showLikes} />
       <SubmitButton className="self-start">Save privacy</SubmitButton>
-    </form>
+    </ActionForm>
   );
 }
 
@@ -231,7 +231,7 @@ export function SecuritySettings({ email }: { email: string }) {
   const [state, action] = useActionState(changePasswordAction, {} as FormState);
   const e = state.fieldErrors ?? {};
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4">
       <p className="text-sm text-muted">
         Signed in as <span className="font-medium text-foreground">{email}</span>
       </p>
@@ -248,6 +248,6 @@ export function SecuritySettings({ email }: { email: string }) {
         </Field>
       </div>
       <SubmitButton className="self-start">Change password</SubmitButton>
-    </form>
+    </ActionForm>
   );
 }

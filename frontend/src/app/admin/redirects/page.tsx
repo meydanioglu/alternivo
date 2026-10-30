@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import type { FormState } from "@/app/actions";
 import { createRedirectAction } from "@/app/admin/actions";
 import { AdminHeader } from "@/components/admin/admin-parts";
-import { Field, FormMessage, SubmitButton, TextInput, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextInput, inputClass } from "@/components/forms/form-kit";
 
 export default function AdminRedirectsPage() {
   const [state, action] = useActionState(createRedirectAction, {} as FormState);
@@ -14,7 +14,7 @@ export default function AdminRedirectsPage() {
         title="Yönlendirmeler"
         description="Eski bir adresi yenisine yönlendirin veya kalıcı olarak kaldırıldı (410) olarak işaretleyin. Uygulama slug'ı değişince yönlendirme otomatik eklenir."
       />
-      <form action={action} className="flex max-w-2xl flex-col gap-4 rounded-xl border border-border bg-surface p-5">
+      <ActionForm action={action} state={state} className="flex max-w-2xl flex-col gap-4 rounded-xl border border-border bg-surface p-5">
         <FormMessage state={state} />
         <Field label="Eski adres" name="fromPath" hint="Sitedeki yol, ör. /software/eski-ad">
           <TextInput name="fromPath" required placeholder="/software/eski-ad" />
@@ -30,7 +30,7 @@ export default function AdminRedirectsPage() {
           </select>
         </Field>
         <SubmitButton className="self-start">Kaydet</SubmitButton>
-      </form>
+      </ActionForm>
     </>
   );
 }

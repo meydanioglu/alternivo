@@ -6,7 +6,7 @@ import { useActionState, useEffect, useMemo, useState } from "react";
 import type { FormState } from "@/app/actions";
 import { deleteCategoryAction, saveCategoryAction } from "@/app/admin/actions";
 import { ActionButton } from "@/components/admin/admin-ui";
-import { Field, FormMessage, SubmitButton, TextInput, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextInput, inputClass } from "@/components/forms/form-kit";
 import { buttonClass } from "@/components/ui/styles";
 
 export interface CategoryRow {
@@ -32,7 +32,7 @@ function CategoryForm({ category, all, onDone }: { category: CategoryRow | null;
   }, [state, router, onDone]);
 
   return (
-    <form action={action} className="flex flex-col gap-4 rounded-xl border border-accent/40 bg-surface p-5">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4 rounded-xl border border-accent/40 bg-surface p-5">
       <div className="flex items-center justify-between">
         <h2 className="font-semibold">{category ? `Düzenle: ${category.name}` : "Yeni kategori"}</h2>
         <button type="button" onClick={onDone} className={buttonClass("ghost", "sm")} aria-label="Kapat">
@@ -74,7 +74,7 @@ function CategoryForm({ category, all, onDone }: { category: CategoryRow | null;
         <TextInput name="description" defaultValue={category?.description ?? ""} maxLength={500} />
       </Field>
       <SubmitButton className="self-start">{category ? "Kaydet" : "Ekle"}</SubmitButton>
-    </form>
+    </ActionForm>
   );
 }
 

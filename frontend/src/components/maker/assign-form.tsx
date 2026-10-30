@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import type { FormState } from "@/app/actions";
 import { assignEntitlementAction } from "@/app/maker/actions";
-import { FormMessage, SubmitButton } from "@/components/forms/form-kit";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/forms/form-kit";
 
 /** Applies a purchased boost to one of the member's products (or, for fast track, a pending submission). */
 export function AssignForm({ entitlementId, targets, currentId }: {
@@ -14,7 +14,7 @@ export function AssignForm({ entitlementId, targets, currentId }: {
   const [state, action] = useActionState(assignEntitlementAction, {} as FormState);
   if (targets.length === 0) return <p className="text-xs text-muted">No eligible product yet.</p>;
   return (
-    <form action={action} className="flex flex-col gap-2">
+    <ActionForm action={action} state={state} className="flex flex-col gap-2">
       <input type="hidden" name="entitlementId" value={entitlementId} />
       <div className="flex flex-wrap items-center gap-2">
         <label className="sr-only" htmlFor={`t-${entitlementId}`}>Product</label>
@@ -32,6 +32,6 @@ export function AssignForm({ entitlementId, targets, currentId }: {
         <SubmitButton variant="outline">Apply</SubmitButton>
       </div>
       <FormMessage state={state} />
-    </form>
+    </ActionForm>
   );
 }

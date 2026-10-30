@@ -5,7 +5,7 @@ import { useActionState, useState, useTransition } from "react";
 import type { FormState } from "@/app/actions";
 import { removeAiKeyAction, saveAiSettingsAction, testAiAction } from "@/app/admin/settings/actions";
 import { ActionButton } from "@/components/admin/admin-ui";
-import { Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
 import { buttonClass } from "@/components/ui/styles";
 
 export interface AiSettingsView {
@@ -41,7 +41,7 @@ export function AiSettingsForm({ view }: { view: AiSettingsView }) {
         <span className="ml-auto text-muted">Model: {view.model}</span>
       </div>
 
-      <form action={action} className="flex flex-col gap-4">
+      <ActionForm action={action} state={state} className="flex flex-col gap-4">
         <FormMessage state={state} />
         <Field
           label={view.configured ? "Yeni API anahtarı" : "OpenAI API anahtarı"}
@@ -71,7 +71,7 @@ export function AiSettingsForm({ view }: { view: AiSettingsView }) {
             </ActionButton>
           )}
         </div>
-      </form>
+      </ActionForm>
 
       {test && (
         <p

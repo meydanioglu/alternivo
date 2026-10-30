@@ -3,7 +3,7 @@
 import { Check, ExternalLink, PencilLine, X } from "lucide-react";
 import { useActionState } from "react";
 import { type FormState, moderateSubmissionAction } from "@/app/actions";
-import { FormMessage, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, FormMessage, inputClass } from "@/components/forms/form-kit";
 import { buttonClass, chipClass, cx } from "@/components/ui/styles";
 
 export interface SubmissionRow {
@@ -54,7 +54,7 @@ export function ModerationRow({ row }: { row: SubmissionRow }) {
       )}
 
       {!done && (
-        <form action={action} className="mt-4 flex flex-col gap-3 border-t border-border pt-4">
+        <ActionForm action={action} state={state} className="mt-4 flex flex-col gap-3 border-t border-border pt-4">
           <input type="hidden" name="id" value={row.id} />
           <input name="note" placeholder="Note to the submitter (optional)" className={inputClass} maxLength={500} />
           <div className="flex flex-wrap gap-2">
@@ -68,7 +68,7 @@ export function ModerationRow({ row }: { row: SubmissionRow }) {
               <X className="size-4" aria-hidden="true" /> Reject
             </button>
           </div>
-        </form>
+        </ActionForm>
       )}
       <div className="mt-3">
         <FormMessage state={state} />

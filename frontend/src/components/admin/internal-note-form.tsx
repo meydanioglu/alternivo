@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import type { FormState } from "@/app/actions";
-import { FormMessage, SubmitButton, TextArea } from "@/components/forms/form-kit";
+import { ActionForm, FormMessage, SubmitButton, TextArea } from "@/components/forms/form-kit";
 
 export function InternalNoteForm({ id, note, action }: {
   id: string;
@@ -11,13 +11,13 @@ export function InternalNoteForm({ id, note, action }: {
 }) {
   const [state, formAction] = useActionState(action, {} as FormState);
   return (
-    <form action={formAction} className="flex flex-col gap-2">
+    <ActionForm action={formAction} state={state} className="flex flex-col gap-2">
       <input type="hidden" name="id" value={id} />
       <FormMessage state={state} />
       <TextArea name="note" defaultValue={note ?? ""} rows={3} maxLength={2000} />
       <div>
         <SubmitButton variant="outline">Notu kaydet</SubmitButton>
       </div>
-    </form>
+    </ActionForm>
   );
 }

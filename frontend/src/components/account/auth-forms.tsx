@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { type FormState, loginAction, registerAction } from "@/app/actions";
-import { Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
 
 const initial: FormState = {};
 
 export function LoginForm({ next }: { next: string }) {
   const [state, action] = useActionState(loginAction, initial);
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4">
       <input type="hidden" name="next" value={next} />
       <FormMessage state={state} />
       <Field label="E-mail" name="email">
@@ -26,7 +26,7 @@ export function LoginForm({ next }: { next: string }) {
           Create a free account
         </Link>
       </p>
-    </form>
+    </ActionForm>
   );
 }
 
@@ -34,7 +34,7 @@ export function RegisterForm({ next }: { next: string }) {
   const [state, action] = useActionState(registerAction, initial);
   const errors = state.fieldErrors ?? {};
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4">
       <input type="hidden" name="next" value={next} />
       <FormMessage state={state} />
       <Field label="Display name" name="displayName" error={errors.displayName} hint="Shown on your reviews and submissions.">
@@ -58,6 +58,6 @@ export function RegisterForm({ next }: { next: string }) {
           Sign in
         </Link>
       </p>
-    </form>
+    </ActionForm>
   );
 }

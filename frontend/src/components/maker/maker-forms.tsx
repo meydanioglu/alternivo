@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import type { FormState } from "@/app/actions";
 import { checkoutAction, createCampaignAction } from "@/app/maker/actions";
-import { Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextInput } from "@/components/forms/form-kit";
 
 /** A single "Pay" button: the server validates the purchase, then opens the Freemius payment page. */
 export function CheckoutButton({ plan, targetId, label, variant = "outline" }: {
@@ -14,12 +14,12 @@ export function CheckoutButton({ plan, targetId, label, variant = "outline" }: {
 }) {
   const [state, action] = useActionState(checkoutAction, {} as FormState);
   return (
-    <form action={action} className="flex flex-col gap-1">
+    <ActionForm action={action} state={state} className="flex flex-col gap-1">
       <input type="hidden" name="plan" value={plan} />
       {targetId && <input type="hidden" name="targetId" value={targetId} />}
       <SubmitButton variant={variant}>{label}</SubmitButton>
       {state.error && <p className="text-xs text-danger">{state.error}</p>}
-    </form>
+    </ActionForm>
   );
 }
 
@@ -34,7 +34,7 @@ export function CampaignForm({ products, categories, plans }: {
   const [plan, setPlan] = useState(plans[0]?.key ?? "");
   const today = new Date().toISOString().slice(0, 10);
   return (
-    <form action={action} className="flex flex-col gap-4">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4">
       <FormMessage state={state} />
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Product" name="applicationId">
@@ -71,6 +71,6 @@ export function CampaignForm({ products, categories, plans }: {
       <div>
         <SubmitButton>Reserve and pay</SubmitButton>
       </div>
-    </form>
+    </ActionForm>
   );
 }

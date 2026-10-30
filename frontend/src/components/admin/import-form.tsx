@@ -4,12 +4,12 @@ import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import type { FormState } from "@/app/actions";
 import { queueImportsAction } from "@/app/admin/imports/actions";
-import { Field, FormMessage, SubmitButton, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, inputClass } from "@/components/forms/form-kit";
 
 export function ImportForm({ categories }: { categories: { slug: string; name: string }[] }) {
   const [state, action] = useActionState(queueImportsAction, {} as FormState);
   return (
-    <form action={action} className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
+    <ActionForm action={action} state={state} className="flex flex-col gap-4 rounded-xl border border-border bg-surface p-5">
       <FormMessage state={state} />
       <Field
         label="Ürün adresleri"
@@ -35,7 +35,7 @@ export function ImportForm({ categories }: { categories: { slug: string; name: s
         </select>
       </Field>
       <SubmitButton className="self-start">Kuyruğa ekle</SubmitButton>
-    </form>
+    </ActionForm>
   );
 }
 

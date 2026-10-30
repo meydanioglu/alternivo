@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import type { FormState } from "@/app/actions";
 import { approveContentAction } from "@/app/admin/content/actions";
-import { FormMessage, SubmitButton, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, FormMessage, SubmitButton, inputClass } from "@/components/forms/form-kit";
 import { cx } from "@/components/ui/styles";
 
 export interface Sections {
@@ -69,7 +69,7 @@ export function ContentReviewForm({ id, nextId, draft, canApprove }: {
   const [state, action] = useActionState(approveContentAction, {} as FormState);
   const s = draft.sections;
   return (
-    <form action={action} className="flex flex-col gap-5">
+    <ActionForm action={action} state={state} className="flex flex-col gap-5">
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="next" value={nextId ?? ""} />
       <FormMessage state={state} />
@@ -112,6 +112,6 @@ export function ContentReviewForm({ id, nextId, draft, canApprove }: {
         </label>
         {canApprove ? <SubmitButton>Onayla ve uygula{nextId ? " → sonraki" : ""}</SubmitButton> : <span className="text-sm text-muted">Bu taslak hâlâ yazılıyor.</span>}
       </div>
-    </form>
+    </ActionForm>
   );
 }

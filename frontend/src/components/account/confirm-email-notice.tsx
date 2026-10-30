@@ -3,7 +3,7 @@
 import { MailWarning } from "lucide-react";
 import { useActionState } from "react";
 import { type FormState, resendConfirmationAction } from "@/app/actions";
-import { FormMessage, SubmitButton } from "@/components/forms/form-kit";
+import { ActionForm, FormMessage, SubmitButton } from "@/components/forms/form-kit";
 
 const initial: FormState = {};
 
@@ -20,13 +20,13 @@ export function ConfirmEmailNotice({ email }: { email: string }) {
             Before you can submit products, write reviews or suggest alternatives, confirm <strong className="break-all">{email}</strong> using
             the link we sent you.
           </p>
-          <form action={action} className="mt-3 flex flex-col gap-2">
+          <ActionForm action={action} state={state} className="mt-3 flex flex-col gap-2">
             <input type="hidden" name="email" value={email} />
             <FormMessage state={state} />
             <SubmitButton variant="outline" className="self-start">
               Send a new link
             </SubmitButton>
-          </form>
+          </ActionForm>
         </div>
       </div>
     </section>

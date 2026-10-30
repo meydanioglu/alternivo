@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import type { FormState } from "@/app/actions";
 import { saveApplicationAction } from "@/app/admin/actions";
-import { Field, FormMessage, SubmitButton, TextArea, TextInput, inputClass } from "@/components/forms/form-kit";
+import { ActionForm, Field, FormMessage, SubmitButton, TextArea, TextInput, inputClass } from "@/components/forms/form-kit";
 import { cx } from "@/components/ui/styles";
 
 export interface AppDetail {
@@ -102,7 +102,7 @@ export function AppEditor({ app, categories, platforms }: {
   );
 
   return (
-    <form action={action} className="flex flex-col gap-5">
+    <ActionForm action={action} state={state} className="flex flex-col gap-5">
       {app && <input type="hidden" name="id" value={app.id} />}
       {app && <input type="hidden" name="version" value={app.version} />}
       <FormMessage state={state} />
@@ -222,6 +222,6 @@ export function AppEditor({ app, categories, platforms }: {
         </div>
         <SubmitButton>{app ? "Değişiklikleri kaydet" : "Uygulamayı oluştur"}</SubmitButton>
       </div>
-    </form>
+    </ActionForm>
   );
 }
