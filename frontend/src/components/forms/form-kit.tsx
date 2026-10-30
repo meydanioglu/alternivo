@@ -95,12 +95,15 @@ export function CheckboxGroup({ name, legend, options, hint }: {
   );
 }
 
-export function SubmitButton({ children, className, variant = "primary" }: {
+export function SubmitButton({ children, className, variant = "primary", pending: pendingProp }: {
   children: ReactNode;
   className?: string;
   variant?: "primary" | "outline" | "ghost" | "secondary";
+  /** For forms submitted with startTransition, where useFormStatus does not see the submission. */
+  pending?: boolean;
 }) {
-  const { pending } = useFormStatus();
+  const status = useFormStatus();
+  const pending = pendingProp ?? status.pending;
   return (
     <button type="submit" disabled={pending} className={buttonClass(variant, "md", cx("disabled:opacity-60", className))}>
       {pending && <Loader2 className="size-4 animate-spin" aria-hidden="true" />}

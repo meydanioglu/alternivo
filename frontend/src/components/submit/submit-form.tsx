@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { startTransition, useActionState } from "react";
 import { type FormState, submitProductAction } from "@/app/actions";
 import { CheckboxGroup, Field, FormMessage, Select, SubmitButton, TextArea, TextInput } from "@/components/forms/form-kit";
 
@@ -78,11 +78,20 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
   categories: { slug: string; name: string }[];
   platforms: { value: string; label: string }[];
 }) {
-  const [state, action] = useActionState(submitProductAction, {} as FormState);
+  const [state, action, pending] = useActionState(submitProductAction, {} as FormState);
   const e = state.fieldErrors ?? {};
 
   return (
-    <form action={action} className="flex flex-col gap-6" noValidate>
+    <form
+      // Submitted manually: a form action resets every field afterwards, so a validation error would wipe what was typed.
+      onSubmit={(ev) => {
+        ev.preventDefault();
+        const data = new FormData(ev.currentTarget);
+        startTransition(() => action(data));
+      }}
+      className="flex flex-col gap-6"
+      noValidate
+    >
       <FormMessage state={state} />
 
       <Step n={1} title="The basics">
@@ -149,7 +158,7 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
 
       <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted">Every submission is reviewed by a person before it goes live.</p>
-        <SubmitButton className="sm:min-w-48">Continue</SubmitButton>
+        <SubmitButton className="sm:min-w-48" pending={pending}>Continue</SubmitButton>
       </div>
     </form>
   );
