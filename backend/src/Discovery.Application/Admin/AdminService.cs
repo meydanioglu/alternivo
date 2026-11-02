@@ -216,7 +216,8 @@ public sealed class AdminService(
             PricingNames.ToNames(x.Pricing), x.LicenseSlug, x.PlatformSlugs, x.Tags, x.SuggestedAlternativeSlugs,
             x.Status.ToString(), x.ModeratorNote, x.PossibleDuplicateApplicationId, x.SubmittedByUserId, x.CreatedAt,
             x.IsPriority, x.PriorityPaidAt, x.ReviewDeadline, open && x.ReviewDeadline < now, x.InternalNote, x.ReviewStartedAt,
-            x.ShareProof.ToString().ToLowerInvariant(), x.ShareProofUrl, x.BadgeMissingSince, x.BadgeHiddenAt);
+            x.ShareProof.ToString().ToLowerInvariant(), x.ShareProofUrl, x.BadgeMissingSince, x.BadgeHiddenAt,
+            x.LogoUrl, x.ScreenshotUrls);
     }
 
     public async Task<IReadOnlyList<AuditLog>> SubmissionHistoryAsync(Guid id, CancellationToken ct) =>
@@ -298,8 +299,10 @@ public sealed class AdminService(
                 var appId = await UpsertApplicationAsync(actorId, null, new UpsertApplicationRequest(
                     submission.Name, null, Truncate(submission.Description, 200), submission.Description, submission.WebsiteUrl,
                     null, PricingNames.ToNames(submission.Pricing), submission.LicenseSlug, false, false, false, 0, null,
-                    submission.CategorySlug, null, submission.PlatformSlugs.ToArray(), null, tagSlugs, null, false, null), ct);
+                    submission.CategorySlug, null, submission.PlatformSlugs.ToArray(), null, tagSlugs, null, false, null, submission.LogoUrl), ct);
                 await SetApplicationStatusAsync(actorId, appId, "publish", ct);
+                db.ApplicationScreenshots.AddRange(submission.ScreenshotUrls.Select((url, i) =>
+                    new ApplicationScreenshot { ApplicationId = appId, Url = url, Caption = submission.Name, SortOrder = i }));
 
                 var altIds = await db.Applications
                     .Where(a => submission.SuggestedAlternativeSlugs.Contains(a.Slug) && a.DeletedAt == null)

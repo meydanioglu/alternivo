@@ -41,7 +41,8 @@ public sealed record CreateSubmissionRequest(
     string[]? Platforms,
     string[]? Tags,
     string[]? ScreenshotUrls,
-    string[]? SuggestedAlternatives);
+    string[]? SuggestedAlternatives,
+    string? LogoUrl = null);
 
 public sealed record CreateReportRequest(string TargetType, Guid TargetId, string Reason, string? Details);
 

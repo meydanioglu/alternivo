@@ -3,6 +3,7 @@
 import { startTransition, useActionState } from "react";
 import { type FormState, submitProductAction } from "@/app/actions";
 import { CheckboxGroup, Field, FormMessage, Select, SubmitButton, TextArea, TextInput } from "@/components/forms/form-kit";
+import { ImageDrop } from "@/components/submit/image-drop";
 
 const PRICING = [
   { value: "free", label: "Free" },
@@ -111,7 +112,12 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
         </Field>
       </Step>
 
-      <Step n={2} title="Details">
+      <Step n={2} title="Logo & screenshots">
+        <ImageDrop name="logoUrl" label="Logo" hint="Square PNG, JPG, WebP or GIF, up to 5 MB" max={1} />
+        <ImageDrop name="screenshotUrls" label="Screenshots" hint="Up to 8 images, 5 MB each" max={8} />
+      </Step>
+
+      <Step n={3} title="Details">
         <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Category" name="category" optional>
             <Select name="category" defaultValue="">
@@ -141,7 +147,7 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
         </Field>
       </Step>
 
-      <Step n={3} title="Alternatives">
+      <Step n={4} title="Alternatives">
         <Field
           label="Which products is it an alternative to?"
           name="alternatives"
@@ -152,7 +158,7 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
         </Field>
       </Step>
 
-      <Step n={4} title="How quickly would you like your product reviewed?">
+      <Step n={5} title="How quickly would you like your product reviewed?">
         <ReviewSpeed fastReviewAvailable={fastReviewAvailable} fastReviewPrice={fastReviewPrice} />
       </Step>
 

@@ -759,6 +759,9 @@ namespace Discovery.Infrastructure.Persistence.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("character varying(60)");
 
+                    b.Property<string>("LogoUrl")
+                        .HasColumnType("text");
+
                     b.Property<DateTimeOffset?>("ModeratedAt")
                         .HasColumnType("timestamp with time zone");
 

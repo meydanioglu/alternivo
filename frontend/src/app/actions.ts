@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { startCheckout } from "@/lib/auth/checkout";
-import { AuthApiError, authPost, clearTokens, login, userApi } from "@/lib/auth/session";
+import { AuthApiError, authPost, clearTokens, login, userApi, userUpload } from "@/lib/auth/session";
 
 export interface FormState {
   error?: string;
@@ -142,7 +142,8 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
         licenseSlug: text(form, "license") || null,
         platforms: list(form, "platforms"),
         tags: commaList(text(form, "tags")).slice(0, 15),
-        screenshotUrls: [],
+        screenshotUrls: list(form, "screenshotUrls").slice(0, 8),
+        logoUrl: text(form, "logoUrl") || null,
         suggestedAlternatives: commaList(text(form, "alternatives")).map((s) => s.toLowerCase()).slice(0, 10),
       },
     }));
@@ -159,6 +160,20 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
     checkout = null;
   }
   redirect(checkout ?? `/maker?submitted=${submissionId}&fast=unavailable`);
+}
+
+/** Uploads one logo or screenshot for the submit form; the returned /media URL is sent with the submission. */
+export async function uploadSubmissionMediaAction(form: FormData): Promise<{ error?: string; url?: string }> {
+  const file = form.get("file");
+  if (!(file instanceof File) || file.size === 0) return { error: "Choose an image first." };
+  if (file.size > 5 * 1024 * 1024) return { error: `${file.name} is larger than 5 MB.` };
+  const upload = new FormData();
+  upload.set("file", file, file.name);
+  try {
+    return await userUpload<{ url: string }>("/api/v1/submissions/media", upload);
+  } catch (error) {
+    return { error: failure(error, `${file.name} could not be uploaded.`).error };
+  }
 }
 
 // ---------- Community actions on an application ----------

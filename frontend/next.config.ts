@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     return Object.entries(MERGED_BEST).map(([from, to]) => ({ source: `/best/${from}`, destination: `/best/${to}`, permanent: true }));
   },
   reactStrictMode: true,
-  experimental: { serverActions: { bodySizeLimit: "2mb" } },
+  experimental: { serverActions: { bodySizeLimit: "6mb" } },
   images: {
     // Application logos/screenshots are served from the configured media host only.
     remotePatterns: process.env.MEDIA_HOST

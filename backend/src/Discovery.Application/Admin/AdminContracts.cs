@@ -60,7 +60,9 @@ public sealed record AdminSubmissionRow(
     string ShareProof = "none",
     string? ShareProofUrl = null,
     DateTimeOffset? BadgeMissingSince = null,
-    DateTimeOffset? BadgeHiddenAt = null);
+    DateTimeOffset? BadgeHiddenAt = null,
+    string? LogoUrl = null,
+    IReadOnlyList<string>? ScreenshotUrls = null);
 
 public sealed record AdminRelationshipRow(
     Guid Id,

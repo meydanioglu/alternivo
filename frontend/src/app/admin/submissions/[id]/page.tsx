@@ -8,7 +8,7 @@ import { api } from "@/lib/api/client";
 import { userApi } from "@/lib/auth/session";
 
 interface Detail {
-  submission: SubmissionData & { possibleDuplicateApplicationId: string | null; createdAt: string };
+  submission: SubmissionData & { possibleDuplicateApplicationId: string | null; createdAt: string; logoUrl?: string | null; screenshotUrls?: string[] | null };
   submitter: { email: string; displayName: string | null; handle: string | null; createdAt: string } | null;
   duplicateSlug: string | null;
 }
@@ -84,6 +84,22 @@ export default async function SubmissionDetailPage({ params }: Props) {
           </div>
         )}
       </div>
+
+      {(s.logoUrl || (s.screenshotUrls?.length ?? 0) > 0) && (
+        <div className="mb-5 rounded-xl border border-border bg-surface p-4 text-sm">
+          <p className="mb-3 text-xs font-medium uppercase tracking-wider text-muted">Logo ve ekran görüntüleri (onayda listeye eklenir)</p>
+          <div className="flex flex-wrap items-start gap-3">
+            {/* eslint-disable @next/next/no-img-element -- maker uploads, shown as-is for review */}
+            {s.logoUrl && <img src={s.logoUrl} alt="Logo" className="size-20 rounded-md border border-border object-contain" />}
+            {s.screenshotUrls?.map((url) => (
+              <a key={url} href={url} target="_blank" rel="noopener nofollow">
+                <img src={url} alt="Ekran görüntüsü" className="h-24 w-40 rounded-md border border-border object-cover" />
+              </a>
+            ))}
+            {/* eslint-enable @next/next/no-img-element */}
+          </div>
+        </div>
+      )}
 
       <SubmissionModeration s={s as unknown as Parameters<typeof SubmissionModeration>[0]["s"]} />
 

@@ -109,7 +109,7 @@ public sealed class ReviewsController(CommunityService community, HttpCurrentUse
 [Produces("application/json")]
 [Authorize]
 [RequireConfirmedEmail]
-public sealed class SubmissionsController(CommunityService community, HttpCurrentUser user) : ControllerBase
+public sealed class SubmissionsController(CommunityService community, HttpCurrentUser user, IConfiguration config) : ControllerBase
 {
     [HttpPost]
     [EnableRateLimiting(Policies.WritesRateLimit)]
@@ -117,6 +117,33 @@ public sealed class SubmissionsController(CommunityService community, HttpCurren
     {
         var id = await community.CreateSubmissionAsync(user.RequireUserId(), request, ct);
         return Accepted(new { id, status = "pending" });
+    }
+
+    /// <summary>Stores a logo or screenshot for a submission that is about to be sent; returns its /media URL.</summary>
+    [HttpPost("media")]
+    [EnableRateLimiting(Policies.WritesRateLimit)]
+    [RequestSizeLimit(6 * 1024 * 1024)]
+    public async Task<object> UploadMedia(IFormFile file, CancellationToken ct)
+    {
+        if (file.Length is 0 or > 5 * 1024 * 1024)
+        {
+            throw new BadRequestException("Images must be up to 5 MB.");
+        }
+
+        if (!UsersController.ImageTypes.TryGetValue(file.ContentType, out var ext) || !await UsersController.LooksLikeImageAsync(file, ct))
+        {
+            throw new BadRequestException("Use a JPG, PNG, GIF or WebP image.");
+        }
+
+        var dir = Path.Combine(config["Media:Path"] ?? "/app/media", "submissions");
+        Directory.CreateDirectory(dir);
+        var fileName = $"{user.RequireUserId():N}-{Guid.NewGuid():N}"[..44] + ext;
+        await using (var stream = System.IO.File.Create(Path.Combine(dir, fileName)))
+        {
+            await file.CopyToAsync(stream, ct);
+        }
+
+        return new { url = $"/media/submissions/{fileName}" };
     }
 }
 
@@ -176,7 +203,7 @@ public sealed partial class UsersController(
 {
     private static readonly string[] ReservedUsernames = ["admin", "root", "support", "alternivo", "me", "settings", "moderator", "staff"];
 
-    private static readonly Dictionary<string, string> ImageTypes = new()
+    internal static readonly Dictionary<string, string> ImageTypes = new()
     {
         ["image/jpeg"] = ".jpg",
         ["image/png"] = ".png",
@@ -338,7 +365,7 @@ public sealed partial class UsersController(
     }
 
     /// <summary>Checks the file signature so a renamed non-image is never stored.</summary>
-    private static async Task<bool> LooksLikeImageAsync(IFormFile file, CancellationToken ct)
+    internal static async Task<bool> LooksLikeImageAsync(IFormFile file, CancellationToken ct)
     {
         var head = new byte[12];
         await using var s = file.OpenReadStream();

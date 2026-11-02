@@ -54,6 +54,19 @@ public static class EmailTemplate
         link: link,
         note: "If the badge is already on your homepage, make sure the page loads without a login and that the link points to alternivo.com.");
 
+    public static EmailContent SubmissionPublished(string siteUrl, string name, string product, string link) => Build(siteUrl,
+        subject: $"{product} is now live on Alternivo",
+        preheader: "Your submission was approved and the listing is published.",
+        heading: "Your product is published",
+        paragraphs:
+        [
+            $"Hi {name}, good news: we reviewed {product} and its listing is now live on Alternivo.",
+            "Share the link with your users, and keep the details up to date from your Maker dashboard.",
+        ],
+        button: "View your listing",
+        link: link,
+        note: "You received this because you submitted this product to Alternivo.");
+
     public static EmailContent BadgeHidden(string siteUrl, string product, string link) => Build(siteUrl,
         subject: $"Your free listing for {product} is hidden",
         preheader: "Add the Alternivo badge back and the listing is published again automatically.",

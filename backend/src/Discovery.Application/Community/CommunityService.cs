@@ -294,6 +294,7 @@ public sealed class CommunityService(
             PlatformSlugs = [.. (request.Platforms ?? []).Distinct()],
             Tags = [.. (request.Tags ?? []).Select(t => t.Trim()).Where(t => t.Length > 0).Distinct(StringComparer.OrdinalIgnoreCase)],
             ScreenshotUrls = [.. (request.ScreenshotUrls ?? []).Distinct()],
+            LogoUrl = string.IsNullOrWhiteSpace(request.LogoUrl) ? null : request.LogoUrl.Trim(),
             SuggestedAlternativeSlugs = [.. (request.SuggestedAlternatives ?? []).Distinct()],
             PossibleDuplicateApplicationId = duplicateId,
             ReviewDeadline = DateTimeOffset.UtcNow.AddDays(Discovery.Domain.Operations.PricingCatalog.FreeReviewDays),

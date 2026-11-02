@@ -32,10 +32,18 @@ public sealed class CreateSubmissionValidator : AbstractValidator<CreateSubmissi
         RuleFor(s => s.Platforms).Must(p => p is null || (p.Length <= 15 && p.All(Slugs.IsValid))).WithMessage("Invalid platforms.");
         RuleFor(s => s.Tags).Must(t => t is null || (t.Length <= 15 && t.All(x => x.Length <= 40))).WithMessage("Invalid tags.");
         RuleFor(s => s.ScreenshotUrls)
-            .Must(u => u is null || (u.Length <= 8 && u.All(UrlSafety.IsSafePublicWebUrl)))
-            .WithMessage("Screenshot links must be public http(s) URLs (max 8).");
+            .Must(u => u is null || (u.Length <= 8 && u.All(IsMediaOrPublicUrl)))
+            .WithMessage("Screenshot links must be uploaded images or public http(s) URLs (max 8).");
+        RuleFor(s => s.LogoUrl)
+            .Must(u => string.IsNullOrWhiteSpace(u) || IsMediaOrPublicUrl(u.Trim()))
+            .WithMessage("The logo must be an uploaded image or a public http(s) URL.");
         RuleFor(s => s.SuggestedAlternatives)
             .Must(a => a is null || (a.Length <= 10 && a.All(Slugs.IsValid)))
             .WithMessage("Invalid alternatives.");
     }
+
+    /// <summary>Files uploaded through the submission media endpoint, or an external public image link.</summary>
+    private static bool IsMediaOrPublicUrl(string url) =>
+        (url.StartsWith("/media/submissions/", StringComparison.Ordinal) && url.Length <= 200 && !url.Contains("..", StringComparison.Ordinal))
+        || UrlSafety.IsSafePublicWebUrl(url);
 }

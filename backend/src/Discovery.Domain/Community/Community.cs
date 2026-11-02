@@ -77,6 +77,8 @@ public class Submission : Entity
     public List<string> PlatformSlugs { get; set; } = [];
     public List<string> Tags { get; set; } = [];
     public List<string> ScreenshotUrls { get; set; } = [];
+    /// <summary>Logo uploaded by the maker (/media/submissions/...); copied to the listing on approval.</summary>
+    public string? LogoUrl { get; set; }
     public List<string> SuggestedAlternativeSlugs { get; set; } = [];
     public SubmissionStatus Status { get; set; } = SubmissionStatus.Pending;
     public string? ModeratorNote { get; set; }

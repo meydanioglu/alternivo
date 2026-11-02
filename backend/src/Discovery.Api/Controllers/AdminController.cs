@@ -208,9 +208,31 @@ public sealed class AdminController(AdminService admin, HttpCurrentUser current)
         {
             await HttpContext.RequestServices.GetRequiredService<ContentService>()
                 .QueueAsync(current.RequireUserId(), new QueueContentRequest("selected", [created]), ct);
+            if (request.Decision == "approve") await NotifyPublishedAsync(id, created, ct);
         }
 
         return Ok(new { applicationId = appId });
+    }
+
+    /// <summary>Tells the maker their listing is live. A mail problem never undoes the approval.</summary>
+    private async Task NotifyPublishedAsync(Guid submissionId, Guid applicationId, CancellationToken ct)
+    {
+        var sp = HttpContext.RequestServices;
+        try
+        {
+            var submission = await admin.GetSubmissionAsync(submissionId, ct);
+            var maker = await sp.GetRequiredService<UserManager<AppUser>>().FindByIdAsync(submission.SubmittedByUserId.ToString());
+            var slug = await admin.GetApplicationSlugAsync(applicationId, ct);
+            if (maker?.Email is null || slug is null) return;
+            var site = (sp.GetRequiredService<IConfiguration>()["Site:Url"] ?? "https://alternivo.com").TrimEnd('/');
+            var name = string.IsNullOrWhiteSpace(maker.DisplayName) ? "there" : maker.DisplayName;
+            await sp.GetRequiredService<EmailSender>().SendAsync(maker.Email,
+                EmailTemplate.SubmissionPublished(site, name, submission.Name, $"{site}/software/{slug}"));
+        }
+        catch (Exception ex)
+        {
+            sp.GetRequiredService<ILogger<AdminController>>().LogError(ex, "Could not send the published notice for submission {Id}", submissionId);
+        }
     }
 
     // ----- Alternative relationships -----
