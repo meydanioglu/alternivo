@@ -138,6 +138,13 @@
       "isOpenSource": false,
       "family": "other",
       "spdx": null
+    },
+    {
+      "slug": "lgpl-3-0",
+      "name": "GNU LGPL v3",
+      "isOpenSource": true,
+      "family": "gpl",
+      "spdx": "LGPL-3.0-or-later"
     }
   ],
   "categories": [
@@ -2060,6 +2067,16 @@
       "featured": false,
       "icon": "sparkles",
       "sortOrder": 191
+    },
+    {
+      "slug": "video-conferencing",
+      "name": "Video Conferencing",
+      "description": "Video call and online meeting software: group calls, screen sharing, recording, webinars and AI meeting notes.",
+      "seoIntro": "Compare video conferencing apps by what matters in a real meeting: free-plan time limits, how many people can join, whether you can record, if guests need an account, end-to-end encryption, and AI notes or summaries.",
+      "parent": "communication",
+      "featured": true,
+      "icon": "video",
+      "sortOrder": 28
     }
   ],
   "features": [
@@ -2298,6 +2315,50 @@
     {
       "slug": "merge-and-split-pdfs",
       "name": "Merge and split PDFs"
+    },
+    {
+      "slug": "meeting-recording",
+      "name": "Meeting recording"
+    },
+    {
+      "slug": "live-transcription",
+      "name": "Live transcription & captions"
+    },
+    {
+      "slug": "ai-meeting-notes",
+      "name": "AI meeting notes & summaries"
+    },
+    {
+      "slug": "breakout-rooms",
+      "name": "Breakout rooms"
+    },
+    {
+      "slug": "webinars",
+      "name": "Webinars"
+    },
+    {
+      "slug": "guest-join-without-account",
+      "name": "Guests join without an account"
+    },
+    {
+      "slug": "noise-cancellation",
+      "name": "Noise cancellation"
+    },
+    {
+      "slug": "virtual-backgrounds",
+      "name": "Virtual backgrounds"
+    },
+    {
+      "slug": "live-streaming",
+      "name": "Live streaming"
+    },
+    {
+      "slug": "calendar-integration",
+      "name": "Calendar integration"
+    },
+    {
+      "slug": "whiteboard",
+      "name": "Whiteboard"
     }
   ],
   "applications": [
@@ -6238,6 +6299,1478 @@
         "adobe-acrobat",
         "okular"
       ]
+    },
+    {
+      "slug": "google-meet",
+      "name": "Google Meet",
+      "shortDescription": "Google's video meeting app that runs in the browser and on phones, with Gemini notes and recording on paid Workspace plans.",
+      "description": "Google Meet is Google's video conferencing service. Meetings run in the browser without an install, or in the Android and iOS apps, and connect to Google Calendar and Gmail. With a free Google account, calls with three or more people end after 60 minutes and up to 100 people can join; one-to-one calls can last up to 24 hours. Meeting recording, larger meetings and Gemini note-taking, summaries and translated captions come with paid Google Workspace plans (Business Standard and above).",
+      "website": "https://meet.google.com",
+      "developer": "Google",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 75,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "breakout-rooms",
+        "virtual-backgrounds",
+        "noise-cancellation",
+        "calendar-integration",
+        "chat-interface",
+        "whiteboard"
+      ],
+      "tags": [
+        "Video calls",
+        "Online meetings",
+        "Google Workspace"
+      ],
+      "aliases": [
+        "Meet",
+        "Hangouts Meet",
+        "Google Hangouts"
+      ],
+      "alternatives": [
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton",
+        "signal",
+        "tldv",
+        "fireflies-ai",
+        "otter-ai"
+      ],
+      "draft": true,
+      "alternativeTo": [
+        "microsoft-teams"
+      ]
+    },
+    {
+      "slug": "zoom",
+      "name": "Zoom",
+      "shortDescription": "Video meetings, webinars and team chat with local recording on the free plan and the AI Companion for summaries.",
+      "description": "Zoom Workplace is a video meeting platform with desktop apps for Windows, macOS and Linux, mobile apps and a web client. The free Basic plan allows meetings of up to 40 minutes with up to 100 participants and recording to your own computer; cloud recording, longer meetings and more AI Companion summaries come with paid plans. Zoom also offers webinars, breakout rooms, whiteboards and team chat.",
+      "website": "https://www.zoom.com",
+      "developer": "Zoom Communications",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 75,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "breakout-rooms",
+        "webinars",
+        "virtual-backgrounds",
+        "noise-cancellation",
+        "calendar-integration",
+        "chat-interface",
+        "whiteboard",
+        "live-streaming",
+        "guest-join-without-account"
+      ],
+      "tags": [
+        "Video calls",
+        "Webinars",
+        "Online meetings"
+      ],
+      "aliases": [
+        "Zoom Workplace",
+        "Zoom Meetings"
+      ],
+      "alternatives": [
+        "google-meet",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton",
+        "signal"
+      ],
+      "draft": true,
+      "alternativeTo": [
+        "microsoft-teams"
+      ]
+    },
+    {
+      "slug": "webex",
+      "name": "Webex",
+      "shortDescription": "Cisco's video meeting platform with noise removal, webinars and the Webex AI Assistant on paid plans.",
+      "description": "Webex by Cisco provides video meetings, webinars, calling and messaging for businesses. The free plan limits meetings to 40 minutes with up to 100 attendees; paid plans add longer meetings, cloud recording and the AI Assistant for meeting summaries. Webex is known for background noise removal, security options and hardware room devices.",
+      "website": "https://www.webex.com",
+      "developer": "Cisco",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 65,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "breakout-rooms",
+        "webinars",
+        "virtual-backgrounds",
+        "noise-cancellation",
+        "calendar-integration",
+        "chat-interface",
+        "whiteboard",
+        "end-to-end-encryption"
+      ],
+      "tags": [
+        "Video calls",
+        "Webinars",
+        "Enterprise"
+      ],
+      "aliases": [
+        "Cisco Webex",
+        "Webex Meetings"
+      ],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton",
+        "signal"
+      ],
+      "draft": true,
+      "alternativeTo": [
+        "microsoft-teams"
+      ]
+    },
+    {
+      "slug": "jitsi-meet",
+      "name": "Jitsi Meet",
+      "shortDescription": "Free, open-source video meetings in the browser with no install, local recording and optional self-hosting.",
+      "description": "Jitsi Meet is an open-source video conferencing app. You can start a meeting on meet.jit.si from the browser or the mobile apps without installing anything, and participants join from a link. It supports screen sharing, chat, background blur, recording to your own device and live streaming, and organizations can run their own Jitsi server for full control of their data.",
+      "website": "https://jitsi.org/jitsi-meet/",
+      "developer": "8x8 / Jitsi community",
+      "pricing": [
+        "free"
+      ],
+      "license": "apache-2-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 70,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-streaming",
+        "guest-join-without-account",
+        "virtual-backgrounds",
+        "chat-interface",
+        "end-to-end-encryption"
+      ],
+      "tags": [
+        "Open source",
+        "Self-hosted",
+        "Video calls"
+      ],
+      "aliases": [
+        "Jitsi",
+        "meet.jit.si"
+      ],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton",
+        "signal"
+      ],
+      "draft": true,
+      "alternativeTo": [
+        "microsoft-teams"
+      ]
+    },
+    {
+      "slug": "whereby",
+      "name": "Whereby",
+      "shortDescription": "Browser-based video meetings in a personal room link that guests join without downloads or accounts.",
+      "description": "Whereby gives each host a fixed room link that guests open in the browser, without installing an app or creating an account. The free plan allows meetings of up to 30 minutes with up to 4 attendees in one room; Pro removes the time limit and adds recording. Whereby also sells an embeddable video API for apps.",
+      "website": "https://whereby.com",
+      "developer": "Whereby",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "guest-join-without-account",
+        "virtual-backgrounds",
+        "noise-cancellation",
+        "chat-interface",
+        "whiteboard"
+      ],
+      "tags": [
+        "Video calls",
+        "No download",
+        "Browser"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton",
+        "signal"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "zoho-meeting",
+      "name": "Zoho Meeting",
+      "shortDescription": "Video meetings and webinars from Zoho, with a free plan for up to 100 participants and 60-minute meetings.",
+      "description": "Zoho Meeting is a video conferencing and webinar tool that runs in the browser and on desktop and mobile apps, and connects with Zoho CRM and the rest of Zoho's apps. The free plan allows meetings of up to 60 minutes with up to 100 participants; recording and cloud storage start with the paid Standard plan.",
+      "website": "https://www.zoho.com/meeting/",
+      "developer": "Zoho",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "webinars",
+        "breakout-rooms",
+        "virtual-backgrounds",
+        "calendar-integration",
+        "chat-interface",
+        "whiteboard"
+      ],
+      "tags": [
+        "Video calls",
+        "Webinars",
+        "Zoho"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "gotomeeting",
+        "bigbluebutton",
+        "signal"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "gotomeeting",
+      "name": "GoTo Meeting",
+      "shortDescription": "Business video conferencing from GoTo with recording, transcription and meeting tools for teams.",
+      "description": "GoTo Meeting is a business video conferencing service from GoTo (formerly LogMeIn). It offers desktop, mobile and browser access, screen sharing, recording and transcription, and integrations with calendars and business tools, for companies that want a dedicated meeting product rather than a full collaboration suite.",
+      "website": "https://www.goto.com/meeting",
+      "developer": "GoTo",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-transcription",
+        "calendar-integration",
+        "chat-interface",
+        "whiteboard",
+        "noise-cancellation"
+      ],
+      "tags": [
+        "Video calls",
+        "Business"
+      ],
+      "aliases": [
+        "GoToMeeting"
+      ],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "bigbluebutton",
+        "signal"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "bigbluebutton",
+      "name": "BigBlueButton",
+      "shortDescription": "Open-source virtual classroom for online teaching, with whiteboard, breakout rooms, polls and recording.",
+      "description": "BigBlueButton is an open-source web conferencing system built for online learning. It runs in the browser and offers a shared whiteboard, presentation upload, breakout rooms, polls, shared notes and session recording. Schools and universities self-host it or use it through Moodle, Canvas and other learning platforms.",
+      "website": "https://bigbluebutton.org",
+      "developer": "BigBlueButton Inc.",
+      "pricing": [
+        "free"
+      ],
+      "license": "lgpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "breakout-rooms",
+        "whiteboard",
+        "chat-interface",
+        "guest-join-without-account"
+      ],
+      "tags": [
+        "Open source",
+        "Education",
+        "Self-hosted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "signal"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "livestorm",
+      "name": "Livestorm",
+      "shortDescription": "Browser-based webinar and video event platform with registration pages, recording and analytics.",
+      "description": "Livestorm runs webinars, virtual events and online meetings entirely in the browser. It includes registration pages, email reminders, polls and Q&A, automatic recording, replays and engagement analytics, and integrates with CRMs and marketing tools.",
+      "website": "https://livestorm.co",
+      "developer": "Livestorm",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "webinars",
+        "guest-join-without-account",
+        "chat-interface",
+        "live-streaming"
+      ],
+      "tags": [
+        "Webinars",
+        "Virtual events"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "zoom",
+        "webex",
+        "google-meet",
+        "zoho-meeting",
+        "streamyard",
+        "gotomeeting"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "ringcentral-video",
+      "name": "RingCentral Video",
+      "shortDescription": "Video meetings from RingCentral, available on its own and as part of its business phone platform.",
+      "description": "RingCentral Video provides browser and app-based video meetings with screen sharing, recording and AI meeting summaries. It is included in RingCentral's business phone plans and is also available as a standalone video product.",
+      "website": "https://www.ringcentral.com/video.html",
+      "developer": "RingCentral",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "ai-meeting-notes",
+        "live-transcription",
+        "chat-interface",
+        "calendar-integration"
+      ],
+      "tags": [
+        "Video calls",
+        "Business phone"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "dialpad-meetings",
+      "name": "Dialpad Meetings",
+      "shortDescription": "AI-powered video meetings from Dialpad with real-time transcription and automatic meeting summaries.",
+      "description": "Dialpad Meetings is the video conferencing part of Dialpad's AI communications platform. Meetings run in the browser or apps, with real-time transcription, AI-generated recaps and action items, and integration with Dialpad's business calling.",
+      "website": "https://www.dialpad.com/meetings/",
+      "developer": "Dialpad",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "guest-join-without-account",
+        "calendar-integration"
+      ],
+      "tags": [
+        "AI",
+        "Video calls"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "lark",
+      "name": "Lark",
+      "shortDescription": "All-in-one workspace with chat, video meetings, docs and calendar, including meeting recording and AI notes.",
+      "description": "Lark is a collaboration suite from ByteDance that combines messaging, video meetings, docs, sheets, calendar and approvals. Its meetings support screen sharing, recording, live captions and translation, and AI meeting notes.",
+      "website": "https://www.larksuite.com",
+      "developer": "Lark Technologies",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "calendar-integration",
+        "chat-interface"
+      ],
+      "tags": [
+        "Collaboration suite",
+        "Video calls"
+      ],
+      "aliases": [
+        "Lark Suite",
+        "Feishu"
+      ],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "wire",
+      "name": "Wire",
+      "shortDescription": "End-to-end encrypted messaging, calls and video conferencing for businesses and public-sector teams.",
+      "description": "Wire is a secure collaboration app with end-to-end encrypted messaging, voice calls, video conferencing and file sharing. It is open source, based in Europe, and offered as a cloud service or for on-premises deployment.",
+      "website": "https://wire.com",
+      "developer": "Wire Swiss",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "end-to-end-encryption",
+        "chat-interface"
+      ],
+      "tags": [
+        "Encrypted",
+        "Privacy",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "jami",
+      "name": "Jami",
+      "shortDescription": "Free, peer-to-peer and end-to-end encrypted video calls and chat with no central server or account required.",
+      "description": "Jami is a free and open-source communication app from the GNU project. Calls, video conferences and messages go directly between devices (peer to peer) with end-to-end encryption, so there is no central server and no phone number or email is needed to create an account.",
+      "website": "https://jami.net",
+      "developer": "Savoir-faire Linux / GNU",
+      "pricing": [
+        "free"
+      ],
+      "license": "gpl-3-0",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "end-to-end-encryption",
+        "chat-interface"
+      ],
+      "tags": [
+        "Peer to peer",
+        "Privacy",
+        "Open source"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "mirotalk",
+      "name": "MiroTalk",
+      "shortDescription": "Open-source, self-hostable WebRTC video calls in the browser, with recording and no sign-up.",
+      "description": "MiroTalk is an open-source family of browser-based video calling apps built on WebRTC. Calls start from a link with no sign-up and include screen sharing, chat, whiteboard and recording to your device. It can be self-hosted with Docker.",
+      "website": "https://p2p.mirotalk.com",
+      "developer": "MiroTalk",
+      "pricing": [
+        "free"
+      ],
+      "license": "agpl-3-0",
+      "selfHostable": true,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "self-hosted",
+        "docker"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "guest-join-without-account",
+        "whiteboard",
+        "chat-interface"
+      ],
+      "tags": [
+        "Open source",
+        "WebRTC",
+        "Self-hosted"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "brave-talk",
+      "name": "Brave Talk",
+      "shortDescription": "Private video calls from Brave, built on Jitsi, that run in the browser without tracking.",
+      "description": "Brave Talk is a privacy-focused video calling service from Brave Software, built on Jitsi technology. Calls run in the browser and are designed not to track participants. Free calls are available, and Brave Talk Premium adds larger calls and recording.",
+      "website": "https://talk.brave.com",
+      "developer": "Brave Software",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": true,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "guest-join-without-account",
+        "chat-interface"
+      ],
+      "tags": [
+        "Privacy",
+        "Browser"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "google-meet",
+        "zoom",
+        "microsoft-teams",
+        "webex",
+        "jitsi-meet",
+        "whereby",
+        "zoho-meeting",
+        "gotomeeting",
+        "bigbluebutton"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "facetime",
+      "name": "FaceTime",
+      "shortDescription": "Apple's video and audio calling app for iPhone, iPad and Mac, with web links for Android and Windows guests.",
+      "description": "FaceTime is Apple's built-in video and audio calling app on iPhone, iPad and Mac. Group FaceTime supports up to 32 people, and calls are end-to-end encrypted. You can share a FaceTime link so people on Android or Windows can join from a web browser.",
+      "website": "https://apps.apple.com/us/app/facetime/id1110145091",
+      "developer": "Apple",
+      "pricing": [
+        "free"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "macos",
+        "ios",
+        "ipados",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "end-to-end-encryption"
+      ],
+      "tags": [
+        "Apple",
+        "Video calls"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "whatsapp",
+        "google-meet",
+        "zoom",
+        "signal",
+        "telegram"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "whatsapp",
+      "name": "WhatsApp",
+      "shortDescription": "Free messaging app with end-to-end encrypted voice and video calls for groups, on phones and desktop.",
+      "description": "WhatsApp is Meta's messaging app with free voice and video calls over the internet. Calls are end-to-end encrypted, group video calls are supported, and call links let people join from WhatsApp on phones or the desktop apps.",
+      "website": "https://www.whatsapp.com",
+      "developer": "Meta",
+      "pricing": [
+        "free"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing",
+        "communication"
+      ],
+      "platforms": [
+        "android",
+        "ios",
+        "windows",
+        "macos",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "end-to-end-encryption",
+        "chat-interface"
+      ],
+      "tags": [
+        "Messaging",
+        "Video calls"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "signal",
+        "telegram",
+        "facetime",
+        "google-meet",
+        "zoom"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "telegram",
+      "name": "Telegram",
+      "shortDescription": "Cloud-based messaging app with one-to-one and group video calls, screen sharing and live streams.",
+      "description": "Telegram is a cloud messaging app with one-to-one voice and video calls, group video chats in groups and channels, screen sharing and live streaming to large audiences. It runs on phones, desktop and the web.",
+      "website": "https://telegram.org",
+      "developer": "Telegram FZ-LLC",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": null,
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing",
+        "communication"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "linux",
+        "android",
+        "ios",
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "chat-interface",
+        "live-streaming"
+      ],
+      "tags": [
+        "Messaging",
+        "Video calls"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "whatsapp",
+        "signal",
+        "discord",
+        "google-meet",
+        "zoom"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "tuple",
+      "name": "Tuple",
+      "shortDescription": "Remote pair programming app with high-resolution screen sharing and shared control for developers.",
+      "description": "Tuple is a screen-sharing and calling app built for remote pair programming. It streams a sharp, low-latency view of the host's screen, lets the guest control the mouse and keyboard, and keeps the interface minimal so it does not get in the way of code.",
+      "website": "https://tuple.app",
+      "developer": "Tuple",
+      "pricing": [
+        "paid",
+        "subscription",
+        "free-trial"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing"
+      ],
+      "platforms": [
+        "macos",
+        "windows",
+        "linux"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing"
+      ],
+      "tags": [
+        "Pair programming",
+        "Developers"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "zoom",
+        "google-meet",
+        "microsoft-teams",
+        "slack",
+        "discord"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "streamyard",
+      "name": "StreamYard",
+      "shortDescription": "Browser-based live streaming and recording studio for podcasts, interviews and webinars.",
+      "description": "StreamYard is a browser-based studio for recording and live streaming. Hosts invite guests with a link, add branding and overlays, and stream to YouTube, LinkedIn, Facebook and other platforms or record video of each guest.",
+      "website": "https://streamyard.com",
+      "developer": "Hopin",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing",
+        "podcast"
+      ],
+      "platforms": [
+        "web"
+      ],
+      "features": [
+        "video-calls",
+        "screen-sharing",
+        "meeting-recording",
+        "live-streaming",
+        "guest-join-without-account"
+      ],
+      "tags": [
+        "Live streaming",
+        "Recording",
+        "Podcasts"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "riverside",
+        "zoom",
+        "livestorm",
+        "google-meet"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "loom",
+      "name": "Loom",
+      "shortDescription": "Async video messaging: record your screen and camera, then share a link instead of booking a meeting.",
+      "description": "Loom records your screen, camera and voice and turns the recording into a shareable link with comments, reactions, transcripts and AI-generated titles and summaries. Teams use it to replace status meetings and walkthroughs with short async videos. Loom is owned by Atlassian.",
+      "website": "https://www.loom.com",
+      "developer": "Atlassian",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "video-conferencing",
+        "productivity"
+      ],
+      "platforms": [
+        "windows",
+        "macos",
+        "android",
+        "ios",
+        "browser-extension",
+        "web"
+      ],
+      "features": [
+        "screen-sharing",
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes"
+      ],
+      "tags": [
+        "Async video",
+        "Screen recording"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "zoom",
+        "google-meet",
+        "microsoft-teams",
+        "tldv"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "tldv",
+      "name": "tl;dv",
+      "shortDescription": "AI meeting recorder for Google Meet, Zoom and Teams that records, transcribes and summarizes calls.",
+      "description": "tl;dv joins Google Meet, Zoom and Microsoft Teams calls to record and transcribe them, then writes AI notes and summaries you can search and share. Teams use it to keep recordings of Google Meet calls without a paid Workspace plan and to send highlights to CRMs and Slack.",
+      "website": "https://tldv.io",
+      "developer": "tl;dv",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "meeting-assistants",
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "browser-extension"
+      ],
+      "features": [
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "calendar-integration"
+      ],
+      "tags": [
+        "AI",
+        "Meeting notes",
+        "Google Meet"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "tactiq",
+        "grain",
+        "meetgeek",
+        "bluedot",
+        "otter-ai",
+        "fireflies-ai",
+        "fathom",
+        "read-ai",
+        "avoma"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "tactiq",
+      "name": "Tactiq",
+      "shortDescription": "Chrome extension that live-transcribes Google Meet, Zoom and Teams calls and writes AI summaries, without a bot.",
+      "description": "Tactiq is a browser extension that captures a live transcript of Google Meet, Zoom and Microsoft Teams meetings without adding a bot to the call, then generates AI summaries, action items and follow-ups. It saves transcripts, not video.",
+      "website": "https://tactiq.io",
+      "developer": "Tactiq",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "meeting-assistants",
+        "video-conferencing"
+      ],
+      "platforms": [
+        "browser-extension",
+        "web"
+      ],
+      "features": [
+        "live-transcription",
+        "ai-meeting-notes"
+      ],
+      "tags": [
+        "AI",
+        "Transcription",
+        "Google Meet"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "tldv",
+        "grain",
+        "meetgeek",
+        "bluedot",
+        "otter-ai",
+        "fireflies-ai",
+        "fathom",
+        "read-ai",
+        "avoma"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "grain",
+      "name": "Grain",
+      "shortDescription": "AI notetaker that records Zoom, Meet and Teams calls and turns them into notes, clips and CRM updates.",
+      "description": "Grain records and transcribes Zoom, Google Meet and Microsoft Teams calls, writes AI meeting notes, and lets you share short video clips of key moments. It is aimed at sales and customer teams and syncs notes to CRMs.",
+      "website": "https://grain.com",
+      "developer": "Grain",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "meeting-assistants",
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "macos",
+        "windows"
+      ],
+      "features": [
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "calendar-integration"
+      ],
+      "tags": [
+        "AI",
+        "Sales",
+        "Meeting notes"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "tldv",
+        "tactiq",
+        "meetgeek",
+        "bluedot",
+        "otter-ai",
+        "fireflies-ai",
+        "fathom",
+        "read-ai",
+        "avoma"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "meetgeek",
+      "name": "MeetGeek",
+      "shortDescription": "AI meeting assistant that records, transcribes and summarizes video calls automatically.",
+      "description": "MeetGeek automatically joins scheduled Google Meet, Zoom and Microsoft Teams calls to record and transcribe them, then produces AI summaries, highlights and action items and shares them with the team.",
+      "website": "https://meetgeek.ai",
+      "developer": "MeetGeek",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "meeting-assistants",
+        "video-conferencing"
+      ],
+      "platforms": [
+        "web",
+        "browser-extension"
+      ],
+      "features": [
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes",
+        "calendar-integration"
+      ],
+      "tags": [
+        "AI",
+        "Meeting notes"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "tldv",
+        "tactiq",
+        "grain",
+        "bluedot",
+        "otter-ai",
+        "fireflies-ai",
+        "fathom",
+        "read-ai",
+        "avoma"
+      ],
+      "draft": true,
+      "alternativeTo": []
+    },
+    {
+      "slug": "bluedot",
+      "name": "Bluedot",
+      "shortDescription": "Bot-free meeting recorder for Google Meet, Zoom and Teams with AI notes, transcripts and summaries.",
+      "description": "Bluedot records Google Meet, Zoom and Microsoft Teams meetings from a browser extension or desktop app without adding a bot to the call, then creates transcripts, AI notes and summaries.",
+      "website": "https://www.bluedothq.com",
+      "developer": "Bluedot",
+      "pricing": [
+        "free",
+        "freemium",
+        "subscription"
+      ],
+      "license": "proprietary",
+      "selfHostable": false,
+      "privacyFocused": false,
+      "offline": false,
+      "releasedOn": null,
+      "editorialScore": 60,
+      "categories": [
+        "meeting-assistants",
+        "video-conferencing"
+      ],
+      "platforms": [
+        "browser-extension",
+        "web",
+        "macos",
+        "windows"
+      ],
+      "features": [
+        "meeting-recording",
+        "live-transcription",
+        "ai-meeting-notes"
+      ],
+      "tags": [
+        "AI",
+        "Recording",
+        "Google Meet"
+      ],
+      "aliases": [],
+      "alternatives": [
+        "tldv",
+        "tactiq",
+        "grain",
+        "meetgeek",
+        "otter-ai",
+        "fireflies-ai",
+        "fathom",
+        "read-ai",
+        "avoma"
+      ],
+      "draft": true,
+      "alternativeTo": []
     }
   ]
 }

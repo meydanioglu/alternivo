@@ -71,6 +71,8 @@ export default async function AdminSolutionsPage({ searchParams }: Props) {
                   <td className="px-3 py-2">
                     {page?.status === "published" ? (
                       <Link href={`/solutions/${page.slug}`} className="font-medium hover:underline">{topic.title}</Link>
+                    ) : page ? (
+                      <Link href={`/admin/solutions/preview/${page.slug}`} className="font-medium hover:underline">{topic.title} <span className="text-xs text-accent">(önizle)</span></Link>
                     ) : (
                       <span className="font-medium">{topic.title}</span>
                     )}

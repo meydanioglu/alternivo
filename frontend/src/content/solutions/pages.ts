@@ -528,6 +528,149 @@ export const SOLUTION_PAGES: SolutionPage[] = [
     updated: "2026-10-30",
     status: "published",
   },
+  // Video calls: written for review. Switch status to "published" once the catalog drafts they link to are approved.
+  {
+    slug: "google-meet-alternatives-with-recording",
+    topicId: "video-calls-01",
+    title: "Google Meet alternatives that can record meetings",
+    description:
+      "Free Google Meet accounts cannot record. Compare video call apps and AI recorders that save your meetings, which ones record on a free plan, and what each costs.",
+    intro:
+      "Google Meet only records on paid Google Workspace plans (Business Standard and above), so on a free Gmail account or Business Starter the record button is simply missing. There are two ways around it: move the meeting to an app that records on its free plan, or keep using Google Meet and add a recorder that joins the call for you.",
+    answer:
+      "To record for free in a meeting app, Zoom and Webex both record to your own computer on their free plans, and Jitsi Meet can record when you run it on your own server. To keep Google Meet and still get a recording, tl;dv and Fathom record and transcribe Google Meet calls on their free plans; Otter.ai records audio with transcripts within 300 free minutes a month.",
+    requirements: [
+      { fact: "free_recording", label: "Records on a free plan", hard: true },
+      { fact: "ai_notes", label: "AI notes or summaries", hard: false },
+    ],
+    columns: [
+      { fact: "free_recording", label: "Free recording" },
+      { fact: "recording", label: "Recording (any plan)" },
+      { fact: "ai_notes", label: "AI notes" },
+      { fact: "free_plan", label: "Free plan" },
+    ],
+    products: ["zoom", "webex", "jitsi-meet", "tldv", "fathom-ai", "otter-ai", "microsoft-teams", "zoho-meeting", "whereby", "streamyard", "google-meet"],
+    limitations: [
+      "Free local recordings in Zoom and Webex are saved to the computer of the person recording, and only from the desktop apps; they are not shared automatically.",
+      "Recorder bots such as tl;dv, Fathom and Otter.ai appear as a participant. Tell everyone the call is recorded; consent rules differ by country.",
+      "Free plans change often. The limits here were read from each vendor's pricing page on the date shown and can change without notice.",
+    ],
+    faqs: [
+      {
+        question: "Can you record Google Meet for free?",
+        answer:
+          "Not with Google's own recorder: recording needs Google Workspace Business Standard or higher. You can add a third-party recorder like tl;dv or Fathom, which record Google Meet calls on their free plans, or use your computer's screen recorder with everyone's consent.",
+      },
+      {
+        question: "Which video call app records on its free plan?",
+        answer:
+          "Zoom's free Basic plan and Webex Free both record locally to your computer. Jitsi Meet is free and open source, and recording works when you run the Jibri recorder on your own server.",
+      },
+      {
+        question: "Do meeting recorders record video or only audio?",
+        answer:
+          "tl;dv and Fathom keep video recordings with transcripts. Otter.ai keeps audio and transcripts on its Basic and Pro plans; video replay is listed for Enterprise. Tactiq saves transcripts only.",
+      },
+      {
+        question: "Where do Google Meet recordings go on paid plans?",
+        answer: "On Workspace plans that include recording, Meet saves recordings to the organizer's Google Drive.",
+      },
+    ],
+    related: ["free-google-meet-alternatives-without-time-limit", "google-meet-alternatives-with-ai-meeting-notes"],
+    updated: "2026-11-03",
+    status: "review",
+  },
+  {
+    slug: "free-google-meet-alternatives-without-time-limit",
+    topicId: "video-calls-02",
+    title: "Free Google Meet alternatives without a time limit",
+    description:
+      "Free Google Meet group calls end after 60 minutes. Compare free video call apps without a meeting time limit, which ones you host yourself, and the caps on Zoom, Teams and Webex.",
+    intro:
+      "On a personal Google account, a Google Meet call with three or more people stops after 60 minutes; only one-to-one calls run for up to 24 hours. Most big-brand free plans have a similar cap: Zoom and Webex stop at 40 minutes and Microsoft Teams (free) at 60. The apps that remove the limit for free are mostly open source, and the trade-off is that you or your organization runs the server.",
+    answer:
+      "Jitsi Meet is the easiest free option without a published meeting time limit: start a call in the browser on meet.jit.si, or self-host it. BigBlueButton (built for classes) and MiroTalk are also free and open source with no time limit when self-hosted. If you need Zoom, Teams or Webex features for long meetings, you will need their paid plans.",
+    requirements: [
+      { fact: "free_plan", label: "Can be used for free", hard: true },
+      { fact: "no_free_time_limit", label: "No meeting time limit on the free option", hard: true },
+      { fact: "guest_no_account", label: "Guests join without an account", hard: false },
+    ],
+    columns: [
+      { fact: "no_free_time_limit", label: "No time limit (free)" },
+      { fact: "guest_no_account", label: "Guests without account" },
+      { fact: "self_hosted", label: "Self-hosted" },
+      { fact: "free_recording", label: "Free recording" },
+    ],
+    products: ["jitsi-meet", "bigbluebutton", "mirotalk", "zoom", "microsoft-teams", "webex", "zoho-meeting", "whereby", "google-meet"],
+    limitations: [
+      "Self-hosting removes the time limit but adds work: a server, updates, TLS and enough bandwidth for your largest call.",
+      "Public Jitsi servers can change their rules; meet.jit.si asks hosts to sign in before starting a room.",
+      "Messaging apps such as WhatsApp, Signal and FaceTime also allow long group video calls, but they are built for personal calls rather than meetings with links, screen sharing and recording.",
+    ],
+    faqs: [
+      {
+        question: "How long can a free Google Meet call last?",
+        answer: "With a personal Google account, calls with three or more participants last up to 60 minutes. One-to-one calls can last up to 24 hours.",
+      },
+      {
+        question: "Is Jitsi Meet really free with no time limit?",
+        answer:
+          "Jitsi Meet is free and open source. On your own server there is no time limit, and meet.jit.si does not publish a meeting length cap, although the host may need to sign in to start a room.",
+      },
+      {
+        question: "What is the time limit on free Zoom and Teams?",
+        answer: "Zoom's free Basic plan limits meetings to 40 minutes and Webex Free also to 40 minutes. Microsoft Teams (free) limits group meetings to 60 minutes.",
+      },
+    ],
+    related: ["google-meet-alternatives-with-recording", "google-meet-alternatives-with-ai-meeting-notes"],
+    updated: "2026-11-03",
+    status: "review",
+  },
+  {
+    slug: "google-meet-alternatives-with-ai-meeting-notes",
+    topicId: "video-calls-03",
+    title: "Google Meet alternatives with AI meeting notes",
+    description:
+      "Gemini notes in Google Meet need a paid Workspace plan. Compare video call apps with built-in AI summaries and AI notetakers that work in Google Meet, Zoom and Teams.",
+    intro:
+      "Google Meet can take notes and summarize meetings with Gemini, but only on paid Workspace plans from Business Standard up. If you want AI notes without that upgrade, you can switch to a meeting app with its own assistant, or keep your current app and add an AI notetaker that writes the summary for you.",
+    answer:
+      "Zoom's AI Companion is the only built-in assistant here with a free allowance (3 meeting summaries a month on the Basic plan). For unlimited use on any meeting app, Fathom gives free unlimited recordings with instant AI summaries, tl;dv records and summarizes Google Meet, Zoom and Teams on its free plan, and Tactiq writes AI notes from live transcripts without a bot in the call.",
+    requirements: [
+      { fact: "ai_notes", label: "AI notes or summaries", hard: true },
+      { fact: "free_plan", label: "Can be used for free", hard: false },
+    ],
+    columns: [
+      { fact: "ai_notes", label: "AI notes" },
+      { fact: "records_meet", label: "Works in Google Meet" },
+      { fact: "bot_free", label: "No bot in call" },
+      { fact: "free_plan", label: "Free plan" },
+    ],
+    products: ["fathom-ai", "tldv", "tactiq", "otter-ai", "bluedot", "zoom", "webex"],
+    limitations: [
+      "AI summaries can miss context or attribute a comment to the wrong person; check them before sending them to customers.",
+      "Most notetakers join as a bot and record the call. Ask for consent and check your company's policy on sending meeting audio to a third party.",
+      "Free AI allowances are small and change often; heavy users end up on paid plans.",
+    ],
+    faqs: [
+      {
+        question: "Does Google Meet have free AI notes?",
+        answer: "No. Gemini note-taking and summaries in Meet come with Google Workspace Business Standard and higher plans, not with free accounts or Business Starter.",
+      },
+      {
+        question: "What is the best free AI notetaker for Google Meet?",
+        answer:
+          "Fathom's free plan offers unlimited recordings with instant AI summaries, and tl;dv's free plan records and transcribes Google Meet calls with limited AI notes. Tactiq is a free option that works without a bot but saves transcripts only.",
+      },
+      {
+        question: "Can an AI notetaker work without joining as a bot?",
+        answer: "Yes. Tactiq and Bluedot run from a browser extension and capture the meeting without adding a participant to the call.",
+      },
+    ],
+    related: ["google-meet-alternatives-with-recording", "free-google-meet-alternatives-without-time-limit"],
+    updated: "2026-11-03",
+    status: "review",
+  },
 ];
 
 export const solutionPage = (slug: string) => SOLUTION_PAGES.find((p) => p.slug === slug && p.status === "published");

@@ -5041,6 +5041,66 @@
       "requiresFactCheck": true,
       "status": "candidate",
       "notes": ""
+    },
+    {
+      "id": "video-calls-01",
+      "slug": "google-meet-alternatives-with-recording",
+      "title": "Google Meet alternatives that can record meetings",
+      "category": "Video Calls",
+      "primaryQuery": "google meet alternatives that can record meetings",
+      "searchIntent": "commercial-investigation",
+      "template": "need-based-comparison",
+      "filters": [
+        "price",
+        "features",
+        "platform",
+        "use_case",
+        "free_plan"
+      ],
+      "priority": "P1",
+      "requiresFactCheck": true,
+      "status": "review",
+      "notes": "Page drafted in pages.ts (status review)."
+    },
+    {
+      "id": "video-calls-02",
+      "slug": "free-google-meet-alternatives-without-time-limit",
+      "title": "Free Google Meet alternatives without a time limit",
+      "category": "Video Calls",
+      "primaryQuery": "free google meet alternatives without a time limit",
+      "searchIntent": "commercial-investigation",
+      "template": "need-based-comparison",
+      "filters": [
+        "price",
+        "features",
+        "platform",
+        "use_case",
+        "free_plan"
+      ],
+      "priority": "P1",
+      "requiresFactCheck": true,
+      "status": "review",
+      "notes": "Page drafted in pages.ts (status review)."
+    },
+    {
+      "id": "video-calls-03",
+      "slug": "google-meet-alternatives-with-ai-meeting-notes",
+      "title": "Google Meet alternatives with AI meeting notes",
+      "category": "Video Calls",
+      "primaryQuery": "google meet alternatives with ai meeting notes",
+      "searchIntent": "commercial-investigation",
+      "template": "need-based-comparison",
+      "filters": [
+        "price",
+        "features",
+        "platform",
+        "use_case",
+        "free_plan"
+      ],
+      "priority": "P1",
+      "requiresFactCheck": true,
+      "status": "review",
+      "notes": "Page drafted in pages.ts (status review)."
     }
   ]
 }

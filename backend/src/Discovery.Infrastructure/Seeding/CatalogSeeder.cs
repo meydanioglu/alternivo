@@ -127,6 +127,7 @@ public sealed class CatalogSeeder(
             .Include(a => a.Tags).Include(a => a.Aliases)
             .ToDictionaryAsync(a => a.Slug, ct);
         var now = DateTimeOffset.UtcNow;
+        var newDrafts = new List<(SoftwareApplication App, ApplicationItem Item)>();
         var created = 0;
         var updated = 0;
 
@@ -147,6 +148,11 @@ public sealed class CatalogSeeder(
                 db.Applications.Add(app);
                 existingApps[item.Slug] = app;
                 created++;
+                if (item.Draft)
+                {
+                    app.NeedsContentReview = true;
+                    newDrafts.Add((app, item));
+                }
             }
 
             app.Name = item.Name;
@@ -162,7 +168,7 @@ public sealed class CatalogSeeder(
             app.ReleasedOn = item.ReleasedOn is null ? null : DateOnly.Parse(item.ReleasedOn);
             app.EditorialScore = item.EditorialScore;
             app.IsDemoData = false;
-            if (app.Status == PublicationStatus.Draft)
+            if (app.Status == PublicationStatus.Draft && !item.Draft)
             {
                 app.Publish(now);
             }
@@ -206,17 +212,25 @@ public sealed class CatalogSeeder(
         foreach (var item in data.Applications)
         {
             var source = existingApps[item.Slug];
-            foreach (var altSlug in item.Alternatives.Distinct())
+            // Alternatives may also name applications that exist only in the database (imported, not in this file).
+            var pairs = item.Alternatives.Distinct().Select(slug => (Source: source, Alt: existingApps.GetValueOrDefault(slug), Slug: slug))
+                .Concat((item.AlternativeTo ?? []).Distinct().Select(slug => (Source: existingApps.GetValueOrDefault(slug)!, Alt: (SoftwareApplication?)source, Slug: slug)));
+            foreach (var (from, alt, slug) in pairs)
             {
-                var alt = existingApps[altSlug];
-                if (alt.Id == source.Id || !known.Add((source.Id, alt.Id)))
+                if (from is null || alt is null)
+                {
+                    logger.LogWarning("Catalog seed: {Slug} references unknown application {Other}", item.Slug, slug);
+                    continue;
+                }
+
+                if (alt.Id == from.Id || !known.Add((from.Id, alt.Id)))
                 {
                     continue;
                 }
 
                 db.AlternativeRelationships.Add(new AlternativeRelationship
                 {
-                    SourceApplicationId = source.Id,
+                    SourceApplicationId = from.Id,
                     AlternativeApplicationId = alt.Id,
                     Source = RelationshipSource.Editorial,
                     Status = ModerationStatus.Approved,
@@ -227,6 +241,7 @@ public sealed class CatalogSeeder(
         }
 
         await db.SaveChangesAsync(ct);
+        await QueueDraftWorkAsync(newDrafts, now, ct);
 
         // Taxonomy and the homepage are cached; drop them so new categories and counts show immediately.
         await cache.RemoveAsync(CacheKeys.Categories, ct);
@@ -235,6 +250,42 @@ public sealed class CatalogSeeder(
         logger.LogInformation(
             "Catalog seed complete: {Created} created, {Updated} updated applications, {Relationships} new relationships",
             created, updated, added);
+    }
+
+    /// <summary>
+    /// New draft applications get their logo and screenshot from their own website (import worker) and an AI content
+    /// draft for the admin Content queue, where approving it with "publish" puts the listing live.
+    /// </summary>
+    private async Task QueueDraftWorkAsync(List<(SoftwareApplication App, ApplicationItem Item)> drafts, DateTimeOffset now, CancellationToken ct)
+    {
+        if (drafts.Count == 0) return;
+        var requester = (await users.GetUsersInRoleAsync(Roles.SuperAdmin)).OrderBy(u => u.CreatedAt).FirstOrDefault();
+        if (requester is null)
+        {
+            logger.LogWarning("Catalog seed: no super admin, so {Count} draft applications were not queued for import or content", drafts.Count);
+            return;
+        }
+
+        var i = 0;
+        foreach (var (app, item) in drafts)
+        {
+            if (item.Website is not null)
+            {
+                db.ImportItems.Add(new Domain.Operations.ImportItem
+                {
+                    Url = item.Website, Name = item.Name, CategorySlug = item.Categories[0], ApplicationId = app.Id,
+                    RequestedByUserId = requester.Id, CreatedAt = now.AddTicks(i), UpdatedAt = now,
+                });
+            }
+
+            db.ContentDrafts.Add(new Domain.Operations.ContentDraft
+            {
+                ApplicationId = app.Id, RequestedByUserId = requester.Id, CreatedAt = now.AddTicks(i++), UpdatedAt = now,
+            });
+        }
+
+        await db.SaveChangesAsync(ct);
+        logger.LogInformation("Catalog seed: queued import and content drafts for {Count} new draft applications", drafts.Count);
     }
 
     private static void Validate(CatalogFile data)
@@ -262,9 +313,6 @@ public sealed class CatalogSeeder(
             errors.AddRange(a.Features.Where(s => !featureSlugs.Contains(s)).Select(s => $"{a.Slug}: unknown feature {s}"));
             errors.AddRange(a.Pricing.Where(p => !PricingNames.All.Contains(p)).Select(p => $"{a.Slug}: unknown pricing {p}"));
         }
-
-        foreach (var a in data.Applications)
-            errors.AddRange(a.Alternatives.Where(s => !appSlugs.Contains(s)).Select(s => $"{a.Slug}: unknown alternative {s}"));
 
         if (errors.Count > 0)
         {
@@ -356,5 +404,9 @@ public sealed class CatalogSeeder(
         List<string> Features,
         List<string> Tags,
         List<string> Aliases,
-        List<string> Alternatives);
+        List<string> Alternatives,
+        // Draft items are added unpublished for editor review: their logo/screenshot import and AI content draft are queued once.
+        bool Draft = false,
+        // Existing applications (by slug) this item is an alternative to.
+        List<string>? AlternativeTo = null);
 }
