@@ -52,7 +52,7 @@ export function buildAppFaq(app: ApplicationDetail): { question: string; answer:
     const names = app.topAlternatives.slice(0, 3).map((a) => a.name);
     faq.push({
       question: `What are the best alternatives to ${s.name}?`,
-      answer: `The top-ranked alternatives to ${s.name} are ${list(names)}. ${
+      answer: `${names.length === 1 ? `The top-ranked alternative to ${s.name} is` : `The top-ranked alternatives to ${s.name} are`} ${list(names)}. ${
         app.alternativesCount > names.length ? `There are ${app.alternativesCount} alternatives in total, ranked by community votes, shared features and platform fit.` : ""
       }`.trim(),
     });

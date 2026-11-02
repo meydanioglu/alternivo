@@ -26,6 +26,12 @@ export default async function LaunchArchivePage() {
         <History className="size-7 text-accent" aria-hidden="true" /> Launch archive
       </h1>
       <p className="mt-1 text-muted">Past launch weeks and their winners.</p>
+      <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted">
+        Each week, newly approved products compete on the{" "}
+        <Link href="/launches" className="text-accent hover:underline">launch board</Link> for community upvotes. When the week closes
+        the ranking is frozen and the top three are recorded here, so makers keep a permanent record of how their launch went and
+        visitors can browse what was new in any past week. Open a week to see its full ranking.
+      </p>
 
       {weeks.length === 0 ? (
         <div className="mt-8">

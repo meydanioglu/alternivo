@@ -7,7 +7,7 @@ import { buttonClass } from "@/components/ui/styles";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: `Submit Your AI Tool for Free — AI Directory Listing on ${site.name}`,
+  title: "Submit Your AI Tool for Free — AI Directory Listing",
   description: `Submit your AI tool or SaaS to ${site.name} for free. Get a reviewed listing with a followed link to your website, and appear in alternatives pages, comparisons and categories.`,
   path: "/submit-ai-tool",
 });

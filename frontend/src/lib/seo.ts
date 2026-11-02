@@ -105,7 +105,8 @@ export function softwareJsonLd(app: ApplicationDetail) {
     ...(s.license?.isOpenSource && { license: s.license.name }),
   };
 
-  if (s.pricing.includes("free") && !s.pricing.includes("paid")) {
+  // A free tier (free, freemium, open source) is a real $0 offer; paid-only prices are not known, so none is claimed.
+  if (s.pricing.includes("free") || s.pricing.includes("freemium") || s.license?.isOpenSource) {
     data.offers = { "@type": "Offer", price: "0", priceCurrency: "USD" };
   }
 

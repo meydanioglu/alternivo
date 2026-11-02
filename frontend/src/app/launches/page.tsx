@@ -120,6 +120,15 @@ export default async function LaunchesPage({ searchParams }: Props) {
               Submit <ArrowRight className="size-4" aria-hidden="true" />
             </Link>
           </section>
+          <section className="rounded-xl border border-border bg-surface p-5 text-sm leading-relaxed text-muted">
+            <h2 className="mb-2 font-semibold text-foreground">How the launch board works</h2>
+            <p>
+              Products approved during the week appear on that week&apos;s board. Signed-in members upvote the launches they find most
+              useful, and the board is ranked by those votes. When the week ends the ranking is frozen and the top three are kept in
+              the archive.
+            </p>
+            <p className="mt-2">Every launch also gets a permanent product page with its alternatives, so it keeps being found after the week ends.</p>
+          </section>
           <Link href="/launches/archive" className="flex items-center gap-3 rounded-xl border border-border bg-surface p-4 hover:border-accent/50">
             <History className="size-5 text-accent" aria-hidden="true" />
             <span className="text-sm font-medium">Past weeks &amp; winners</span>

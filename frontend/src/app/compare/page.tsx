@@ -45,6 +45,20 @@ export default async function ComparePage() {
           </ul>
         </section>
       )}
+
+      <section className="mt-10 max-w-3xl text-sm leading-relaxed text-muted">
+        <h2 className="mb-2 text-base font-semibold text-foreground">How comparisons work</h2>
+        <p>
+          A comparison puts two listings next to each other row by row: pricing model, license, whether the app can be self-hosted,
+          the platforms it runs on, the features each one has, and how the community rates it. Shared features are shown first so you
+          can see where the apps overlap, then the features only one of them offers, which is usually where the decision is made.
+        </p>
+        <p className="mt-3">
+          Every value comes from the same catalogue data as the product pages, and moderators check submissions and corrections before
+          they are published. If something looks wrong, use the report link on the product page and we will fix it. To find more
+          candidates first, open any product&apos;s alternatives page, which ranks similar apps by shared features, platform fit and votes.
+        </p>
+      </section>
     </Container>
   );
 }
