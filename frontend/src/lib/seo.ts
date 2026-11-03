@@ -120,6 +120,19 @@ export function softwareJsonLd(app: ApplicationDetail) {
     };
   }
 
+  // Google treats SoftwareApplication without both offers and a rating as invalid. Rather than invent a price or
+  // rating, pages that lack either describe the product as the subject of a plain WebPage.
+  if (!data.offers || !data.aggregateRating) {
+    return {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: s.name,
+      description: s.shortDescription,
+      url: data.url,
+      about: { "@type": "Thing", name: s.name, ...(data.sameAs ? { sameAs: data.sameAs } : {}), ...(data.image ? { image: data.image } : {}) },
+    };
+  }
+
   return data;
 }
 
