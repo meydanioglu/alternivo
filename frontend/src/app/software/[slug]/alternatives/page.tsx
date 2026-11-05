@@ -58,9 +58,13 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   // A page number past the last page renders an empty list; keep it out of the index (soft 404) and point to page 1.
   const outOfRange = page > Math.max(1, data.results.totalPages);
 
+  // Naming the top-ranked picks lets searchers see real answers in the snippet.
+  const top = data.results.items.slice(0, 3).map((i) => i.application.name);
+  const picks = top.length >= 2 ? ` Top picks: ${top.join(", ")}.` : "";
+
   return pageMetadata({
     title: page > 1 ? `${titleFor(data)} – Page ${page}` : titleFor(data),
-    description: `Compare ${plural(data.totalAlternatives, "alternative")} to ${data.source.name}${category ? ` for ${category}` : ""}, including free and open-source apps like ${data.source.name}. See features, pricing, platforms and license side by side, ranked transparently.`,
+    description: `Compare ${plural(data.totalAlternatives, "alternative")} to ${data.source.name}${category ? ` for ${category}` : ""}.${picks} See features, pricing, platforms and license side by side, ranked transparently.`,
     path: base,
     // Filtered/sorted views consolidate to the base URL; paginated pages keep a self-canonical.
     canonical: filtered || outOfRange ? base : page > 1 ? `${base}?page=${page}` : base,
