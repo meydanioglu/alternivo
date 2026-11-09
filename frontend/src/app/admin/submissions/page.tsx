@@ -4,7 +4,6 @@ import { AdminHeader, StatCard, Table, Tabs, dateTime } from "@/components/admin
 import { Pagination } from "@/components/layout/page-parts";
 import { buttonClass, chipClass } from "@/components/ui/styles";
 import { userApi } from "@/lib/auth/session";
-import { sendBadgeNoticeAction } from "./actions";
 
 interface Item {
   submission: {
@@ -79,10 +78,6 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
         title="Ürün gönderimleri"
         description="Üyelerin gönderdiği ürünler. Açılışa özel gönderim ücretsiz; hiçbir ürün sizin onayınız olmadan yayına girmez."
       />
-      <form action={sendBadgeNoticeAction} className="mb-4 flex flex-wrap items-center gap-3 text-sm">
-        <button type="submit" className={buttonClass("outline", "sm")}>Rozet bildirimi gönder</button>
-        <span className="text-muted">Rozeti doğrulanmamış açık ücretsiz gönderimlerin sahiplerine rozet / Fast Review e-postası; her gönderim bir kez.</span>
-      </form>
       {done === "notice" && (
         <p role="status" className="mb-4 rounded-lg border border-success/30 bg-success/10 px-3 py-2 text-sm text-success">
           Rozet bildirimi {sent ?? 0} kişiye gönderiliyor (5 saniye arayla).
@@ -154,7 +149,7 @@ export default async function AdminSubmissionsPage({ searchParams }: Props) {
                 <span className={chipClass(st.color, "soft", "sm")}>{st.label}</span>
                 {s.isPriority && <span className={chipClass("accent", "soft", "sm", "ml-1")}>Fast Review · ödendi</span>}
                 {s.shareProof === "badge" && <span className={chipClass("success", "soft", "sm", "ml-1")}>Rozet doğrulandı · 7 gün</span>}
-                {!s.isPriority && s.shareProof !== "badge" && s.status !== "Approved" && <span className={chipClass("warning", "soft", "sm", "ml-1")}>Rozet yok · onaylanamaz</span>}
+                
                 {s.badgeHiddenAt ? (
                   <span className={chipClass("danger", "soft", "sm", "ml-1")}>Rozet kaldırıldı · gizlendi</span>
                 ) : s.badgeMissingSince ? (

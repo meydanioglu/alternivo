@@ -67,7 +67,7 @@ public static class DependencyInjection
         services.AddScoped<Content.ContentGenerator>();
         services.AddHostedService<Content.ContentWorker>();
         services.AddHostedService<Seo.SeoSnapshotWorker>();
-        services.AddHostedService<Community.BadgeRecheckWorker>();
+        // BadgeRecheckWorker is off: the badge is optional, so a missing badge no longer hides a listing.
         services.AddSingleton<Community.BadgeNotice>();
         if (configuration.GetValue("Import:WorkerEnabled", true))
         {

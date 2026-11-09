@@ -464,7 +464,7 @@ function Submissions({ data, can, priceOf, justPaid = false }: { data: MakerDash
                   <span className="ml-auto text-xs text-muted">Submitted {date(s.createdAt)}</span>
                 </div>
                 <p className="text-xs text-muted">
-                  {s.reviewMethod === "fast" ? "Fast Review (paid)" : s.shareProof === "badge" ? "Free review · badge verified" : "Free review · waiting for the badge"}
+                  {s.reviewMethod === "fast" ? "Fast Review (paid)" : s.shareProof === "badge" ? "Free review · badge verified" : "Free review"}
                   {open && s.reviewDeadline && ` · review by ${date(s.reviewDeadline)}`}
                 </p>
                 {s.moderatorNote && <p className="text-muted">Note from the team: {s.moderatorNote}</p>}

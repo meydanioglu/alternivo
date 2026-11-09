@@ -26,8 +26,8 @@ function CopyButton({ text, label }: { text: string; label: string }) {
 }
 
 /**
- * Required step for a free submission: the Alternivo badge on the product's homepage. A free listing is approved only
- * once the badge is verified, and verifying it also shortens the review from 15 to 7 days. Fast Review skips this step.
+ * Optional step for a free submission: verifying the Alternivo badge on the product's homepage shortens the review
+ * from 15 to 7 days.
  */
 export function ShareBoost({ submissionId, siteUrl }: { submissionId: string; siteUrl: string }) {
   const [variant, setVariant] = useState<"light" | "dark">("light");
@@ -36,10 +36,9 @@ export function ShareBoost({ submissionId, siteUrl }: { submissionId: string; si
 
   return (
     <div className="rounded-[10px] border border-warning/40 bg-background p-4">
-      <p className="font-medium">Add the Alternivo badge to publish your free listing</p>
+      <p className="font-medium">Add the Alternivo badge for a faster free review</p>
       <p className="mt-0.5 text-xs text-muted">
-        Free listings are approved only after our badge is live on your homepage. Once verified, your review time drops from 15 to 7 days.
-        Prefer not to? Fast Review does not need the badge.
+        Optional. Once our badge is verified on your homepage, your review time drops from 15 to 7 days.
       </p>
       <ActionForm action={badgeAction} state={badgeState} className="mt-4 flex flex-col gap-3">
         <input type="hidden" name="submissionId" value={submissionId} />

@@ -48,7 +48,7 @@ function ReviewSpeed({ fastReviewAvailable, fastReviewPrice }: { fastReviewAvail
             Standard Review <span className="ml-auto text-sm font-medium text-muted">Free</span>
           </span>
           <span className="text-sm text-muted">
-            No payment required. Add the Alternivo badge to your homepage to get approved; reviews take up to 15 days, or 7 once the badge is verified.
+            No payment required. Reviews take up to 15 days, or 7 once the optional Alternivo badge is verified on your homepage.
           </span>
         </label>
         {fastReviewAvailable && (
