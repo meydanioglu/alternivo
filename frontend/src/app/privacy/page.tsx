@@ -3,12 +3,16 @@ import Link from "next/link";
 import { LegalPage } from "@/components/layout/legal-page";
 import { site } from "@/config/site";
 import { paymentProvider } from "@/config/business";
+import { adsensePublisherId } from "@/config/adsense";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
   description: `What personal data ${site.name} collects, why, and the choices you have.`,
   alternates: { canonical: "/privacy" },
 };
+
+// Re-rendered at runtime so the advertising section follows the server environment without a rebuild.
+export const revalidate = 300;
 
 export default function PrivacyPage() {
   return (
@@ -28,15 +32,35 @@ export default function PrivacyPage() {
         <p>
           We use strictly necessary cookies to keep you signed in (httpOnly session cookies) and to remember your theme. We measure page
           views with our own anonymous, cookie-free counter (including the campaign tags in a landing link, such as utm_source) and with Tiny Analytics, a privacy-friendly analytics service, which also
-          collects performance and error data. We do not use advertising cookies or sell personal data.
+          collects performance and error data. {adsensePublisherId ? "We do not sell personal data." : "We do not use advertising cookies or sell personal data."}
         </p>
       </section>
+      {adsensePublisherId && (
+        <section>
+          <h2>Advertising</h2>
+          <p>
+            We show ads from Google AdSense. Google and other third-party vendors use cookies and similar identifiers, along with
+            data such as your IP address, to serve ads based on your prior visits to this and other websites. Google&apos;s use of
+            advertising cookies enables it and its partners to serve ads based on those visits. Ads may be personalised or, where you
+            have not consented or have opted out, non-personalised, which still use cookies or similar technologies for frequency
+            capping, aggregated reporting and combating fraud.
+          </p>
+          <p>
+            You can opt out of personalised ads in <a href="https://adssettings.google.com" rel="nofollow noopener">Google Ads Settings</a> or at{" "}
+            <a href="https://www.aboutads.info/choices/" rel="nofollow noopener">aboutads.info</a>, and learn more in{" "}
+            <a href="https://policies.google.com/technologies/partner-sites" rel="nofollow noopener">how Google uses data from partner sites</a>.
+            Visitors in the EEA, the UK and Switzerland are asked for their choices through a consent message and can change them from it.
+            Google ads are separate from the labelled sponsored placements that makers buy directly from us.
+          </p>
+        </section>
+      )}
       <section>
         <h2>Service providers</h2>
         <ul>
           <li><strong>{paymentProvider}</strong> — card payment processing (we share your e-mail, name, IP address and the order amount).</li>
           <li><strong>Google</strong> — optional sign-in.</li>
           <li><strong>Tiny Analytics</strong> — website analytics.</li>
+          {adsensePublisherId && <li><strong>Google AdSense</strong> — advertising (see Advertising above).</li>}
           <li><strong>OpenAI</strong> — helps draft product descriptions from vendors&apos; public websites. No member data is sent.</li>
           <li><strong>Our hosting provider</strong> — stores the site and its database.</li>
         </ul>

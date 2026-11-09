@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 import { site } from "@/config/site";
+import { adsensePublisherId } from "@/config/adsense";
 import { Footer, MainHeader } from "@/components/layout/site-chrome";
 import { themeInitScript } from "@/components/layout/theme-switch";
 import { PageViewTracker } from "@/components/analytics/page-view-tracker";
@@ -62,6 +63,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           data-track-errors="true"
           strategy="afterInteractive"
         />
+        {adsensePublisherId && (
+          <Script
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${adsensePublisherId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
