@@ -48,6 +48,20 @@ function titleFor(data: AlternativesPage) {
   return base.length + suffix.length > 58 ? base : base + suffix;
 }
 
+/**
+ * Snippet test started 2026-11-12 (see seo-reports/gsc-2026-11-12.md): these pages rank in the top 10 but got no
+ * clicks with the generic title. Only the <title> changes; the H1, URL and description stay the same.
+ */
+const TITLE_TEST_SLUGS = new Set(["roblox-studio", "summer-engine", "godot-engine"]);
+
+function testTitleFor(data: AlternativesPage, top: string[]) {
+  const n = data.totalAlternatives;
+  const head = `${n} ${data.source.name} Alternatives (${currentYear()})`;
+  const two = `${head}: ${top.slice(0, 2).join(", ")} & More`;
+  if (top.length >= 2 && two.length <= 62) return two;
+  return top.length >= 1 ? `${head}: ${top[0]} & More` : head;
+}
+
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug } = await params;
   const { filters, data } = await load(slug, await searchParams);
@@ -63,7 +77,12 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const picks = top.length >= 2 ? ` Top picks: ${top.join(", ")}.` : "";
 
   return pageMetadata({
-    title: page > 1 ? `${titleFor(data)} – Page ${page}` : titleFor(data),
+    title:
+      page > 1
+        ? `${titleFor(data)} – Page ${page}`
+        : TITLE_TEST_SLUGS.has(slug) && !filtered && data.totalAlternatives >= 3
+          ? testTitleFor(data, top)
+          : titleFor(data),
     description: `Compare ${plural(data.totalAlternatives, "alternative")} to ${data.source.name}${category ? ` for ${category}` : ""}.${picks} See features, pricing, platforms and license side by side, ranked transparently.`,
     path: base,
     // Filtered/sorted views consolidate to the base URL; paginated pages keep a self-canonical.
@@ -109,7 +128,7 @@ function AlternativeCard({ item, rank, sourceSlug, sourceName, signedIn }: { ite
   const compareSlug = [sourceSlug, app.slug].sort().join("-vs-");
   const meta = [pricingSummary(app), app.license?.name, app.platforms.length > 0 ? platformSummary(app.platforms, 4) : null].filter(Boolean);
   return (
-    <li className="rounded-[10px] border border-border bg-surface">
+    <li className="rounded-2xl border border-border bg-surface">
       <div className="flex gap-4 p-4 sm:p-5">
         <span className="hidden w-6 pt-3 text-right text-sm tabular-nums text-muted sm:block" aria-label={`Rank ${rank}`}>
           {rank}
