@@ -128,7 +128,6 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
 
   // The first line of the description becomes the short description on approval.
   const fullDescription = `${tagline}\n\n${description}`.slice(0, 3000);
-  const fastReview = text(form, "reviewSpeed") === "fast";
   let submissionId: string;
   try {
     ({ id: submissionId } = await userApi<{ id: string }>("/api/v1/submissions", {
@@ -150,9 +149,7 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
   } catch (error) {
     return failure(error, "Your submission could not be sent. Please check the fields and try again.");
   }
-  if (!fastReview) redirect(`/maker?submitted=${submissionId}`);
-
-  // The submission is saved as a standard (free) one; it becomes Fast Review only when the payment webhook confirms it.
+  // Every new submission pays the listing fee; it is marked paid only when the payment webhook confirms it.
   let checkout: string | null = null;
   try {
     checkout = await startCheckout("fastReview", submissionId);

@@ -8,7 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
   title: `Submit Your Software — Get Listed on ${site.name}`,
-  description: `List your app, software or AI tool on ${site.name} for free and reach people looking for alternatives.`,
+  description: `List your app, software or AI tool on ${site.name} for a one-time $5 and reach people looking for alternatives.`,
   path: "/submit",
 });
 
@@ -27,7 +27,7 @@ const STEPS = [
 ];
 
 const FAQ = [
-  ["Is it free?", "Yes — submitting is free during our launch period. You only need a free account."],
+  ["Is it free?", "No — each new listing has a one-time $5 fee, reviewed within 24 hours of payment. The account itself is free."],
   ["Will my product go live immediately?", "No. Every submission is reviewed and approved by our team first, usually within a few days. You can follow its status on your account page."],
   ["How long does review take?", "Usually a few days. You can follow the status on your account page."],
   ["What gets accepted?", "Real, working software with a public website. We do not list spam, clones or unfinished landing pages."],
@@ -38,7 +38,7 @@ export default function SubmitLandingPage() {
   return (
     <Container className="py-12 sm:py-16">
       <header className="max-w-2xl">
-        <p className="eyebrow">For makers · Free during launch</p>
+        <p className="eyebrow">For makers · $5 one-time listing</p>
         <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
           Get your product in front of people looking to switch
         </h1>

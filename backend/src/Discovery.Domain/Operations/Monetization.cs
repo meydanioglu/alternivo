@@ -39,6 +39,11 @@ public static class PricingCatalog
     public const int SharedReviewDays = 7;
     public const int FastReviewHours = 24;
     public const int FoundingVendorLimit = 100;
+    /// <summary>
+    /// Submissions created from this moment need the paid listing review (the fastReview plan) before they can be
+    /// approved. Earlier free submissions keep their original terms.
+    /// </summary>
+    public static readonly DateTimeOffset PaidListingSince = new(2026, 11, 15, 0, 0, 0, TimeSpan.Zero);
     /// <summary>Unpaid campaign reservations hold inventory this long, so two sponsors cannot pay for the last slot.</summary>
     public static readonly TimeSpan ReservationHold = TimeSpan.FromMinutes(30);
 

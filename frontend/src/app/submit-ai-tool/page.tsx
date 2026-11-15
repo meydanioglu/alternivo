@@ -7,8 +7,8 @@ import { buttonClass } from "@/components/ui/styles";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Submit Your AI Tool for Free — AI Directory Listing",
-  description: `Submit your AI tool or SaaS to ${site.name} for free. Get a reviewed listing with a followed link to your website, and appear in alternatives pages, comparisons and categories.`,
+  title: "Submit Your AI Tool — AI Directory Listing for $5",
+  description: `Submit your AI tool or SaaS to ${site.name} for a one-time $5. Get a reviewed listing with a followed link to your website, and appear in alternatives pages, comparisons and categories.`,
   path: "/submit-ai-tool",
 });
 
@@ -20,8 +20,8 @@ const PLACES = [
 ];
 
 const FAQ = [
-  ["Is it free to submit an AI tool?", `Yes. Submitting an AI tool or SaaS product to ${site.name} is free. You only need a free account.`],
-  ["How long does review take?", "Free listings are reviewed within 15 days (7 once the optional Alternivo badge is verified on your homepage). Optional Fast Review gets your submission reviewed within 24 hours of payment — it does not guarantee approval."],
+  ["Is it free to submit an AI tool?", `No. Listing an AI tool or SaaS product on ${site.name} has a one-time $5 fee, with no subscription.`],
+  ["How long does review take?", "Within 24 hours of a confirmed payment. The fee covers the review and does not guarantee approval; if we miss the window you can ask for a full refund."],
   ["Is the link to my website dofollow?", "Yes. The website link on an approved product page is a normal, followed link."],
   ["What gets accepted?", "Real, working AI tools and software with a public website. We do not list spam, clones or unfinished landing pages."],
   ["Where will my tool appear?", "On its own product page, in relevant categories, on alternatives pages of related tools and in comparisons where there is a real overlap."],
@@ -40,7 +40,7 @@ export default function SubmitAiToolPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <header className="max-w-2xl">
         <p className="eyebrow">AI directory submission</p>
-        <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">Submit your AI tool to {site.name} — free</h1>
+        <h1 className="mt-3 text-balance text-3xl font-semibold tracking-tight sm:text-4xl">Submit your AI tool to {site.name}</h1>
         <p className="mt-4 text-pretty text-[17px] leading-relaxed text-muted">
           List your AI tool or SaaS where people compare software and look for alternatives. Every listing is reviewed by a person, gets a
           followed link to your website and shows up next to the tools your users already know.
@@ -57,8 +57,8 @@ export default function SubmitAiToolPage() {
 
       <dl className="mt-12 grid max-w-3xl gap-px overflow-hidden rounded-[10px] border border-border bg-border sm:grid-cols-3">
         {[
-          ["Price", "Free"],
-          ["Review", "Up to 15 days · 24h with Fast Review"],
+          ["Price", "$5 one-time"],
+          ["Review", "Within 24 hours of payment"],
           ["Website link", "Followed (dofollow)"],
         ].map(([k, v]) => (
           <div key={k} className="bg-surface p-5">

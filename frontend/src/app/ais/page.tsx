@@ -213,7 +213,7 @@ export default async function AisPage() {
             <section className="rounded-xl bg-accent p-5 text-accent-foreground">
               <Rocket className="size-6" aria-hidden="true" />
               <h2 className="mt-2 font-semibold">Built an AI tool?</h2>
-              <p className="mt-1 text-sm opacity-85">Submit it for free and compete in this week&apos;s launch board.</p>
+              <p className="mt-1 text-sm opacity-85">List it for $5 and compete in this week&apos;s launch board.</p>
               <Link href="/submit" className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-accent hover:bg-white/90">
                 Submit an AI <ArrowRight className="size-4" aria-hidden="true" />
               </Link>

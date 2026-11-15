@@ -1,9 +1,11 @@
 "use client";
 
-import { startTransition, useActionState } from "react";
+import { Check } from "lucide-react";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { type FormState, submitProductAction } from "@/app/actions";
 import { CheckboxGroup, Field, FormMessage, Select, SubmitButton, TextArea, TextInput } from "@/components/forms/form-kit";
 import { ImageDrop } from "@/components/submit/image-drop";
+import { buttonClass } from "@/components/ui/styles";
 
 const PRICING = [
   { value: "free", label: "Free" },
@@ -36,44 +38,81 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
   );
 }
 
-function ReviewSpeed({ fastReviewAvailable, fastReviewPrice }: { fastReviewAvailable: boolean; fastReviewPrice: string }) {
-  const option = "flex cursor-pointer flex-col gap-1 rounded-[10px] border border-border bg-surface p-4 has-[:checked]:border-accent has-[:checked]:ring-2 has-[:checked]:ring-accent/30";
+const LISTING_PERKS = [
+  "Reviewed by a person within 24 hours of payment",
+  "A permanent listing with a followed link once approved",
+  "Shown as an alternative on related product pages",
+  "Logo, screenshots and full description on your page",
+];
+
+function ListingSummary({ price }: { price: string }) {
   return (
-    <fieldset className="flex flex-col gap-3">
-      <legend className="sr-only">Review speed</legend>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className={option}>
-          <span className="flex items-center gap-2 font-semibold">
-            <input type="radio" name="reviewSpeed" value="standard" defaultChecked className="accent-[var(--accent)]" />
-            Standard Review <span className="ml-auto text-sm font-medium text-muted">Free</span>
-          </span>
-          <span className="text-sm text-muted">
-            No payment required. Reviews take up to 15 days, or 7 once the optional Alternivo badge is verified on your homepage.
-          </span>
-        </label>
-        {fastReviewAvailable && (
-          <label className={option}>
-            <span className="flex items-center gap-2 font-semibold">
-              <input type="radio" name="reviewSpeed" value="fast" className="accent-[var(--accent)]" />
-              Fast Review <span className="ml-auto text-sm font-medium text-accent">{fastReviewPrice} one-time</span>
-            </span>
-            <span className="text-sm text-muted">
-              Skip the standard queue and get your submission reviewed within 24 hours of payment. Approval is not guaranteed.
-            </span>
-          </label>
-        )}
+    <div className="flex flex-col gap-3 rounded-[10px] border border-accent/30 bg-accent-soft/60 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="font-semibold">Listing review · {price} one-time</p>
+        <p className="text-sm text-muted">You pay after this form. No subscription. Approval is not guaranteed.</p>
       </div>
-      {fastReviewAvailable && (
-        <p className="text-xs text-muted">
-          Fast Review is a one-time fee for priority evaluation, not guaranteed publication. You can also upgrade later from your Maker
-          dashboard. Paid by card; if we miss the 24-hour window you can ask for a full refund.
-        </p>
-      )}
-    </fieldset>
+    </div>
   );
 }
 
-export function SubmitForm({ categories, platforms, fastReviewAvailable = false, fastReviewPrice = "" }: {
+/** Confirmation popup shown before the paid submission is sent; checkout opens right after. */
+function PaymentDialog({ open, price, pending, onClose, onConfirm }: {
+  open: boolean;
+  price: string;
+  pending: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    const d = ref.current;
+    if (!d) return;
+    if (open && !d.open) d.showModal();
+    if (!open && d.open) d.close();
+  }, [open]);
+  return (
+    <dialog
+      ref={ref}
+      onClose={onClose}
+      onClick={(ev) => ev.target === ref.current && onClose()}
+      aria-labelledby="pay-title"
+      className="m-auto w-[min(28rem,calc(100vw-2rem))] rounded-3xl border border-border bg-surface p-0 text-foreground shadow-2xl backdrop:bg-black/50 backdrop:backdrop-blur-sm"
+    >
+      <div className="relative overflow-hidden rounded-t-3xl bg-gradient-to-br from-[#1f1b16] to-[#3a2414] px-6 pb-6 pt-7 text-white">
+        <p className="text-xs font-semibold uppercase tracking-wider text-orange-300">One step left</p>
+        <h2 id="pay-title" className="mt-2 text-2xl font-semibold">
+          Get listed for <span className="text-orange-300">{price}</span>
+        </h2>
+        <p className="mt-1 text-sm text-white/75">One-time payment. No subscription, no renewal.</p>
+        <span aria-hidden="true" className="pointer-events-none absolute -right-10 -top-10 size-36 rounded-full bg-orange-400/25 blur-2xl" />
+      </div>
+      <div className="flex flex-col gap-5 p-6">
+        <ul className="flex flex-col gap-2.5 text-sm">
+          {LISTING_PERKS.map((p) => (
+            <li key={p} className="flex items-start gap-2.5">
+              <Check className="mt-0.5 size-4 shrink-0 text-accent" aria-hidden="true" />
+              {p}
+            </li>
+          ))}
+        </ul>
+        <p className="text-xs text-muted">
+          A fee for a priority human review, not guaranteed publication. If we miss the 24-hour window you can ask for a full refund.
+        </p>
+        <div className="flex flex-col gap-2">
+          <button type="button" onClick={onConfirm} disabled={pending} className={buttonClass("primary", "lg", "w-full")}>
+            {pending ? "Saving your submission…" : `Continue to payment · ${price}`}
+          </button>
+          <button type="button" onClick={onClose} className={buttonClass("ghost", "md", "w-full")}>
+            Keep editing
+          </button>
+        </div>
+      </div>
+    </dialog>
+  );
+}
+
+export function SubmitForm({ categories, platforms, fastReviewAvailable = false, fastReviewPrice = "$5" }: {
   fastReviewAvailable?: boolean;
   fastReviewPrice?: string;
   categories: { slug: string; name: string }[];
@@ -81,14 +120,25 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
 }) {
   const [state, action, pending] = useActionState(submitProductAction, {} as FormState);
   const e = state.fieldErrors ?? {};
+  const formRef = useRef<HTMLFormElement>(null);
+  const [confirming, setConfirming] = useState(false);
+  useEffect(() => {
+    if (state.error || state.fieldErrors) setConfirming(false);
+  }, [state]);
+  const send = () => {
+    if (!formRef.current) return;
+    const data = new FormData(formRef.current);
+    data.set("reviewSpeed", "fast");
+    startTransition(() => action(data));
+  };
 
   return (
     <form
       // Submitted manually: a form action resets every field afterwards, so a validation error would wipe what was typed.
+      ref={formRef}
       onSubmit={(ev) => {
         ev.preventDefault();
-        const data = new FormData(ev.currentTarget);
-        startTransition(() => action(data));
+        setConfirming(true);
       }}
       className="flex flex-col gap-6"
       noValidate
@@ -158,14 +208,18 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
         </Field>
       </Step>
 
-      <Step n={5} title="How quickly would you like your product reviewed?">
-        <ReviewSpeed fastReviewAvailable={fastReviewAvailable} fastReviewPrice={fastReviewPrice} />
+      <Step n={5} title="Listing fee">
+        <ListingSummary price={fastReviewPrice} />
+        {!fastReviewAvailable && (
+          <p className="text-sm text-muted">Card payments are briefly unavailable. Your submission is saved and you can pay from your Maker dashboard.</p>
+        )}
       </Step>
 
       <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted">Every submission is reviewed by a person before it goes live.</p>
-        <SubmitButton className="sm:min-w-48" pending={pending}>Continue</SubmitButton>
+        <SubmitButton className="sm:min-w-48" pending={pending}>Continue · {fastReviewPrice}</SubmitButton>
       </div>
+      <PaymentDialog open={confirming} price={fastReviewPrice} pending={pending} onClose={() => setConfirming(false)} onConfirm={send} />
     </form>
   );
 }

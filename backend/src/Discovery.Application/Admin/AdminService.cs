@@ -289,6 +289,8 @@ public sealed class AdminService(
                 break;
             case "approve":
             {
+                if (submission.CreatedAt >= PricingCatalog.PaidListingSince && submission.PriorityPaidAt is null)
+                    throw new ConflictException("This submission has not paid the listing fee yet, so it cannot be approved.");
                 var tagSlugs = submission.Tags.Select(Slugs.Create).Where(Slugs.IsValid).ToArray();
                 var appId = await UpsertApplicationAsync(actorId, null, new UpsertApplicationRequest(
                     submission.Name, null, Truncate(submission.Description, 200), submission.Description, submission.WebsiteUrl,

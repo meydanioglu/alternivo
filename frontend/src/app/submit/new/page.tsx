@@ -31,7 +31,7 @@ export default async function NewSubmissionPage() {
     <Container className="max-w-3xl py-8">
       <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Submit a product</h1>
       <p className="mt-2 text-sm text-muted">
-        Free during launch · reviewed and approved by our team before it goes live
+        One-time listing fee · reviewed and approved by our team before it goes live
       </p>
       <p className="mb-8 mt-3 text-muted">
         Tell us about the product. The more detail you add, the faster it can be reviewed and the better it ranks as an
@@ -41,7 +41,7 @@ export default async function NewSubmissionPage() {
         categories={flatten(categories).sort((a, b) => a.name.localeCompare(b.name))}
         platforms={platforms.map((p) => ({ value: p.slug, label: p.name }))}
         fastReviewAvailable={billing.enabled && billing.plans.includes("fastReview")}
-        fastReviewPrice={fast ? formatPrice(fast.priceCents, prices.currency) : ""}
+        fastReviewPrice={fast ? formatPrice(fast.priceCents, prices.currency) : "$5"}
       />
     </Container>
   );

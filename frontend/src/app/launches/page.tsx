@@ -112,7 +112,7 @@ export default async function LaunchesPage({ searchParams }: Props) {
           <section className="rounded-xl bg-accent p-5 text-accent-foreground">
             <Rocket className="size-6" aria-hidden="true" />
             <h2 className="mt-2 font-semibold">Launch your product</h2>
-            <p className="mt-1 text-sm opacity-85">Submit it for free. Once approved it competes in that week&apos;s board.</p>
+            <p className="mt-1 text-sm opacity-85">List it for $5. Once approved it competes in that week&apos;s board.</p>
             <Link
               href="/submit"
               className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-accent hover:bg-white/90"

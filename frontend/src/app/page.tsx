@@ -196,7 +196,7 @@ export default async function HomePage() {
         <section className="flex flex-col gap-4 border-t border-border pt-10 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold tracking-tight">Building something people should switch to?</h2>
-            <p className="mt-1 text-sm text-muted">Submit your product for free. Every listing is reviewed by an editor.</p>
+            <p className="mt-1 text-sm text-muted">List your product for a one-time $5. Every listing is reviewed by an editor.</p>
           </div>
           <div className="flex gap-2">
             <Link href="/submit" className={buttonClass("primary", "md")}>

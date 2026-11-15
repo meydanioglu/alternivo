@@ -12,19 +12,17 @@ import { faqJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Pricing for makers",
-  description: `List your software on ${site.name} for free. Optional one-time Fast Review and prepaid Featured or Growth promotion.`,
+  description: `List your software on ${site.name} for a one-time $5 listing fee, reviewed within 24 hours. Optional prepaid Featured or Growth promotion.`,
   alternates: { canonical: "/pricing" },
 };
 
 export const revalidate = 300;
 
 const FAQ = [
-  { question: "Is submitting a product free?", answer: "Yes. Submitting is free and always will be. Every product is reviewed against the same editorial guidelines." },
-  { question: "How long does standard review take?", answer: "Up to 15 days from submission, or 7 days once the Alternivo badge is verified on your homepage." },
-  { question: "Can I get a faster review without paying?", answer: "Yes. After submitting, add our badge to your homepage or post about your listing on X or Substack from your Maker dashboard, and your submission is reviewed within 7 days instead of 15. It is optional; free listing never depends on it." },
-  { question: "What do I get with Fast Review?", answer: "Your submission moves to the priority queue and is reviewed within 24 hours of a confirmed payment. It is a one-time fee per submission, not a subscription." },
-  { question: "Does Fast Review guarantee approval?", answer: "No. Fast Review only changes how quickly we review. The same approval standards apply, and approval is never guaranteed. If we miss the 24-hour window you can ask for a full refund." },
-  { question: "Can I upgrade an existing submission?", answer: "Yes. While a submission is waiting for review you can buy Fast Review for it from your Maker dashboard. The 24 hours start when the payment is confirmed." },
+  { question: "Is submitting a product free?", answer: "No. Every new submission has a one-time $5 listing fee. It buys a human review within 24 hours of a confirmed payment, not a subscription." },
+  { question: "What do I get for the listing fee?", answer: "Your submission is reviewed within 24 hours of payment. Once approved you get a permanent product page with a followed link, and you appear in relevant categories and alternatives pages." },
+  { question: "Does paying guarantee approval?", answer: "No. The fee covers the review. The same approval standards apply, and approval is never guaranteed. If we miss the 24-hour window you can ask for a full refund." },
+  { question: "I submitted before the fee was introduced. Do I need to pay?", answer: "No. Submissions sent before November 15, 2026 keep their original free terms." },
   { question: "Can I cancel Featured or Growth?", answer: "There is nothing to cancel: Featured and Growth are prepaid 30-day periods that never renew automatically. Buy another period to extend." },
   { question: "Can I get a refund?", answer: "Yes, in clear cases: Fast Review not completed within 24 hours, a rejected sponsored campaign, a period that has not started yet, a placement we end early, or a mistake on our side. Consumers also keep their statutory rights. See the refund policy for details." },
   { question: "Are clicks or customers guaranteed?", answer: "No. We show your product to people browsing relevant pages and report impressions and clicks, but we cannot promise traffic, rankings, sign-ups or sales." },
@@ -33,20 +31,12 @@ const FAQ = [
 
 const TIERS = [
   {
-    key: "free",
-    name: "Free",
-    price: "$0",
-    period: "forever",
-    cta: { label: "Submit for Free", href: "/submit/new" },
-    features: ["Submit any software or AI product", "Standard review queue (up to 15 days, 7 with the badge verified)", "Listed in relevant categories and alternatives pages once approved", "Basic product profile"],
-  },
-  {
     key: "fastReview",
-    name: "Fast Review",
+    name: "Listing",
     period: "one-time, per submission",
-    cta: { label: "Get Fast Review", href: "/submit/new" },
-    note: "Add-on to a submission — not a subscription",
-    features: ["Priority queue", "Reviewed within 24 hours of payment", "Same approval standards", "Upgrade an existing submission any time"],
+    cta: { label: "Submit a product", href: "/submit/new" },
+    note: "Required for every new submission — not a subscription",
+    features: ["Human review within 24 hours of payment", "Permanent product page with a followed link once approved", "Listed in relevant categories and alternatives pages", "Same approval standards for everyone"],
   },
   {
     key: "featured",
@@ -78,7 +68,7 @@ export default async function PricingPage() {
         <p className="eyebrow">For makers</p>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Grow your software with {site.name}</h1>
         <p className="mt-3 text-lg text-muted">
-          Get discovered by people actively searching for software alternatives. Start for free and promote your product when you’re ready.
+          Get discovered by people actively searching for software alternatives. List it for a one-time $5 and promote it when you’re ready.
         </p>
       </header>
 
@@ -92,7 +82,7 @@ export default async function PricingPage() {
             >
               <h2 className="font-semibold">{t.name}</h2>
               <p className="mt-3 flex items-baseline gap-1">
-                <span className="text-3xl font-semibold">{t.price ?? (plan ? formatPrice(plan.priceCents, data.currency) : "—")}</span>
+                <span className="text-3xl font-semibold">{plan ? formatPrice(plan.priceCents, data.currency) : "—"}</span>
                 <span className="text-sm text-muted">{t.period}</span>
               </p>
               {t.note && <p className="mt-1 text-xs font-medium text-accent">{t.note}</p>}
