@@ -149,7 +149,9 @@ export async function submitProductAction(_: FormState, form: FormData): Promise
   } catch (error) {
     return failure(error, "Your submission could not be sent. Please check the fields and try again.");
   }
-  // Every new submission pays the listing fee; it is marked paid only when the payment webhook confirms it.
+  // Free path: the maker adds the Alternivo badge and verifies it from the Maker dashboard before approval.
+  if (text(form, "reviewSpeed") === "badge") redirect(`/maker?submitted=${submissionId}&badge=1`);
+  // Paid path: marked paid only when the payment webhook confirms it.
   let checkout: string | null = null;
   try {
     checkout = await startCheckout("fastReview", submissionId);

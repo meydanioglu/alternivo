@@ -49,8 +49,8 @@ function ListingSummary({ price }: { price: string }) {
   return (
     <div className="flex flex-col gap-3 rounded-[10px] border border-accent/30 bg-accent-soft/60 p-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="font-semibold">Listing review · {price} one-time</p>
-        <p className="text-sm text-muted">You pay after this form. No subscription. Approval is not guaranteed.</p>
+        <p className="font-semibold">Listing review · {price} one-time, or free with our badge</p>
+        <p className="text-sm text-muted">Pay once for a 24-hour review, or add a link to Alternivo on your homepage and get listed free. Approval is not guaranteed.</p>
       </div>
     </div>
   );
@@ -62,7 +62,7 @@ function PaymentDialog({ open, price, pending, onClose, onConfirm }: {
   price: string;
   pending: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (mode: "paid" | "badge") => void;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   useEffect(() => {
@@ -100,9 +100,19 @@ function PaymentDialog({ open, price, pending, onClose, onConfirm }: {
           A fee for a priority human review, not guaranteed publication. If we miss the 24-hour window you can ask for a full refund.
         </p>
         <div className="flex flex-col gap-2">
-          <button type="button" onClick={onConfirm} disabled={pending} className={buttonClass("primary", "lg", "w-full")}>
+          <button type="button" onClick={() => onConfirm("paid")} disabled={pending} className={buttonClass("primary", "lg", "w-full")}>
             {pending ? "Saving your submission…" : `Continue to payment · ${price}`}
           </button>
+          <div className="mt-2 rounded-2xl border border-border p-4">
+            <p className="text-sm font-medium">Or get listed free with our badge</p>
+            <p className="mt-0.5 text-xs text-muted">
+              Add the Alternivo badge (a link back to alternivo.com) to your homepage. We verify it from your Maker dashboard, then review
+              your product in up to 7 days. The badge must stay on your site while you are listed.
+            </p>
+            <button type="button" onClick={() => onConfirm("badge")} disabled={pending} className={buttonClass("outline", "md", "mt-3 w-full")}>
+              Submit free with badge
+            </button>
+          </div>
           <button type="button" onClick={onClose} className={buttonClass("ghost", "md", "w-full")}>
             Keep editing
           </button>
@@ -125,10 +135,10 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
   useEffect(() => {
     if (state.error || state.fieldErrors) setConfirming(false);
   }, [state]);
-  const send = () => {
+  const send = (mode: "paid" | "badge") => {
     if (!formRef.current) return;
     const data = new FormData(formRef.current);
-    data.set("reviewSpeed", "fast");
+    data.set("reviewSpeed", mode === "paid" ? "fast" : "badge");
     startTransition(() => action(data));
   };
 
@@ -208,7 +218,7 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
         </Field>
       </Step>
 
-      <Step n={5} title="Listing fee">
+      <Step n={5} title="Listing">
         <ListingSummary price={fastReviewPrice} />
         {!fastReviewAvailable && (
           <p className="text-sm text-muted">Card payments are briefly unavailable. Your submission is saved and you can pay from your Maker dashboard.</p>
@@ -217,7 +227,7 @@ export function SubmitForm({ categories, platforms, fastReviewAvailable = false,
 
       <div className="flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted">Every submission is reviewed by a person before it goes live.</p>
-        <SubmitButton className="sm:min-w-48" pending={pending}>Continue · {fastReviewPrice}</SubmitButton>
+        <SubmitButton className="sm:min-w-48" pending={pending}>Continue</SubmitButton>
       </div>
       <PaymentDialog open={confirming} price={fastReviewPrice} pending={pending} onClose={() => setConfirming(false)} onConfirm={send} />
     </form>

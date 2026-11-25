@@ -36,9 +36,9 @@ export function ShareBoost({ submissionId, siteUrl }: { submissionId: string; si
 
   return (
     <div className="rounded-[10px] border border-warning/40 bg-background p-4">
-      <p className="font-medium">Add the Alternivo badge for a faster free review</p>
+      <p className="font-medium">Add the Alternivo badge to get listed free</p>
       <p className="mt-0.5 text-xs text-muted">
-        Optional. Once our badge is verified on your homepage, your review time drops from 15 to 7 days.
+        Free submissions need our badge (a link to alternivo.com) on your homepage. Once it is verified, we review your product within 7 days. Keep it on your site while you are listed, or pay the one-time listing fee instead.
       </p>
       <ActionForm action={badgeAction} state={badgeState} className="mt-4 flex flex-col gap-3">
         <input type="hidden" name="submissionId" value={submissionId} />

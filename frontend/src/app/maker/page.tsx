@@ -110,7 +110,7 @@ function flatten(categories: Category[]): { slug: string; name: string }[] {
   return categories.flatMap((c) => [{ slug: c.slug, name: c.name }, ...flatten(c.children ?? [])]);
 }
 
-type Props = { searchParams: Promise<{ tab?: string; purchase?: string; submitted?: string; fast?: string; canceled?: string; days?: string }> };
+type Props = { searchParams: Promise<{ tab?: string; purchase?: string; submitted?: string; fast?: string; badge?: string; canceled?: string; days?: string }> };
 
 export default async function MakerPage({ searchParams }: Props) {
   const user = await getCurrentUser();
@@ -154,7 +154,9 @@ export default async function MakerPage({ searchParams }: Props) {
         <Notice tone={params.fast === "unavailable" ? "warning" : "success"}>
           {params.fast === "unavailable"
             ? "Your product was submitted for standard review. Fast Review checkout is not available right now — you can upgrade below later."
-            : "Thanks! Your product was submitted. You can follow its review status below."}
+            : params.badge
+              ? "Thanks! Your product was submitted. To get listed free, add the Alternivo badge to your homepage and press Verify badge below."
+              : "Thanks! Your product was submitted. You can follow its review status below."}
         </Notice>
       )}
       {params.purchase && (

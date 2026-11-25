@@ -1,3 +1,4 @@
+using Discovery.Domain.Operations;
 using Discovery.Application.Admin;
 using Discovery.Application.Common;
 using Discovery.Application.Community;
@@ -54,7 +55,7 @@ public sealed class BadgeRecheckWorker(IServiceScopeFactory scopes, ILogger<Badg
         var due = now.AddDays(-ShareProof.BadgeRecheckDays);
 
         var batch = await db.Submissions
-            .Where(s => s.Status == SubmissionStatus.Approved && !s.IsPriority && s.ShareProof == ShareProofKind.Badge && s.CreatedApplicationId != null
+            .Where(s => s.Status == SubmissionStatus.Approved && !s.IsPriority && s.ShareProof == ShareProofKind.Badge && s.CreatedAt >= PricingCatalog.PaidListingSince && s.CreatedApplicationId != null
                 && (s.BadgeCheckedAt == null || s.BadgeCheckedAt < due))
             .OrderBy(s => s.BadgeCheckedAt).Take(BatchSize).ToListAsync(ct);
 

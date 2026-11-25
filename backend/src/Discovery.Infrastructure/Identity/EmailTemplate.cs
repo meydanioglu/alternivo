@@ -101,6 +101,27 @@ public static class EmailTemplate
             note: "If you have already added the badge, you only need to click \"Verify badge\" on your dashboard.");
     }
 
+    /// <summary>Reminder for a maker whose submission waits in the free queue; position and queue size are real numbers.</summary>
+    public static EmailContent QueueReminder(string siteUrl, string name, string product, int position, int waiting, string price)
+    {
+        var ahead = position - 1;
+        return Build(siteUrl,
+            subject: $"{product} is #{position} in the Alternivo review queue",
+            preheader: $"{ahead} submission{(ahead == 1 ? "" : "s")} ahead of yours. Skip the line with a 24-hour review.",
+            heading: $"You are #{position} in the queue",
+            paragraphs:
+            [
+                $"Hi {name},",
+                $"{product} is waiting for review. Right now it is #{position} of {waiting} submissions in the free queue, so {ahead} {(ahead == 1 ? "product is" : "products are")} ahead of yours.",
+                $"Want to go live sooner? Fast Review moves {product} to the front: a person reviews it within 24 hours of payment. It is {price}, one-time, with no subscription.",
+                "Prefer to stay free? Add the Alternivo badge to your homepage and click \"Verify badge\" on your Maker dashboard. Free submissions need either the badge or the payment before they can be approved.",
+                "Approval is not guaranteed for either option.",
+            ],
+            button: $"Skip the line for {price}",
+            link: $"{siteUrl.TrimEnd('/')}/maker",
+            note: "We send this reminder every 3 days while your submission waits. It stops as soon as you pay, verify the badge, or your submission is reviewed. Reply to this e-mail to stop it sooner.");
+    }
+
     public static EmailContent PasswordResetCode(string siteUrl, string code)
     {
         var c = WebUtility.HtmlEncode(code);
