@@ -161,9 +161,9 @@ export default async function AdminContentPage({ searchParams }: Props) {
                 </td>
                 <td className="whitespace-nowrap px-4 py-3 text-xs text-muted">{dateTime(r.updatedAt)}</td>
                 <td className="px-4 py-3 text-right">
-                  {(r.status === "Ready" || r.status === "Approved" || r.status === "Rejected") && (
+                  {(r.status === "Ready" || r.status === "Approved" || r.status === "Rejected" || r.status === "Failed") && (
                     <Link href={`/admin/content/${r.id}`} className={buttonClass(r.status === "Ready" ? "primary" : "outline", "sm")}>
-                      {r.status === "Ready" ? "İncele" : "Aç"}
+                      {r.status === "Ready" ? "İncele" : r.status === "Failed" ? "Elle yaz" : "Aç"}
                     </Link>
                   )}
                 </td>

@@ -108,7 +108,7 @@ export default async function ContentReviewPage({ params, searchParams }: Props)
         key={d.id}
         id={d.id}
         nextId={nextId}
-        canApprove={d.status !== "Queued" && d.status !== "Generating" && d.status !== "Failed"}
+        canApprove={d.status !== "Queued" && d.status !== "Generating"}
         draft={{
           shortDescription: d.shortDescription ?? "",
           description: d.description ?? "",
